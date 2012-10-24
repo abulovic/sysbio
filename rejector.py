@@ -16,9 +16,9 @@ n = 1000
 naccepted = 0
 theta1 = []
 theta2 = []
-epsilon = 4.3
+epsilon = 5
 times = (11,24,39,56,75,96,119,144)
-steps = 10000
+steps = 50000
 
 def generate_dataset(theta):
     dataset = np.zeros([8,2])
@@ -60,32 +60,56 @@ def rejector_algorithm(ds):
         if euclidian_distance(ds, sim_dataset) <= epsilon:#accept
             theta1.append(theta[0])
             theta2.append(theta[1])
-            #naccepted += 1
 
-def calc_a():
-    rv = uniform(0,1)
+def calc_a(sim_th, theta):
+    from scipy.stats import uniform
+    prior_sim = uniform(-3,3)
+    pth_sim = prior_sim.pdf(sim_th)
+    pth = prior_sim.pdf(theta)
+    from scipy.stats import norm
+    jumping_dist_sim = norm(sim_th,1)
+    prop_th = jumping_dist_sim.pdf(theta)
+    jumping_dist = norm(theta,1)
+    prop_simth = jumping_dist_sim.pdf(sim_th)
+    likelihood = (0.4 * prop_th) / (0.4 * prop_simth)
+    print likelihood
+    return min(1, likelihood)
     
-#def mcmc(ds):
-#    theta = np.zeros(2)
-#    init_theta = np.random.uniform(-3,3,2)
-#    for i in range(steps):
-#        sim_theta = np.random.normal((theta[0]+theta[1])/2,1,2)
-#        sim_dataset = generate_dataset(theta)
-#        if euclidean_distance(ds, sim_dataset) <= epsilon:
-#            theta_prior = uniform(0,1)
-#            prior_sim_theta = theta_prior(
-        
+def mcmc(ds):
+    sigma = 3
+    rej_streak = 0
+    th1 = np.random.uniform(-3,3)
+    th2 = np.random.uniform(-3,3)
+    for i in range(5000):
+        sim_th1 = np.random.normal(th1,sigma,1)
+        sim_th2 = np.random.normal(th2,sigma,1)
+        print i, sim_th1, sim_th2, sigma
+        el = np.array([sim_th1[0], sim_th2[0]])
+        sim_dataset = generate_dataset(el)
+        e = euclidian_distance(ds, sim_dataset)
+        if e <= epsilon:
+            sigma = 0.1
+            r = random.randint(0,1)
+            a1 = calc_a(sim_th1[0],th1)
+            a2 = calc_a(sim_th2[0],th2)
+            if r > (1 - a1) or r > (1 - a2):
+                th1 = sim_th1[0]
+                theta1.append(th1)
+                th2 = sim_th2[0]
+                theta2.append(th2)
+        else:
+            rej_streak += 1
+            if rej_streak > 50:
+                rej_streak = 0
+                sigma = 3
 
 if __name__ == "__main__":
     theta = np.array([1,1])
     ds = generate_dataset(theta)
     ds = add_gaussian_noise(ds)
-    rejector_algorithm(ds)
-    plt.hist(theta1)
-    plt.hist(theta2)
-    print "theta1 " , theta1
+    mcmc(ds)
+    print "theta1", theta1
     print "theta2 ", theta2
-    plt.show()
 
 #    plt.plot(t, X[:,0],'ro',  t, X[:,1], 'bx')     # x = X[:,0] and y = X[:,1]
 #    plt.legend(['x(t)','y(t)'])
