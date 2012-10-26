@@ -21,6 +21,7 @@ epsilon = 4.3
 data_points = 8
 times = (11,24,39,56,75,96,119,144)
 steps = 60000
+param_number = 2
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -43,8 +44,8 @@ def generate_dataset(theta):
 
 def add_gaussian_noise(dataset):
     x_noise = np.random.normal(0,0.5,data_points)
-    dataset[:,0] = dataset[:,0] + x_noise
-    dataset[:,1] = dataset[:,1] + x_noise
+    for i in range(dataset.shape[1]):
+        dataset[:,i] = dataset[:,i] + x_noise
     return dataset
 
 def euclidian_distance(dataset, sim_dataset):
@@ -111,7 +112,38 @@ def mcmc(ds):
                 sigma = 3
                 th1 = np.random.uniform(-5,5)
                 th2 = np.random.uniform(-5,5)
-                
+
+#returns a distribution from population and associated weights
+def calc_weighted_distribution(population, weights):
+    weighted_population = []
+    for i in range(len(population)):
+        for k in range(weights[i]):
+            weighted_population.append(population[i])
+
+    from scipy.stats.mstats import gmean
+    mu = gmean(weighted_population)
+    return norm(mu, 1)
+    
+def smc(ds, eps_seq=[30.0]):#, 16.0, 6.0, 5.0, 4.3]):
+    current_theta = np.array(params_number)
+    previous_population = []
+    previous_weights = []
+    current_population = []
+    population_weights = []
+    prior_dist = uniform(-1,1)
+    for epsilon in eps_seq:
+        if eps_seq.index(epsilon) == 0: #if first population draw from prior
+            #get the simulated points
+            for i in range(params_number):
+                current_theta[i] = np.random.uniform(-1,1)
+            sim_dataset = generate_dataset(current_theta)
+            if euclidian_distance(sim_dataset, ds) >= epsilon:
+                continue
+            else:
+              current_population.append(current_theta)
+              population_weights.append(1)
+        else: #draw from previous population
+            pass
 
 def write_to_file(filename,theta):
     f = open(filename, 'w')
