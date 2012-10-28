@@ -113,38 +113,72 @@ def mcmc(ds):
                 th1 = np.random.uniform(-5,5)
                 th2 = np.random.uniform(-5,5)
 
-#returns a distribution from population and associated weights
+#returns a weighted distribution from population and associated weights
 def calc_weighted_distribution(population, weights):
     weighted_population = []
     for i in range(len(population)):
-        for k in range(weights[i]):
+        for k in range(weights[i].astype(int)):
             weighted_population.append(population[i])
+    #from scipy.stats.mstats import gmean
+    #mu = gmean(weighted_population)
+    return weighted_population#norm(mu, 1)
 
-    from scipy.stats.mstats import gmean
-    mu = gmean(weighted_population)
-    return norm(mu, 1)
-    
+#initialises a list with a number of sublists
+def init_list():
+    lst = []
+    for i in range(param_number):
+        lst.append([])
+    return lst
+
+#returns an np.array with values drawn from uniform(start, end)
+def draw_uniform(start, end):
+    theta = np.array([])
+    for i in range(param_number):
+        theta = np.append(theta, np.random.uniform(start, end))
+    return theta
+
+#adds a particle (parameter vector) to corresponding sublists of current population
+#th1 goes to sublist for th1, th2 goes to second sublist for th2 and so on
+def add_particle_to_list(c_population, theta):
+    for i in range(param_number):
+        c_population[i].append(theta[i])
+    return c_population
+
+#adds a set of weights for current parameter vector to corresponding sublists of weights
+#for example w1 of th1 goes to first sublist for weights associated with th1 and so on
+def add_weights_to_list(c_weights, wei):
+    for i in range(param_number):
+        c_weights[i].append(wei[i])
+    return c_weights
+
+#adds a population to the general list of populations
+#first it gets the weighted population  
+def add_population_to_list(population, weights, current_population):
+    for i in range(param_number):
+        current_population[i] = calc_weighted_distribution(current_population, weights[i])
+    population.append(current_population)
+
+#sequential monte carlo
 def smc(ds, eps_seq=[30.0]):#, 16.0, 6.0, 5.0, 4.3]):
-    current_theta = np.array(params_number)
-    previous_population = []
-    previous_weights = []
-    current_population = []
-    population_weights = []
-    prior_dist = uniform(-1,1)
+    populations = []
+    weights = init_list()
+    current_population = init_list()
     for epsilon in eps_seq:
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            #get the simulated points
-            for i in range(params_number):
-                current_theta[i] = np.random.uniform(-1,1)
-            sim_dataset = generate_dataset(current_theta)
-            if euclidian_distance(sim_dataset, ds) >= epsilon:
-                continue
-            else:
-              current_population.append(current_theta)
-              population_weights.append(1)
+            for i in range(5000):
+                sim_theta = draw_uniform(-5,5)
+                print sim_theta
+                sim_dataset = generate_dataset(sim_theta)
+                if euclidian_distance(sim_dataset, ds) < epsilon:
+                    current_population = add_particle_to_list(current_population, sim_theta)
+                    weights = add_weights_to_list(weights, np.ones(param_number))
         else: #draw from previous population
             pass
-
+        add_population_to_list(populations, weights, current_population)
+        current_population = []
+        weights = []
+    return populations
+    
 def write_to_file(filename,theta):
     f = open(filename, 'w')
     f.write("theta\n")
@@ -155,11 +189,9 @@ if __name__ == "__main__":
     theta = np.array([1,1])
     ds = generate_dataset(theta)
     ds = add_gaussian_noise(ds)
-    mcmc(ds)
-    write_to_file("theta1.txt", theta1)
-    write_to_file("theta2.txt", theta2)
-    print theta1
-    print theta2
+    populations = smc(ds)
+    for pop in populations:
+        print pop
 
 
 
