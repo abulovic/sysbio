@@ -11,3 +11,6 @@ if __name__ == "__main__":
     if document.getNumErrors() != 0:
         print "Something went wrong!"
         sys.exit()
+    model = document.getModel()
+    print model.getNumSpecies()
+        
