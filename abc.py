@@ -5,11 +5,13 @@
 #we'll use Lotka-Voltera model(http://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equation) -> get dataset
 #with params a=b=1 and add gaussian noise
 #also added a simple mcmc based on metropolis algorithm
+#and a sequential monte carlo
 
 from scipy import integrate
 from scipy import array
 from scipy.stats import uniform
 from scipy.stats import norm
+from itertools import izip
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -113,14 +115,16 @@ def mcmc(ds):
                 th1 = np.random.uniform(-5,5)
                 th2 = np.random.uniform(-5,5)
 
+def ftoi(w):
+    if w < 1: return 1
+    else : return w.astype(int)
+    
 #returns a weighted distribution from population and associated weights
 def calc_weighted_distribution(population, weights):
     weighted_population = []
     for i in range(len(population)):
-        for k in range(weights[i].astype(int)):
-            weighted_population.append(population[i])
-    #from scipy.stats.mstats import gmean
-    #mu = gmean(weighted_population)
+        for k in range(ftoi(weights[i]*10)): # *10??
+             weighted_population.append(population[i])
     return weighted_population#norm(mu, 1)
 
 #initialises a list with a number of sublists
@@ -155,28 +159,66 @@ def add_weights_to_list(c_weights, wei):
 #first it gets the weighted population  
 def add_population_to_list(population, weights, current_population):
     for i in range(param_number):
-        current_population[i] = calc_weighted_distribution(current_population, weights[i])
+        current_population[i] = calc_weighted_distribution(current_population[i], weights[i])
     population.append(current_population)
 
+def sample_from_previous(prev_population):
+    from scipy.stats import tstd
+    theta = np.array([])
+    for i in range(param_number):
+        mu = sum(prev_population[i]) / len(prev_population[i])
+        sigma = tstd(prev_population[i])
+        particle = np.random.normal(mu, sigma, 1)[0]
+        pert_particle = np.random.normal(particle, sigma, 1)[0]
+        theta = np.append(theta,pert_particle)
+    return theta
+
+def calculate_weights(prev_population, prev_weights, sim_theta):
+    from scipy.stats.mstats import gmean
+    from scipy.stats import tstd
+    weights = np.array([])
+    for i in range(param_number):
+        rv = uniform(-5, 5)
+        prior = rv.pdf(sim_theta[i])
+        prod = []
+        for w,th in izip(prev_weights[i], prev_population[i]):
+            prod.append(w * norm(sim_theta[i], tstd(prev_population[i])).pdf(th))
+            weights = np.append(weights, (0.1 / sum(prod)))
+    return weights
+
 #sequential monte carlo
-def smc(ds, eps_seq=[30.0]):#, 16.0, 6.0, 5.0, 4.3]):
+def smc(ds, eps_seq=[30.0, 16.0]):
+    t = 0
     populations = []
-    weights = init_list()
+    weights = []
+    current_weights = init_list()
     current_population = init_list()
     for epsilon in eps_seq:
+        print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            for i in range(5000):
+            for i in range(100):
                 sim_theta = draw_uniform(-5,5)
-                print sim_theta
+                print i, sim_theta
                 sim_dataset = generate_dataset(sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     current_population = add_particle_to_list(current_population, sim_theta)
-                    weights = add_weights_to_list(weights, np.ones(param_number))
+                    current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            pass
-        add_population_to_list(populations, weights, current_population)
-        current_population = []
-        weights = []
+            for i in range(100):
+                sim_theta = sample_from_previous(populations[t-1])
+                sim_dataset = generate_dataset(sim_theta)
+                error = euclidian_distance(sim_dataset, ds)
+                print i, sim_theta, error
+                if error <= epsilon:
+                    current_population = add_particle_to_list(current_population, sim_theta)
+                    wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
+                    current_weights = add_weights_to_list(current_weights, wei)
+        print "current_weights ", t, " ", current_weights
+        add_population_to_list(populations, current_weights, current_population)
+        weights.append(current_weights)
+        current_population = init_list()
+        current_weights = init_list()
+        t += 1
     return populations
     
 def write_to_file(filename,theta):
@@ -191,7 +233,9 @@ if __name__ == "__main__":
     ds = add_gaussian_noise(ds)
     populations = smc(ds)
     for pop in populations:
-        print pop
+        if len(pop) != 0:
+            print (sum(pop[0]) / len(pop[0]))
+        print "===================================="
 
 
 
