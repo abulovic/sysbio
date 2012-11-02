@@ -9,23 +9,16 @@ import math
 def generate_dataset():
     pass
 
-def dx_dt(X,t):
-    a1 = 2
-    a2 = 1
-    b1 = 1
-    b2 = 2
-    b3 = 1
-    c1 = 1
-    d1 = 2
-    d2 = 2
-    y = array([((a1 * X[0]**2) / (b1 + X[0]**2 + c1 * X[1])) - d1 * X[0],
-               ((a2 * X[0]**2) / (b2 + b3 * X[0]**2)) / d2 * X[1]])
+def dx_dt(X,t,th0, th1, th2, th3, th4, th5, th6, th7):
+    y = array([((th0 * X[0]**2) / (th2 + X[0]**2 + th5 * X[1])) - th6 * X[0],
+               ((th1 * X[0]**2) / (th3 + th4 * X[0]**2)) / th7 * X[1]])
     return y
 
 if __name__ == "__main__":
     X0 = np.array([1, 0.5])
     t = np.linspace(0, 15, 1000)
-    X, info = integrate.odeint(dx_dt, X0, t, full_output=True)
+    theta = (1,1,1,1,1,1,1,1)
+    X, info = integrate.odeint(dx_dt, X0, t, args=theta, full_output=True)
     x,y = X.T
     plt.plot(t, x, 'r-', label='x(t)')
     plt.plot(t, y, 'b-', label='y(t)')
