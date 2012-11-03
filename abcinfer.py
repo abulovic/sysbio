@@ -13,6 +13,7 @@ from scipy.stats import uniform
 from scipy.stats import norm
 from itertools import izip
 import numpy as np
+np.seterr(all='ignore')
 import matplotlib.pyplot as plt
 import random
 
@@ -21,10 +22,9 @@ theta1 = []
 theta2 = []
 epsilon = 4.3
 data_points = 8
-#times = (11,24,39,56,75,96,119,144)
-times = (1 , 2, 4, 5, 7 , 9, 11, 14)
-steps = 60000
-param_number = 8
+times = (11,24,39,56,75,96,119,144)
+steps = 100000
+param_number = 2
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -32,18 +32,27 @@ def summary(theta):
     return gmean(theta), mode(theta)
 
 #ode system for Lotka-Voltera model
-def dx_dt(X,t,a,b):
+def dx_dt(X,t,theta):
+    a = theta[0]
+    b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
     return y
 
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, np.size(theta)])
+    dataset = np.zeros([data_points, 2])
     t = np.arange(0, 15, 0.1)
     X0 = array([1,0.5])
-    X, info = integrate.odeint(dx_dt,X0, t,args=theta, full_output=True)
+    X= integrate.odeint(dx_dt,X0, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in range(data_points):
-        dataset[i] = np.array([X[times[i]][0], X[times[i]][1]])
+        dataset[i] = create_datapoint(X[times[i]])
     return dataset
+
+#create a datapoint from 
+def create_datapoint(data):
+    datapoint = np.array([])
+    for x in data:
+        datapoint = np.append(datapoint, x)
+    return datapoint
 
 def add_gaussian_noise(dataset):
     x_noise = np.random.normal(0,0.5,data_points)
@@ -59,20 +68,24 @@ def euclidian_distance(dataset, sim_dataset):
     return sq_error
 
 def rejector_algorithm(dx_dt, ds):
-    population = init_list
-    naccepted = 0
+    population = init_list()
     #draw sample from uniform prior in the interval [-10,10]
-    for i in range(steps):
-        theta = np.random.uniform(-5,5,param_number)
-        print i, theta, naccepted
-        sim_dataset = generate_dataset(dx_dt, theta)
-        if euclidian_distance(ds, sim_dataset) <= epsilon:#accept
+    for i in range(100000):
+        theta = np.random.uniform(-10,10,param_number)
+        sim_dataset = generate_dataset(dx_dt, array_to_tuple(theta))
+        error = euclidian_distance(ds, sim_dataset)
+        print i, theta, error
+        if error <= epsilon:#accept
             naccepted += 1
-            theta1.append(theta[0])
-            theta2.append(theta[1])
+            population = add_particle_to_list(population, theta)
+    return population
+
+def array_to_tuple(nparray):
+    lst = [x for x in nparray]
+    return lst
 
 def calc_a(sim_th, theta, sigma):
-    prior_sim = uniform(-5,5)
+    prior_sim = uniform(-10,10)
     pth_sim = prior_sim.pdf(sim_th)
     pth = prior_sim.pdf(theta)
     jumping_dist_sim = norm(sim_th,sigma)
@@ -82,40 +95,46 @@ def calc_a(sim_th, theta, sigma):
     likelihood = (0.1 * prop_th) / (0.1 * prop_simth)
     return min(1, likelihood)
 
+def add_particle(population, sim_theta, theta, sigma):
+    for p, sth, th in izip(population, sim_theta, theta):
+        a = calc_a(sth, th, sigma)
+        r = random.randint(0,1)
+        if r <= a:
+            th = sth
+            p.append(th)
+
+def draw_from_jumping(theta, sigma):
+    sim_theta = []
+    for pth in theta:
+        sim_theta.append(np.random.normal(pth, sigma))
+    return sim_theta
+
 #simple mcmc algorithm creating a separate chain for each parameter
 def mcmc(ds):
-    naccepted = 0
+    population = init_list()
     sigma = 3
     rej_streak = 0
-    i = 0
+    counter = 0
     #start of with random values for params taken from uniform prior
-    th1 = np.random.uniform(-5,5)
-    th2 = np.random.uniform(-5,5)
-    for i in range(steps):
-        sim_th1 = np.random.normal(th1,sigma,1)[0]
-        sim_th2 = np.random.normal(th2,sigma,1)[0]
-        print i,sim_th1, sim_th2, sigma, naccepted
-        sim_dataset = generate_dataset(np.array([sim_th1, sim_th2]))
-        if euclidian_distance(ds, sim_dataset) <= epsilon:
+    theta = np.random.uniform(-5, 5, param_number)
+    while counter < steps:
+        counter += 1
+        sim_theta = draw_from_jumping(theta, sigma)
+        sim_dataset = generate_dataset(dx_dt, sim_theta)
+        error = euclidian_distance(ds, sim_dataset)
+        if error <= epsilon:
+            print sim_theta
             rej_streak = 0
             sigma = 0.1
-            r = random.randint(0,1)
-            a1 = calc_a(sim_th1,th1,sigma)
-            a2 = calc_a(sim_th2,th2,sigma)
-            if r <= a1:
-                naccepted += 1
-                th1 = sim_th1
-                theta1.append(th1)
-            if r <= a2:
-                th2 = sim_th2
-                theta2.append(th2)
+            add_particle(population, sim_theta, theta, sigma)
         else:
             rej_streak += 1
             if rej_streak > 10:
+                theta = np.random.uniform(-5, 5, param_number)
                 rej_streak = 0
                 sigma = 3
-                th1 = np.random.uniform(-5,5)
-                th2 = np.random.uniform(-5,5)
+    print "steps taken ", counter
+    return population
 
 def ftoi(w):
     if w < 1: return 1
@@ -170,13 +189,12 @@ def sample_from_previous(prev_population):
     for i in range(param_number):
         mu = sum(prev_population[i]) / len(prev_population[i])
         sigma = tstd(prev_population[i])
-        particle = np.random.normal(mu, sigma, 1)[0]
-        pert_particle = np.random.normal(particle, sigma, 1)[0]
+        particle = np.random.normal(mu, sigma)
+        pert_particle = np.random.normal(particle, sigma)
         theta = np.append(theta,pert_particle)
     return theta
 
 def calculate_weights(prev_population, prev_weights, sim_theta):
-    from scipy.stats.mstats import gmean
     from scipy.stats import tstd
     weights = np.array([])
     for i in range(param_number):
@@ -201,7 +219,7 @@ def smc(ds, eps_seq=[30.0, 16.0]):
             for i in range(100):
                 sim_theta = draw_uniform(-5,5)
                 print i, sim_theta
-                sim_dataset = generate_dataset(sim_theta)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
@@ -228,16 +246,34 @@ def write_to_file(filename,theta):
     f.write("theta\n")
     for th in theta:
         f.write(str(th) + ",")
+
+def plot_solution(population):
+    theta1 = np.array([1,1])
+    theta = []
+    for p in population:
+        theta.append(sum(p) / len(p))
+    X0 = np.array([1, 0.5])
+    t = np.arange(0, 15, 0.1)
+    X= integrate.odeint(dx_dt, X0, t, args=(theta,))
+    Y= integrate.odeint(dx_dt, X0, t, args=(theta1,))
+    x,y = X.T
+    x1,y1 = Y.T
+    plt.figure(1)
+    plt.subplot(211)
+    plt.plot(t, x, 'r-', label='x(t)')
+    plt.plot(t, x1,'g-',label='x(t))')
+    plt.subplot(212)
+    plt.plot(t, y, 'b-', label='y(t)')
+    plt.plot(t, y1, 'g-', label='y(t)')
+    plt.xlabel('time')
+    plt.show()
         
 if __name__ == "__main__":
-    theta = np.array([1,1])
-    ds = generate_dataset(theta)
+    theta1 = np.array([1,1])
+    ds = generate_dataset(dx_dt,  theta1)
     ds = add_gaussian_noise(ds)
-    populations = smc(ds)
-    for pop in populations:
-        if len(pop) != 0:
-            print (sum(pop[0]) / len(pop[0]))
-        print "===================================="
-
+    population = mcmc(ds)
+    plot_solution(population)
+    
 
 
