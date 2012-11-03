@@ -137,10 +137,6 @@ def mcmc(dx_dt, ds):
     print "steps taken ", counter
     return population
 
-def ftoi(w):
-    if w < 1: return 1
-    else : return w.astype(int)
-    
 #returns a weighted distribution from population and associated weights
 def calc_weighted_mean(population, weights):
     wsum = 0.0
