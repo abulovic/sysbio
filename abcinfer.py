@@ -141,12 +141,15 @@ def ftoi(w):
     else : return w.astype(int)
     
 #returns a weighted distribution from population and associated weights
-def calc_weighted_distribution(population, weights):
-    weighted_population = []
-    for i in range(len(population)):
-        for k in range(ftoi(weights[i]*10)): # *10??
-             weighted_population.append(population[i])
-    return weighted_population#norm(mu, 1)
+def calc_weighted_mean(population, weights):
+    wsum = 0.0
+    sum_weights = 0.0
+    wmu = 0.0
+    for p, w in izip(population, weights):
+        wsum += p*w
+        sum_weights += w
+    wmu = wsum / sum_weights
+    return wmu
 
 #initialises a list with a number of sublists
 def init_list():
@@ -183,15 +186,15 @@ def add_population_to_list(population, weights, current_population):
         current_population[i] = calc_weighted_distribution(current_population[i], weights[i])
     population.append(current_population)
 
-def sample_from_previous(prev_population):
+def sample_from_previous(prev_population, weights):
     from scipy.stats import tstd
     theta = np.array([])
     for i in range(param_number):
-        mu = sum(prev_population[i]) / len(prev_population[i])
+        weighted_mu = calculate_weighted_mean(prev_population[i], weights[i])
         sigma = tstd(prev_population[i])
-        particle = np.random.normal(mu, sigma)
+        particle = np.random.normal(weighted_mu, sigma)
         pert_particle = np.random.normal(particle, sigma)
-        theta = np.append(theta,pert_particle)
+        theta = np.append(theta, pert_particle)
     return theta
 
 def calculate_weights(prev_population, prev_weights, sim_theta):
@@ -203,7 +206,7 @@ def calculate_weights(prev_population, prev_weights, sim_theta):
         prod = []
         for w,th in izip(prev_weights[i], prev_population[i]):
             prod.append(w * norm(sim_theta[i], tstd(prev_population[i])).pdf(th))
-            weights = np.append(weights, (0.1 / sum(prod)))
+            weights = np.append(weights, (0.1 / math.fsum(prod)))
     return weights
 
 #sequential monte carlo
@@ -225,7 +228,7 @@ def smc(ds, eps_seq=[30.0, 16.0]):
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
             for i in range(100):
-                sim_theta = sample_from_previous(populations[t-1])
+                sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 print i, sim_theta, error
@@ -234,7 +237,7 @@ def smc(ds, eps_seq=[30.0, 16.0]):
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
         print "current_weights ", t, " ", current_weights
-        add_population_to_list(populations, current_weights, current_population)
+        populations.append(current_population)
         weights.append(current_weights)
         current_population = init_list()
         current_weights = init_list()
@@ -251,7 +254,7 @@ def plot_solution(population):
     theta1 = np.array([1,1])
     theta = []
     for p in population:
-        theta.append(sum(p) / len(p))
+        theta.append(math.fsum(p) / len(p))
     X0 = np.array([1, 0.5])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, X0, t, args=(theta,))
