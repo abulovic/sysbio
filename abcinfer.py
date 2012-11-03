@@ -16,6 +16,7 @@ import numpy as np
 np.seterr(all='ignore')
 import matplotlib.pyplot as plt
 import random
+import math
 
 #global vars used throughout
 theta1 = []
@@ -179,18 +180,11 @@ def add_weights_to_list(c_weights, wei):
         c_weights[i].append(wei[i])
     return c_weights
 
-#adds a population to the general list of populations
-#first it gets the weighted population  
-def add_population_to_list(population, weights, current_population):
-    for i in range(param_number):
-        current_population[i] = calc_weighted_distribution(current_population[i], weights[i])
-    population.append(current_population)
-
 def sample_from_previous(prev_population, weights):
     from scipy.stats import tstd
     theta = np.array([])
     for i in range(param_number):
-        weighted_mu = calculate_weighted_mean(prev_population[i], weights[i])
+        weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
         sigma = tstd(prev_population[i])
         particle = np.random.normal(weighted_mu, sigma)
         pert_particle = np.random.normal(particle, sigma)
@@ -219,7 +213,7 @@ def smc(ds, eps_seq=[30.0, 16.0]):
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            for i in range(100):
+            for i in range(1000):
                 sim_theta = draw_uniform(-5,5)
                 print i, sim_theta
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
@@ -227,9 +221,9 @@ def smc(ds, eps_seq=[30.0, 16.0]):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            for i in range(100):
+            for i in range(1000):
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(sim_theta)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 print i, sim_theta, error
                 if error <= epsilon:
@@ -275,8 +269,9 @@ if __name__ == "__main__":
     theta1 = np.array([1,1])
     ds = generate_dataset(dx_dt,  theta1)
     ds = add_gaussian_noise(ds)
-    population = mcmc(ds)
-    plot_solution(population)
+    population = smc(ds)
+    print population
+#    plot_solution(population)
     
 
 
