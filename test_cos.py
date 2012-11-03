@@ -16,7 +16,13 @@ def generate_data():
     for i in range(datapoints):
         dataset[i] = np.array([np.cos(times[i]), np.cos(times[i] + th)])
     return dataset
-    
+
+def dn_dt(N, t, theta):
+    k = theta[0]
+    a = theta[1]
+    n = array([k * N[1] * N[0], -a * k * N[1] * N[0]])
+    return n
+
 def dx_dt(X,t,th):
     a1 = th[0]
     a2 = th[1]
@@ -31,32 +37,50 @@ def dx_dt(X,t,th):
     return y
 
 #ode system for Lotka-Voltera model
-def dy_dt(X,t,a,b):
+def dy_dt(X,t,theta):
+    a = theta[0]
+    b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
     return y
 
 def plot_solution(population=[]):
-    for i in range(50):
-        theta =  np.random.uniform(-15,15,8)
+    theta = []
     for p in population:
-        theta.append(p[0])
-        tpl_theta = tuple(theta)
-        X0 = np.array([1, 0.5])
-        t = np.arange(0, 15, 0.1)#np.linspace(0, 15, 1000)
-        X= integrate.odeint(dx_dt, X0, t, args=(theta,))
-        x,y = X.T
-        plt.plot(t, x, 'r-', label='x(t)')
-        plt.plot(t, y, 'b-', label='y(t)')
-        plt.plot(t, np.cos(t+1), 'g-', label='cos(t+1)')
-        plt.plot(t,np.cos(t), 'g-',label='cos(t)')
-        plt.xlabel('time')
-        plt.show()
+        print p
+        theta.append(math.fsum(p) / len(p))
+    X0 = np.array([1, 0.5])
+    t = np.arange(0, 15, 0.1)
+    X= integrate.odeint(dn_dt, X0, t, args=(theta,))
+    x,y = X.T
+    plt.figure(1)
+    plt.plot(t, x, 'r-', label='x(t)')
+    plt.plot(t, y, 'b-', label='y(t)')
+    plt.xlabel('time')
+    plt.show()
     
 if __name__ == "__main__":
-    plot_solution()
-    ds = generate_data()
-    population = abc.rejector_algorithm(dx_dt, ds)
-    plot_solution(population)
+    th1 = [0.004135078986502213, 0.005453319282478275, 0.005544545270795098, 0.006675492144787094]
+    th2 = [1.1072950322750366, 1.4057376007144096, 1.5955076391162772, 1.7477408048695864, 0.7789653444152186]
+    t1 =  math.fsum(th1) / len(th1)
+    t2 =  math.fsum(th2) / len(th2)
+    theta = [t1, t2]
+    n0 = [0.1,10]
+    t = np.arange(0, 480, 5)
+    theta1 = [0.005, 1]
+    r = integrate.odeint(dn_dt, n0, t, args=(theta,))
+    y = integrate.odeint(dn_dt, n0, t, args=(theta1,))
+    plt.plot(t, r, '-o')
+    plt.plot(t, y, 'r-')
+    plt.legend(['Bacteria', 'Nutrients'], loc='lower right')
+    plt.xlabel('Time')
+    plt.ylabel('Concentration')
+    plt.title('Simple ODE model for bacterial growth')
+    plt.show()
+
+#    ds = abc.generate_dataset(dn_dt, theta)
+#    ds = abc.add_gaussian_noise(ds)
+#    population = abc.mcmc(dn_dt, ds)
+#    plot_solution(population)'
     
     
     
