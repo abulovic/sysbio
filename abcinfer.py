@@ -80,10 +80,6 @@ def rejector_algorithm(dx_dt, ds):
             population = add_particle_to_list(population, theta)
     return population
 
-def array_to_tuple(nparray):
-    lst = [x for x in nparray]
-    return lst
-
 def calc_a(sim_th, theta, sigma):
     prior_sim = uniform(-10,10)
     pth_sim = prior_sim.pdf(sim_th)
