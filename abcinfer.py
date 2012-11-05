@@ -19,7 +19,7 @@ import random
 import math
 
 #global vars used throughout
-epsilon = 40
+epsilon = 10
 data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
@@ -113,10 +113,7 @@ def mcmc(dx_dt, ds):
     counter = 0
     #start of with random values for params taken from uniform prior
     theta = np.random.uniform(-5, 5, param_number)
-#    theta.append(np.random.uniform(-5, 5))
-#    theta.append(np.random.uniform(-5,5))
-#    print theta
-    while counter < 6000:#steps:
+    while counter < 1000:#steps:
         counter += 1
         sim_theta = draw_from_jumping(theta, sigma)
         sim_dataset = generate_dataset(dx_dt, sim_theta)
@@ -124,7 +121,7 @@ def mcmc(dx_dt, ds):
         if error <= epsilon:
             print counter, sim_theta, sigma, error
             rej_streak = 0
-            sigma = 0.01
+            sigma = 0.1
             add_particle(population, sim_theta, theta, sigma)
         else:
             rej_streak += 1
@@ -198,7 +195,7 @@ def calculate_weights(prev_population, prev_weights, sim_theta):
     return weights
 
 #sequential monte carlo
-def smc(ds, eps_seq):
+def smc(dx_dt, ds, eps_seq):
     t = 0
     populations = []
     weights = []
@@ -207,7 +204,7 @@ def smc(ds, eps_seq):
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            for i in range(5000):
+            for i in range(2000):
                 sim_theta = draw_uniform(-5,5)
                 print i, sim_theta
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
@@ -215,7 +212,7 @@ def smc(ds, eps_seq):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            for i in range(5000):
+            for i in range(2000):
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
