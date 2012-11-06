@@ -59,7 +59,6 @@ def plot_solution(population=[]):
     plt.show()
     
 if __name__ == "__main__":
-#    theta = [th1[len(th1) / 2], th2[len(th2) / 2]]
 #    print theta
 #    n0 = [0.1,10]
 #    t = np.arange(0, 480, 5)
@@ -75,9 +74,9 @@ if __name__ == "__main__":
 #    plt.show()
 
     ds = generate_data()
-    ds = abc.add_gaussian_noise(ds)
-    population = abc.mcmc(dx_dt, ds)
-    plot_solution(population)
+    population = abc.smc(dx_dt, ds, [20.0, 10.0, 5.0])
+    plot_solution(population[len(population)-1])
+    
     
     
     
