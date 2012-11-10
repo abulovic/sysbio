@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 #simple abc rejector. samples parameter vector from uniform prior, simulates dataset and then compares simulated
 #dataset with actual dataset and either rejects or accepts based on the euclidian distance between the two.
@@ -172,15 +172,20 @@ def add_weights_to_list(c_weights, wei):
     return c_weights
 
 def sample_from_previous(prev_population, weights):
-    from scipy.stats import tstd
-    theta = np.array([])
-    for i in range(param_number):
-        weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
-        sigma = tstd(prev_population[i])
-        particle = np.random.normal(weighted_mu, sigma)
-        pert_particle = np.random.normal(particle, sigma)
-        theta = np.append(theta, pert_particle)
-    return theta
+    from itertools import izip
+    X = np.vstack((prev_population))
+    Sigma = np.cov(X)
+    mu = [calc_weighted_mean(pop,wei) for pop,wei in izip(prev_population, weights)]
+    return np.random.multivariate_normal(mu, Sigma)
+#    from scipy.stats import tstd
+#    theta = np.array([])
+#    for i in range(param_number):
+#        weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
+#        sigma = tstd(prev_population[i])
+#        particle = np.random.normal(weighted_mu, sigma)
+#        pert_particle = np.random.normal(particle, sigma)
+#        theta = np.append(theta, pert_particle)
+#    return theta
 
 def calculate_weights(prev_population, prev_weights, sim_theta):
     from scipy.stats import tstd
@@ -204,9 +209,9 @@ def smc(dx_dt, ds, eps_seq):
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            for i in range(5000):
+            for i in range(1000):
                 sim_theta = draw_uniform(-5,5)
-                print i, sim_theta
+                print sim_theta
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     current_population = add_particle_to_list(current_population, sim_theta)
@@ -227,7 +232,7 @@ def smc(dx_dt, ds, eps_seq):
         current_population = init_list()
         current_weights = init_list()
         t += 1
-    return populations
+        return populations
     
 def write_to_file(filename,theta):
     f = open(filename, 'w')
@@ -260,5 +265,5 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = mcmc(dx_dt, ds)
-    plot_solution(population)
+    population = smc(dx_dt, ds, [30.0, 16.0, 8.0, 4.3])
+    plot_solution(population[len(population) -1])
