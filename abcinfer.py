@@ -24,7 +24,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 8
+param_number = 2
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -118,8 +118,8 @@ def mcmc(dx_dt, ds):
         sim_theta = draw_from_jumping(theta, sigma)
         sim_dataset = generate_dataset(dx_dt, sim_theta)
         error = euclidian_distance(ds, sim_dataset)
+        print counter, sim_theta, sigma, error
         if error <= epsilon:
-            print counter, sim_theta, sigma, error
             rej_streak = 0
             sigma = 0.1
             add_particle(population, sim_theta, theta, sigma)
@@ -171,21 +171,23 @@ def add_weights_to_list(c_weights, wei):
         c_weights[i].append(wei[i])
     return c_weights
 
+#to do: perturb particle before returning
 def sample_from_previous(prev_population, weights):
-    from itertools import izip
-    X = np.vstack((prev_population))
-    Sigma = np.cov(X)
-    mu = [calc_weighted_mean(pop,wei) for pop,wei in izip(prev_population, weights)]
-    return np.random.multivariate_normal(mu, Sigma)
-#    from scipy.stats import tstd
-#    theta = np.array([])
-#    for i in range(param_number):
-#        weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
-#        sigma = tstd(prev_population[i])
-#        particle = np.random.normal(weighted_mu, sigma)
-#        pert_particle = np.random.normal(particle, sigma)
-#        theta = np.append(theta, pert_particle)
-#    return theta
+    #from itertools import izip
+    #X = np.vstack((prev_population))
+    #Sigma = np.cov(X)
+    #mu = [calc_weighted_mean(pop,wei) for pop,wei in izip(prev_population, weights)]
+    #theta = np.random.multivariate_normal(mu, Sigma)
+    #return np.random.multivariate_normal(theta, Sigma)
+    from scipy.stats import tstd
+    theta = np.array([])
+    for i in range(param_number):
+        weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
+        sigma = tstd(prev_population[i])
+        particle = np.random.normal(weighted_mu, sigma)
+        pert_particle = np.random.normal(particle, sigma)
+        theta = np.append(theta, pert_particle)
+    return theta
 
 def calculate_weights(prev_population, prev_weights, sim_theta):
     from scipy.stats import tstd
@@ -201,6 +203,8 @@ def calculate_weights(prev_population, prev_weights, sim_theta):
 
 #sequential monte carlo
 def smc(dx_dt, ds, eps_seq):
+    i = 0
+    naccepted = 0
     t = 0
     populations = []
     weights = []
@@ -209,49 +213,62 @@ def smc(dx_dt, ds, eps_seq):
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            for i in range(1000):
+            while naccepted < 500:
+                i += 1
                 sim_theta = draw_uniform(-5,5)
-                print sim_theta
+                print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
+                    naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
+                    
         else: #draw from previous population
-            for i in range(10000):
+            while naccepted < 500:
+                i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
-                print i, sim_theta, error
+                print i, sim_theta, error, naccepted
                 if error <= epsilon:
+                    naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
-        print "current_weights ", t, " ", current_weights
+        #print "current_weights ", t, " ", current_weights
         populations.append(current_population)
         weights.append(current_weights)
         current_population = init_list()
         current_weights = init_list()
         t += 1
-        return populations
+        naccepted = 0
+    return populations
     
 def write_to_file(filename,theta):
     f = open(filename, 'w')
     f.write("theta\n")
     for th in theta:
         f.write(str(th) + ",")
-
+        
 def plot_solution(population):
     theta1 = np.array([1,1])
     theta = []
+    #rint "================================"
+    #rint population
+    plt.figure(1)
     for p in population:
-        theta.append(math.fsum(p) / len(p))
+        m = math.fsum(p) / float(len(p))
+        print m
+        theta.append(m)
+        plt.hist(p)
+        plt.figure(2)
     X0 = np.array([1, 0.5])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, X0, t, args=(theta,))
     Y= integrate.odeint(dx_dt, X0, t, args=(theta1,))
     x,y = X.T
     x1,y1 = Y.T
-    plt.figure(1)
+    plt.figure(3)
     plt.subplot(211)
     plt.plot(t, x, 'r-', label='x(t)')
     plt.plot(t, x1,'g-',label='x(t))')
@@ -265,5 +282,5 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = smc(dx_dt, ds, [30.0, 16.0, 8.0, 4.3])
-    plot_solution(population[len(population) -1])
+    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
+    plot_solution(population[len(population)-1])
