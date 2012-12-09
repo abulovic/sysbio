@@ -2,44 +2,44 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: progress.aux
 The style file: plain.bst
 Database file #1: progress.bib
-You've used 22 entries,
+You've used 23 entries,
             2118 wiz_defined-function locations,
-            638 strings with 7676 characters,
-and the built_in function-call counts, 7588 in all, are:
-= -- 726
-> -- 411
+            644 strings with 7847 characters,
+and the built_in function-call counts, 7972 in all, are:
+= -- 765
+> -- 429
 < -- 0
-+ -- 163
-- -- 140
-* -- 615
-:= -- 1306
-add.period$ -- 64
-call.type$ -- 22
-change.case$ -- 134
++ -- 171
+- -- 146
+* -- 648
+:= -- 1369
+add.period$ -- 67
+call.type$ -- 23
+change.case$ -- 140
 chr.to.int$ -- 0
-cite$ -- 22
-duplicate$ -- 233
-empty$ -- 560
-format.name$ -- 140
-if$ -- 1519
+cite$ -- 23
+duplicate$ -- 244
+empty$ -- 589
+format.name$ -- 146
+if$ -- 1596
 int.to.chr$ -- 0
-int.to.str$ -- 22
-missing$ -- 21
-newline$ -- 111
-num.names$ -- 44
-pop$ -- 115
+int.to.str$ -- 23
+missing$ -- 22
+newline$ -- 116
+num.names$ -- 46
+pop$ -- 119
 preamble$ -- 1
-purify$ -- 113
+purify$ -- 118
 quote$ -- 0
-skip$ -- 157
+skip$ -- 164
 stack$ -- 0
-substring$ -- 511
-swap$ -- 22
+substring$ -- 548
+swap$ -- 23
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 86
+type$ -- 90
 warning$ -- 0
-while$ -- 71
-width$ -- 24
-write$ -- 235
+while$ -- 75
+width$ -- 25
+write$ -- 246

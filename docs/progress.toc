@@ -5,5 +5,5 @@
 \contentsline {subsection}{\numberline {3.2}Markov Chain Monte Carlo}{6}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Sequential Monte Carlo}{7}{subsection.3.3}
 \contentsline {subsection}{\numberline {3.4}Results}{7}{subsection.3.4}
-\contentsline {section}{\numberline {4}Future Work}{7}{section.4}
-\contentsline {section}{References}{7}{section*.3}
+\contentsline {section}{\numberline {4}Future Work}{8}{section.4}
+\contentsline {section}{References}{8}{section*.3}

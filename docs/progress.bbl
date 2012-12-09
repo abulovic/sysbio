@@ -16,6 +16,12 @@ S.~{Dasmahapatra}.
   autoregulatory activator}.
 \newblock {\em ArXiv e-prints}, December 2012.
 
+\bibitem{del2012adaptive}
+P.~Del~Moral, A.~Doucet, and A.~Jasra.
+\newblock An adaptive sequential monte carlo method for approximate bayesian
+  computation.
+\newblock {\em Statistics and Computing}, 22(5):1009--1020, 2012.
+
 \bibitem{filippi2011optimal}
 S.~{Filippi}, C.~{Barnes}, J.~{Cornebise}, and M.~P.~H {Stumpf}.
 \newblock {On optimality of kernels for approximate Bayesian computation using

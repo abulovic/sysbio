@@ -68,13 +68,16 @@ def euclidian_distance(dataset, sim_dataset):
     return sq_error
 
 def rejector_algorithm(dx_dt, ds):
+    naccepted = 0
+    i = 0
     population = init_list()
     #draw sample from uniform prior in the interval [-10,10]
-    for i in range(100000):
+    while naccepted < 200:
+        i += 1
         theta = np.random.uniform(-10,10,param_number)
-        sim_dataset = generate_dataset(dx_dt, array_to_tuple(theta))
+        sim_dataset = generate_dataset(dx_dt,theta)
         error = euclidian_distance(ds, sim_dataset)
-        print i, theta, error
+        print i, theta, error, naccepted
         if error <= epsilon:#accept
             naccepted += 1
             population = add_particle_to_list(population, theta)
@@ -282,5 +285,7 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
-    plot_solution(population[len(population)-1])
+    population = rejector_algorithm(dx_dt, ds)
+    plot_solution(population)
+    
+	   
