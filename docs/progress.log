@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  9 DEC 2012 22:31
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  11 DEC 2012 00:14
 entering extended mode
  %&-line parsing enabled.
 **progress.tex
@@ -235,6 +235,54 @@ Package: enumitem 2009/05/18 v2.2 Customized lists
 \enit@outerparindent=\dimen117
 \enitdp@desc=\count107
 )
+(/usr/share/texmf-texlive/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count108
+\float@exts=\toks22
+\float@box=\box28
+\@float@everytoks=\toks23
+\@floatcapt=\box29
+)
+(/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+\captionmargin=\dimen118
+\captionmargin@=\dimen119
+\captionwidth=\dimen120
+\caption@indent=\dimen121
+\caption@parindent=\dimen122
+\caption@hangindent=\dimen123
+)
+\c@ContinuedFloat=\count109
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+(/usr/share/texmf-texlive/tex/latex/caption/subcaption.sty
+Package: subcaption 2008/08/31 v1.0b Adding subcaptions (AR)
+\c@subfigure=\count110
+\c@subtable=\count111
+)
+(/usr/share/texmf-texlive/tex/latex/tools/tabularx.sty
+Package: tabularx 1999/01/07 v2.07 `tabularx' package (DPC)
+
+(/usr/share/texmf-texlive/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen124
+\extrarowheight=\dimen125
+\NC@list=\toks24
+\extratabsurround=\skip48
+\backup@length=\skip49
+)
+\TX@col@width=\dimen126
+\TX@old@table=\dimen127
+\TX@old@col=\dimen128
+\TX@target=\dimen129
+\TX@delta=\dimen130
+\TX@cols=\count112
+\TX@ftn=\toks25
+)
 (/usr/share/texmf-texlive/tex/latex/tocbibind/tocbibind.sty
 Package: tocbibind 2009/09/04 v1.5i extra ToC listings
 
@@ -247,57 +295,60 @@ Package tocbibind Note: Using section or other style headings.
 ) (./progress.aux)
 \openout1 = `progress.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 13.
-LaTeX Font Info:    ... okay on input line 13.
-Package hyperref Info: Link coloring OFF on input line 13.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+Package hyperref Info: Link coloring OFF on input line 18.
  (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count108
+\c@section@level=\count113
 )
-LaTeX Info: Redefining \ref on input line 13.
-LaTeX Info: Redefining \pageref on input line 13.
+LaTeX Info: Redefining \ref on input line 18.
+LaTeX Info: Redefining \pageref on input line 18.
  (./progress.out)
 (./progress.out)
 \@outlinefile=\write3
 \openout3 = `progress.out'.
 
-\AtBeginShipoutBox=\box28
+\AtBeginShipoutBox=\box30
  (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count109
-\scratchdimen=\dimen118
-\scratchbox=\box29
-\nofMPsegments=\count110
-\nofMParguments=\count111
-\everyMPshowfont=\toks22
-\MPscratchCnt=\count112
-\MPscratchDim=\dimen119
-\MPnumerator=\count113
-\everyMPtoPDFconversion=\toks23
-) (./title.tex [1
+\scratchcounter=\count114
+\scratchdimen=\dimen131
+\scratchbox=\box31
+\nofMPsegments=\count115
+\nofMParguments=\count116
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count117
+\MPscratchDim=\dimen132
+\MPnumerator=\count118
+\everyMPtoPDFconversion=\toks27
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+ (./title.tex [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])pdfTeX warning (ext4): des
 tination with the same identifier (name{page.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.20 \end{abstract}
+l.25 \end{abstract}
                     [1] (./progress.toc)
 \tf@toc=\write4
 \openout4 = `progress.toc'.
@@ -306,32 +357,116 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.22 \newpage
-              [1] [2] [3] [4] [5] [6] (./progress.bbl [7] [8] [9]) [10]
-(./progress.aux) ) 
+l.27 \newpage
+              [1] [2] [3] [4] [5] [6] [7]
+<mcmc500th1.png, id=171, 586.8324pt x 442.2924pt>
+File: mcmc500th1.png Graphic file (type png)
+ <use mcmc500th1.png>
+<mcmc500th2.png, id=173, 586.8324pt x 442.2924pt>
+File: mcmc500th2.png Graphic file (type png)
+ <use mcmc500th2.png>
+Overfull \hbox (36.23132pt too wide) in paragraph at lines 110--122
+ []$[]$$[]$ 
+ []
+
+
+LaTeX Warning: Reference `smcinter' on page 8 undefined on input line 126.
+
+
+LaTeX Warning: Reference `dstep' on page 8 undefined on input line 126.
+
+[8 <./mcmc500th1.png> <./mcmc500th2.png>]
+<p1th1_1.png, id=185, 586.8324pt x 442.2924pt>
+File: p1th1_1.png Graphic file (type png)
+ <use p1th1_1.png>
+<p1th2_1.png, id=186, 586.8324pt x 442.2924pt>
+File: p1th2_1.png Graphic file (type png)
+ <use p1th2_1.png>
+<p2th1_1.png, id=187, 586.8324pt x 442.2924pt>
+File: p2th1_1.png Graphic file (type png)
+ <use p2th1_1.png>
+<p2th2_1.png, id=188, 586.8324pt x 442.2924pt>
+File: p2th2_1.png Graphic file (type png)
+ <use p2th2_1.png>
+<p3th1_1.png, id=189, 586.8324pt x 442.2924pt>
+File: p3th1_1.png Graphic file (type png)
+ <use p3th1_1.png>
+<p3th2_1.png, id=190, 586.8324pt x 442.2924pt>
+File: p3th2_1.png Graphic file (type png)
+ <use p3th2_1.png>
+<p4th1_1.png, id=191, 586.8324pt x 442.2924pt>
+File: p4th1_1.png Graphic file (type png)
+ <use p4th1_1.png>
+<p4th2_1.png, id=192, 586.8324pt x 442.2924pt>
+File: p4th2_1.png Graphic file (type png)
+ <use p4th2_1.png>
+<p5th1_1.png, id=193, 586.8324pt x 442.2924pt>
+File: p5th1_1.png Graphic file (type png)
+ <use p5th1_1.png>
+<p5th2_1.png, id=194, 586.8324pt x 442.2924pt>
+File: p5th2_1.png Graphic file (type png)
+ <use p5th2_1.png>
+<smc500_x1.png, id=195, 502.9992pt x 198.0198pt>
+File: smc500_x1.png Graphic file (type png)
+ <use smc500_x1.png>
+Overfull \hbox (5.89165pt too wide) in paragraph at lines 161--162
+ [][] 
+ []
+
+<smc500_x2.png, id=196, 521.7894pt x 205.2468pt>
+File: smc500_x2.png Graphic file (type png)
+ <use smc500_x2.png>
+Overfull \hbox (23.9721pt too wide) in paragraph at lines 167--168
+ [][] 
+ []
+
+
+Overfull \hbox (9.06128pt too wide) in paragraph at lines 159--171
+ []$[]$$[]$ 
+ []
+
+(./progress.bbl [9 <./p1th1_1.png> <./p1th2_1.png> <./p2th1_1.png> <./p2th2_1.p
+ng> <./p3th1_1.png> <./p3th2_1.png> <./p4th1_1.png> <./p4th2_1.png> <./p5th1_1.
+png> <./p5th2_1.png>] [10 <./smc500_x1.png> <./smc500_x2.png>] [11])
+<gantt1.png, id=226, 903.375pt x 190.7125pt>
+File: gantt1.png Graphic file (type png)
+ <use gantt1.png>
+<gantt2.png, id=227, 919.435pt x 186.6975pt>
+File: gantt2.png Graphic file (type png)
+ <use gantt2.png>
+Overfull \hbox (6.74847pt too wide) in paragraph at lines 186--187
+ [][] 
+ []
+
+[12 <./gantt1.png (PNG copy)> <./gantt2.png (PNG copy)>] (./progress.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 5069 strings out of 493848
- 72068 string characters out of 1152824
- 151489 words of memory out of 3000000
- 8217 multiletter control sequences out of 15000+50000
- 9536 words of font info for 34 fonts, out of 3000000 for 9000
+ 6280 strings out of 493848
+ 92599 string characters out of 1152824
+ 174398 words of memory out of 3000000
+ 9383 multiletter control sequences out of 15000+50000
+ 10984 words of font info for 39 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 38i,8n,36p,2065b,420s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx
-12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share
-/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texl
-ive/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
-/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texm
-f-texlive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fo
-nts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/fonts/type1/pu
-blic/amsfonts/cm/cmti12.pfb>
-Output written on progress.pdf (12 pages, 195129 bytes).
+ 38i,12n,38p,2065b,485s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texmf-texlive/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/
+public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi
+8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on progress.pdf (14 pages, 461005 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 61 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 298 PDF objects out of 1000 (max. 8388607)
+ 70 named destinations out of 1000 (max. 500000)
+ 161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

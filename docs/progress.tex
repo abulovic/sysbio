@@ -7,6 +7,11 @@
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{enumitem}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularx}
 \usepackage[nottoc]{tocbibind}
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
@@ -95,8 +100,90 @@ The three implemented algorithms were tested with Lotka-Volterra\cite{lotka1925e
 \dot x_{1} & = & ax_{1} - x_{1} x_{2}\\
 \dot x_{2} & =& b x_{1}x_{2} - x_{2}
 \end{eqnarray*}
-The prior distribution given by $\sim N(1,2)$.
+The model has two parameter $(a,b)$ which were set to $(a,b) = 1$ and a dataset was created from 8 data-points chosen at random in the interval $[0, 15]$. Then Gaussian noise $\mathcal{N}(0, (0.5)^2)$ was added to the dataset.  The distance between the original set and noisy dataset averaged over some runs is $\approx$4 so the tolerance rate $\epsilon$ could not be $< 4$ so a choice of $\epsilon = 4.5$ was deemed appropriate.
+
+First, we apply the simple rejection sampler algorithm with $\epsilon = 4.5$. The prior distributions for parameters $a$ and $b$ are taken to be uniform $a, b = \mathcal{U}(-10, 10)$. As expected the acceptance rate is really low. In order to accept 200 particle, 247000 data generation steps are required which gives an acceptance rate of $8\times10^{-4}$.
+
+Then the Markov Chain Monte Carlo method with the adaptive Gaussian as described in the previous section is applied with the same tolerance rate $\epsilon = 4.5$.  In order to obtain 500 particles 20000 to 40000 data generation steps were needed which is a big improvement from the simple rejection algorithm. The inferred posterior distributions for model parameters $a$ and $b$ are shown in Figure~\ref{fig:mcmcdistros}.
+\begin{figure}
+\centering
+\begin{subfigure}{.54\linewidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{mcmc500th1.png}
+  \caption{Posterior distribution obtained for parameter $a$}
+  \label{fig:t}
+\end{subfigure}%
+\begin{subfigure}{.54\linewidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{mcmc500th2.png}
+  \caption{Posterior distribution obtained for parameter $b$}
+  \label{fig:ps}
+\end{subfigure}
+\caption{Posterior distribution inferred for parameters $a$ and $b$ with MCMC method(500 particles)}
+\label{fig:mcmcdistros}
+\end{figure}
+
+Next, we applied the SMC algorithm with a manually tuned schedule $\epsilon = (30.0, 16.0, 6.0, \allowbreak5.0, 4.3)$. The prior distributions for model parameter $a$ and $b$ are taken to be uniform $a, b = \mathcal{U}(-10, 10)$. The perturbation kernels $K_{t}$ are taken to be Gaussian centered around the previous population and with standard deviation equal to that of the previous population. The results are shown in Figure~\ref{fig:smcres}. The evolution of the intermediate distributions for both parameters to the inferred distributions at $t=5$ is shown in Figure~\ref{smcinter}. It can be seen that the parameters are well inferred $a$: stats $b$: stats. The number of data generation steps needed for every intermediate population generated are shown in Table~\ref{dstep}. The numbers verify the claims in the previous section: the big difference between $\epsilon_{1}$ and $\epsilon_{2}$ is reflected in the big number of data generation steps needed to go from $t=1$ to $t=2$. On the other hand very few data generation steps are needed between $t=4$ and $t=5$ due to the small difference between $\epsilon_{4}$ and $\epsilon_{5}$.
+
+\newpage
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale=0.2]{p1th1_1}&\includegraphics[scale=0.2]{p1th2_1.png}\\
+\newline
+\includegraphics[scale=0.2]{p2th1_1}&\includegraphics[scale=0.2]{p2th2_1.png}\\
+\newline
+\includegraphics[scale=0.2]{p3th1_1}&\includegraphics[scale=0.2]{p3th2_1.png}\\
+\newline
+\includegraphics[scale=0.2]{p4th1_1}&\includegraphics[scale=0.2]{p4th2_1.png}\\
+\newline
+\includegraphics[scale=0.2]{p5th1_1}&\includegraphics[scale=0.2]{p5th2_1.png}\\
+\end{tabular}
+\caption{Evolution of intermediate distribution for SMC method and $t=5$.}
+\label{tab:smcinter}
+\end{table}
+\begin{table}[ht]
+\centering
+\begin{tabular}{ l*{5} c r }
+\hline
+population              & 1 & 2 & 3 & 4 & 5 \\
+\hline
+data generation steps & 926 & 13 563 & 50 135 & 51 214 & 52 411   \\
+\hline
+\end{tabular}
+\caption{Cumulative data generation steps needed for each population.}
+\label{tab:dsteps}
+\end{table}
+\begin{figure}
+\centering
+\begin{subfigure}{.52\linewidth}
+  \centering
+  \includegraphics[scale=0.48]{smc500_x1.png}
+  \caption{$x_{1}$}
+  \label{fig:smcx1}
+\end{subfigure}%
+\begin{subfigure}{.5\linewidth}
+  \centering
+  \includegraphics[scale=0.48]{smc500_x2.png}
+  \caption{$x_{2}$}
+  \label{fig:smcx2}
+\end{subfigure}
+\caption{Results for SMC method(500 particles). The green graphs are the ideal functions. The green triangles and squares are the noisy dataset used and the blue and red graphs are the inferred functions.}
+\label{fig:smcres}
+\end{figure}
 \section{Future Work}
-As stated in a previous section the main goals of the project were to create a tool that does automatic parameter estimation in dynamic biological systems and augment that by taking into account in the process other properties and characteristics of the systems such as evolution to make the inference process more powerful and the resulting models more complete. So far only the first part of task has been addressed, namely the automatic parameter estimation problem. The implemented algorithms could be refined by making better choices for the settings like using an adaptive $\epsilon$-schedule for the SMC algorithm and switch to Multivariate Gaussian distribution to account for correlations between parameters. 	The main bulk of the future work will however fall on the second task, incorporating the dynamic nature of these systems in the parameter inference process. One area of focus is accounting for evolutionary events like gene duplication. This could be a post-processing step which will act as model selection step after getting parameter candidates from the ABC procedures as described above. In order to get parameter candidates the algorithms will have to be tweaked because in their current state they give a population centred around a single value. One way to do it could be to employ some form of genetic algorithm of heuristic process to explore other areas of parameter space to get more parameters sets with high  likelihood. Then the model selection among models with the different candidate parameter sets will be done according to how well the competing models behave under evolutionary events such as gene duplication.
+As stated in a previous section the main goals of the project were to create a tool that does automatic parameter estimation in dynamic biological systems and augment that by taking into account in the process other properties and characteristics of the systems such as evolution to make the inference process more powerful and the resulting models more complete. So far only the first part of task has been addressed, namely the automatic parameter estimation problem. The implemented algorithms could be refined by making better choices for the settings like using an adaptive $\epsilon$-schedule for the SMC algorithm and switch to Multivariate Gaussian distribution to account for correlations between parameters. 	The main bulk of the future work will however fall on the second task, incorporating the dynamic nature of these systems in the parameter inference process. One area of focus is accounting for evolutionary events like gene duplication. This could be a post-processing step which will act as model selection step after getting parameter candidates from the ABC procedures as described above. In order to get parameter candidates the algorithms will have to be tweaked because in their current state they give a population centered around a single value. One way to do it could be to employ some form of genetic algorithm of heuristic process to explore other areas of parameter space to get more parameters sets with high  likelihood. Then the model selection among models with the different candidate parameter sets will be done according to how well the competing models behave under evolutionary events such as gene duplication.
 \bibliography{progress}
+\appendix
+\section{Time Management}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{gantt1}
+\caption{Gantt chart for work so far}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{gantt2}
+\caption{Gantt chart for future work.}
+\end{figure}
 \end{document}

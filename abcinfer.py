@@ -19,7 +19,7 @@ import random
 import math
 
 #global vars used throughout
-epsilon = 5
+epsilon = 5.0
 data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
@@ -43,6 +43,7 @@ def generate_dataset(dx_dt, theta):
     t = np.arange(0, 15, 0.1)
     X0 = array([1.0, 0.5])
     X= integrate.odeint(dx_dt, X0, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    #plt.plot(t, X)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
@@ -58,6 +59,7 @@ def add_gaussian_noise(dataset):
     x_noise = np.random.normal(0, 0.5, data_points)
     for i in range(dataset.shape[1]):
         dataset[:,i] = dataset[:,i] + x_noise
+    
     return dataset
 
 def euclidian_distance(dataset, sim_dataset):
@@ -101,6 +103,7 @@ def add_particle(population, sim_theta, theta, sigma):
         if r <= a:
             th = sth
             p.append(th)
+            
 
 def draw_from_jumping(theta, sigma):
     sim_theta = []
@@ -110,6 +113,7 @@ def draw_from_jumping(theta, sigma):
 
 #simple mcmc algorithm creating a separate chain for each parameter
 def mcmc(dx_dt, ds):
+    naccepted = 0
     population = init_list()
     sigma = 3
     rej_streak = 0
@@ -117,15 +121,17 @@ def mcmc(dx_dt, ds):
     #start of with random values for params taken from uniform prior
     theta = np.random.uniform(-5, 5, param_number)
     while counter < 50000:#steps:
+        if len(population[1]) > 500: break
         counter += 1
         sim_theta = draw_from_jumping(theta, sigma)
         sim_dataset = generate_dataset(dx_dt, sim_theta)
         error = euclidian_distance(ds, sim_dataset)
-        print counter, sim_theta, sigma, error
+        print counter, sim_theta, sigma, error, naccepted
         if error <= epsilon:
             rej_streak = 0
             sigma = 0.1
             add_particle(population, sim_theta, theta, sigma)
+            naccepted += 1
         else:
             rej_streak += 1
             if rej_streak > 10:
@@ -204,6 +210,13 @@ def calculate_weights(prev_population, prev_weights, sim_theta):
             weights = np.append(weights, (0.1 / math.fsum(prod)))
     return weights
 
+def show_histogram(population):
+    plt.figure(1)
+    for pop in population:
+        plt.hist(pop)
+        plt.show()
+        plt.figure(2)
+        
 #sequential monte carlo
 def smc(dx_dt, ds, eps_seq):
     i = 0
@@ -218,14 +231,13 @@ def smc(dx_dt, ds, eps_seq):
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
             while naccepted < 500:
                 i += 1
-                sim_theta = draw_uniform(-5,5)
+                sim_theta = draw_uniform(-10,10)
                 print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
-                    
         else: #draw from previous population
             while naccepted < 500:
                 i += 1
@@ -239,6 +251,7 @@ def smc(dx_dt, ds, eps_seq):
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
         #print "current_weights ", t, " ", current_weights
+        show_histogram(current_population)
         populations.append(current_population)
         weights.append(current_weights)
         current_population = init_list()
@@ -253,7 +266,9 @@ def write_to_file(filename,theta):
     for th in theta:
         f.write(str(th) + ",")
         
-def plot_solution(population):
+def plot_solution(population, ds):
+    #ds = generate_dataset(dx_dt, theta)
+    ti = [t/10 for t in times]
     theta1 = np.array([1,1])
     theta = []
     #rint "================================"
@@ -261,7 +276,7 @@ def plot_solution(population):
     plt.figure(1)
     for p in population:
         m = math.fsum(p) / float(len(p))
-        print m
+        print str(m) + " median " +  str(p[len(population)/2])
         theta.append(m)
         plt.hist(p)
         plt.figure(2)
@@ -275,17 +290,24 @@ def plot_solution(population):
     plt.subplot(211)
     plt.plot(t, x, 'r-', label='x(t)')
     plt.plot(t, x1,'g-',label='x(t))')
+    plt.plot(ti, ds[:, 0], marker='s', linestyle='', color='g')
     plt.subplot(212)
     plt.plot(t, y, 'b-', label='y(t)')
     plt.plot(t, y1, 'g-', label='y(t)')
+    plt.plot(ti, ds[:, 1], marker='^', linestyle='', color='g')
     plt.xlabel('time')
     plt.show()
 
 if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
+    #times = [t/10 for t in times]
     ds = add_gaussian_noise(ds)
-    population = rejector_algorithm(dx_dt, ds)
-    plot_solution(population)
+    #plt.plot(times, ds[:, 0], marker='s', linestyle='', color='b')
+    #plt.plot(times, ds[:, 1], marker='^', linestyle='', color='g')
+    plt.show()
+    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
+    
+    plot_solution(population[len(population)-1], ds)
     
 	   
