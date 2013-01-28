@@ -25,7 +25,9 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 8
+weighted_mu = np.zeros(param_number)
+sigma = np.zeros((param_number, param_number))
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -105,7 +107,6 @@ def add_particle(population, sim_theta, theta, sigma):
             th = sth
             p.append(th)
             
-
 def draw_from_jumping(theta, sigma):
     sim_theta = []
     for pth in theta:
@@ -144,12 +145,12 @@ def mcmc(dx_dt, ds):
 
 #returns a weighted distribution from population and associated weights
 def calc_weighted_mean(population, weights):
-         wsum = np.zeros(param_number)
-         sum_weights = 0.0
-         for i in range(len(population)):
-             wsum += population[i]*weights[i]
-             sum_weights += weights[i]
-         return wsum / sum_weights
+    wsum = np.zeros(param_number)
+    sum_weights = 0.0
+    for i in range(len(population)):
+        wsum += population[i]*weights[i]
+        sum_weights += weights[i]
+    return wsum / sum_weights
 
 #returns an np.array with values drawn from uniform(start, end)
 def draw_uniform(start, end):
@@ -159,10 +160,9 @@ def draw_uniform(start, end):
     return theta
 
 #to do: perturb particle before returning
-def sample_from_previous(prev_population, weights):
-    theta = np.array([])
-    weighted_mu = calc_weighted_mean(prev_population, weights)
-    sigma = np.cov(np.vstack(prev_population).T)
+def sample_from_previous(weighted_mu, sigma):
+    #weighted_mu = calc_weighted_mean(prev_population, weights)
+    #sigma = np.cov(np.vstack(prev_population).T)
     particle = np.random.multivariate_normal(weighted_mu, sigma)
     pert_particle = np.random.multivariate_normal(particle, sigma)
     return pert_particle
@@ -181,7 +181,17 @@ def show_histogram(population):
         plt.hist(pop)
         plt.show()
         plt.figure(2)
-        
+
+def norm_weights(weights):
+    sum_weights = math.fsum(weights)
+    n_weights = [weight/sum_weights for weight in weights]
+    return n_weights
+
+def calc_pert_params(prev_population, weights):
+    weighted_mu = calc_weighted_mean(prev_population, weights)
+    sigma = np.cov(np.vstack(prev_population).T)
+    return weighted_mu, sigma
+
 #sequential monte carlo
 def smc(dx_dt, ds, eps_seq):
     i = 0
@@ -204,9 +214,10 @@ def smc(dx_dt, ds, eps_seq):
                     current_population.append(sim_theta)
                     current_weights.append(1)
         else: #draw from previous population
+            weighted_mu, sigma = calc_pert_params(populations[t-1], weights[t-1])
             while naccepted < 100:
                 i += 1
-                sim_theta = sample_from_previous(populations[t-1], weights[t-1])
+                sim_theta = sample_from_previous(weighted_mu, sigma)
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 print i, sim_theta, error, naccepted
@@ -216,7 +227,7 @@ def smc(dx_dt, ds, eps_seq):
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
                     current_weights.append(wei)
         populations.append(current_population)
-        weights.append(current_weights)
+        weights.append(norm_weights(current_weights))
         current_population = []
         current_weights = []
         t += 1
@@ -233,16 +244,8 @@ def plot_solution(population, ds):
     #ds = generate_dataset(dx_dt, theta)
     ti = [t/10 for t in times]
     theta1 = np.array([1,1])
-    theta = []
-    #rint "================================"
-    #rint population
     plt.figure(1)
-    for p in population:
-        m = math.fsum(p) / float(len(p))
-        print str(m) + " median " +  str(p[len(population)/2])
-        theta.append(m)
-        plt.hist(p)
-        plt.figure(2)
+    theta = utils.colMeans(np.vstack(population))
     X0 = np.array([1, 0.5])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, X0, t, args=(theta,))
@@ -264,15 +267,10 @@ def plot_solution(population, ds):
 if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
-    #times = [t/10 for t in times]
     ds = add_gaussian_noise(ds)
-    #plt.plot(times, ds[:, 0], marker='s', linestyle='', color='b')
-    #plt.plot(times, ds[:, 1], marker='^', linestyle='', color='g')
-    #plt.show()
-    population = smc(dx_dt, ds, [30.0, 16.0, 12.0, 8.0, 5.0])
-    print population
-    
-#    plot_solution(population[len(population)-1], ds)
+    population = smc(dx_dt, ds, [30.0, 16.0, 12.0, 8.0, 5.0, 4.3])
+    last_population = population[len(population)-1]
+    plot_solution(population[len(population)-1], ds)
     
 
 	   
