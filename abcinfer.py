@@ -17,6 +17,7 @@ np.seterr(all='ignore')
 import matplotlib.pyplot as plt
 import random
 import math
+import stats_util as utils
 
 #global vars used throughout
 epsilon = 5.0
@@ -182,19 +183,15 @@ def add_weights_to_list(c_weights, wei):
 
 #to do: perturb particle before returning
 def sample_from_previous(prev_population, weights):
-    #from itertools import izip
-    #X = np.vstack((prev_population))
-    #Sigma = np.cov(X)
-    #mu = [calc_weighted_mean(pop,wei) for pop,wei in izip(prev_population, weights)]
-    #theta = np.random.multivariate_normal(mu, Sigma)
-    #return np.random.multivariate_normal(theta, Sigma)
     from scipy.stats import tstd
     theta = np.array([])
     for i in range(param_number):
         weighted_mu = calc_weighted_mean(prev_population[i], weights[i])
-        sigma = tstd(prev_population[i])
+        #sigma = 0.5 * (np.max(prev_population[i]) - np.min(prev_population[i]))
+        sigma = (tstd(prev_population[i]))
         particle = np.random.normal(weighted_mu, sigma)
-        pert_particle = np.random.normal(particle, sigma)
+        pert_sigma = 2 * sigma
+        pert_particle = np.random.normal(particle, pert_sigma)
         theta = np.append(theta, pert_particle)
     return theta
 
@@ -216,7 +213,17 @@ def show_histogram(population):
         plt.hist(pop)
         plt.show()
         plt.figure(2)
-        
+
+def norm_weights(weights):
+     norm_weights = []
+     for weight in weights:
+         cn_weight = []
+         w_sum = math.fsum(weight) 
+         for w in weight:
+             cn_weight.append(w / w_sum)
+             norm_weights.append(cn_weight)
+     return norm_weights
+
 #sequential monte carlo
 def smc(dx_dt, ds, eps_seq):
     i = 0
@@ -229,7 +236,7 @@ def smc(dx_dt, ds, eps_seq):
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
-            while naccepted < 500:
+            while naccepted < 100:
                 i += 1
                 sim_theta = draw_uniform(-10,10)
                 print i, sim_theta, naccepted
@@ -239,7 +246,7 @@ def smc(dx_dt, ds, eps_seq):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            while naccepted < 500:
+            while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
@@ -251,9 +258,9 @@ def smc(dx_dt, ds, eps_seq):
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
         #print "current_weights ", t, " ", current_weights
-        show_histogram(current_population)
+        #show_histogram(current_population)
         populations.append(current_population)
-        weights.append(current_weights)
+        weights.append(norm_weights(current_weights))
         current_population = init_list()
         current_weights = init_list()
         t += 1
@@ -306,7 +313,7 @@ if __name__ == "__main__":
     #plt.plot(times, ds[:, 0], marker='s', linestyle='', color='b')
     #plt.plot(times, ds[:, 1], marker='^', linestyle='', color='g')
     plt.show()
-    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
+    population = smc(dx_dt, ds, [30.0,16.0,12.0, 8.0, 5.0, 4.3])
     
     plot_solution(population[len(population)-1], ds)
     
