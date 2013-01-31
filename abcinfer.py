@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 import stats_util as utils
+import sys
 
 #global vars used throughout
 epsilon = 5.0
@@ -25,7 +26,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 8
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -204,7 +205,7 @@ def calculate_weights(prev_population, prev_weights, sim_theta):
         prod = []
         for w,th in izip(prev_weights[i], prev_population[i]):
             prod.append(w * norm(sim_theta[i], tstd(prev_population[i])).pdf(th))
-            weights = np.append(weights, (0.1 / math.fsum(prod)))
+        weights = np.append(weights, (0.1 / math.fsum(prod)))
     return weights
 
 def show_histogram(population):
