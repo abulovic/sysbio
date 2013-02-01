@@ -46,21 +46,21 @@ def generate_dataset(dx_dt, theta):
     t = np.arange(0, 15, 0.1)
     X0 = array([1.0, 0.5])
     X= integrate.odeint(dx_dt, X0, t, args=(theta,),mxhnil=0,hmin=1e-20)
-    #plt.plot(t, X)
-    for i in range(data_points):
+    for i in xrange(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
 
 #create a datapoint from 
 def create_datapoint(data):
-    datapoint = np.array([])
-    for x in data:
-        datapoint = np.append(datapoint, x)
+    data_n = len(data)
+    datapoint = np.zeros(data_n)
+    for i in xrange(data_n):
+        datapoint[i] = data[i]#np.append(datapoint, x)
     return datapoint
 
 def add_gaussian_noise(dataset):
     x_noise = np.random.normal(0, 0.5, data_points)
-    for i in range(dataset.shape[1]):
+    for i in xrange(dataset.shape[1]):
         dataset[:,i] = dataset[:,i] + x_noise
     
     return dataset
@@ -68,7 +68,7 @@ def add_gaussian_noise(dataset):
 def euclidian_distance(dataset, sim_dataset):
     sq_error = 0
     from scipy.spatial.distance import sqeuclidean
-    for i in range(dataset.shape[1]):
+    for i in xrange(dataset.shape[1]):
         sq_error += sqeuclidean(sim_dataset[:,i],dataset[:,i])
     return sq_error
 
@@ -147,7 +147,7 @@ def mcmc(dx_dt, ds):
 def calc_weighted_mean(population, weights):
     wsum = np.zeros(param_number)
     sum_weights = 0.0
-    for i in range(len(population)):
+    for i in xrange(len(population)):
         wsum += population[i]*weights[i]
         sum_weights += weights[i]
     return wsum / sum_weights
@@ -155,7 +155,7 @@ def calc_weighted_mean(population, weights):
 #returns an np.array with values drawn from uniform(start, end)
 def draw_uniform(start, end):
     theta = np.array([])
-    for i in range(param_number):
+    for i in xrange(param_number):
         theta = np.append(theta, np.random.uniform(start, end))
     return theta
 
@@ -215,6 +215,8 @@ def smc(dx_dt, ds, eps_seq):
     weights = []
     current_weights = []
     current_population = []
+    cpopulation_append = current_population.append
+    cweights_append = current_weights.append
     for epsilon in eps_seq:
         print "population", t
         if eps_seq.index(epsilon) == 0: #if first population draw from prior
@@ -225,8 +227,8 @@ def smc(dx_dt, ds, eps_seq):
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     naccepted += 1
-                    current_population.append(sim_theta)
-                    current_weights.append(1)
+                    cpopulation_append(sim_theta)
+                    cweights_append(1)
         else: #draw from previous population
             #weighted_mu, sigma = calc_pert_params(populations[t-1], weights[t-1])
             while naccepted < 100:
@@ -238,8 +240,10 @@ def smc(dx_dt, ds, eps_seq):
                 if error <= epsilon:
                     naccepted += 1
                     current_population.append(sim_theta)
+                    #cpopulation_append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
-                    current_weights.append(wei)
+                    current_weights.append(wei)#cweights_append(wei)
+        print current_population
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         current_population = []
@@ -255,7 +259,6 @@ def write_to_file(filename,theta):
         f.write(str(th) + ",")
         
 def plot_solution(population, ds):
-    #ds = generate_dataset(dx_dt, theta)
     ti = [t/10 for t in times]
     theta1 = np.array([1,1])
     plt.figure(1)
