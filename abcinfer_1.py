@@ -26,8 +26,8 @@ data_points = 8
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
 param_number = 8
-weighted_mu = np.zeros(param_number)
-sigma = np.zeros((param_number, param_number))
+#weighted_mu = np.zeros(param_number)
+#sigma = np.zeros((param_number, param_number))
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -117,7 +117,7 @@ def draw_from_jumping(theta, sigma):
 def mcmc(dx_dt, ds):
     naccepted = 0
     population = init_list()
-    sigma = 3
+    sigma = 5
     rej_streak = 0
     counter = 0
     #start of with random values for params taken from uniform prior
@@ -139,7 +139,7 @@ def mcmc(dx_dt, ds):
             if rej_streak > 10:
                 theta = np.random.uniform(-5, 5, param_number)
                 rej_streak = 0
-                sigma = 3
+                sigma = 1
     print "steps taken ", counter
     return population
 
@@ -159,12 +159,26 @@ def draw_uniform(start, end):
         theta = np.append(theta, np.random.uniform(start, end))
     return theta
 
+def get_pert_sigma(prev_population, sim_theta):
+    M = 20
+    from scipy.spatial.distance import sqeuclidean
+    distances = []
+    for p in prev_population:
+        distances.append(sqeuclidean(p, sim_theta))
+
+    nearest = []
+    indices = [i[0] for i in sorted(enumerate(distances), key=lambda x:x[1])]
+    for index in indices[:M]:
+        nearest.append(prev_population[index])
+    return np.cov(np.vstack(nearest).T)
+
 #to do: perturb particle before returning
-def sample_from_previous(weighted_mu, sigma):
-    #weighted_mu = calc_weighted_mean(prev_population, weights)
-    #sigma = np.cov(np.vstack(prev_population).T)
+def sample_from_previous(prev_population, weights):
+    weighted_mu = calc_weighted_mean(prev_population, weights)
+    sigma = np.cov(np.vstack(prev_population).T)
     particle = np.random.multivariate_normal(weighted_mu, sigma)
-    pert_particle = np.random.multivariate_normal(particle, sigma)
+    pert_sigma = get_pert_sigma(prev_population, particle)
+    pert_particle = np.random.multivariate_normal(particle, pert_sigma)
     return pert_particle
 
 def calculate_weight(prev_population, prev_weights, sim_theta):
@@ -216,10 +230,10 @@ def smc(dx_dt, ds, eps_seq):
                     cpopulation_append(sim_theta)
                     cweights_append(1)
         else: #draw from previous population
-            weighted_mu, sigma = calc_pert_params(populations[t-1], weights[t-1])
+            #weighted_mu, sigma = calc_pert_params(populations[t-1], weights[t-1])
             while naccepted < 100:
                 i += 1
-                sim_theta = sample_from_previous(weighted_mu, sigma)
+                sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 print i, sim_theta, error, naccepted
@@ -271,9 +285,10 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = smc(dx_dt, ds, [30.0, 16.0, 12.0, 8.0, 5.0, 4.3])
+    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0])
+    #population = smc(dx_dt,ds)
     last_population = population[len(population)-1]
-    plot_solution(population[len(population)-1], ds)
+    plot_solution(last_population, ds)
     
 
 	   
