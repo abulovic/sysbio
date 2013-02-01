@@ -25,7 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 8
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -94,12 +94,13 @@ def calc_a(sim_th, theta, sigma):
     prop_th = jumping_dist_sim.pdf(theta)
     jumping_dist = norm(theta,sigma)
     prop_simth = jumping_dist_sim.pdf(sim_th)
-    likelihood = (0.1 * prop_th) / (0.1 * prop_simth)
+    likelihood = (0.05 * prop_th) / (0.05 * prop_simth)
     return min(1, likelihood)
 
 def add_particle(population, sim_theta, theta, sigma):
     for p, sth, th in izip(population, sim_theta, theta):
         a = calc_a(sth, th, sigma)
+        print "a", a
         r = random.randint(0,1)
         if r <= a:
             th = sth
@@ -116,7 +117,7 @@ def draw_from_jumping(theta, sigma):
 def mcmc(dx_dt, ds):
     naccepted = 0
     population = init_list()
-    sigma = 3
+    sigma = 5
     rej_streak = 0
     counter = 0
     #start of with random values for params taken from uniform prior
@@ -135,12 +136,38 @@ def mcmc(dx_dt, ds):
             naccepted += 1
         else:
             rej_streak += 1
-            if rej_streak > 10:
+            if rej_streak > 50:
                 theta = np.random.uniform(-5, 5, param_number)
                 rej_streak = 0
-                sigma = 3
+                sigma = 5
     print "steps taken ", counter
     return population
+
+def mcmc_orig(dx_dt, ds):
+    naccepted = 0
+    population = init_list()
+    sigma = 5
+    rej_streak = 0
+    counter = 0
+    #start of with random values for params taken from uniform prior
+    theta = np.random.uniform(-5, 5, param_number)
+    while counter < 50000:#steps:
+        if len(population[1]) > 500: break
+        counter += 1
+        sim_theta = draw_from_jumping(theta, sigma)
+        sim_dataset = generate_dataset(dx_dt, sim_theta)
+        error = euclidian_distance(ds, sim_dataset)
+        print counter, sim_theta, sigma, error, naccepted
+        if error <= epsilon:
+            rej_streak = 0
+            #sigma = 0.1
+            population.append(sim_theta)
+            naccepted += 1
+        else:
+            add_particle(population, sim_theta, theta, sigma)
+    print "steps taken ", counter
+    return population
+
 
 #returns a weighted distribution from population and associated weights
 def calc_weighted_mean(population, weights):
@@ -239,7 +266,7 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 100:
                 i += 1
                 sim_theta = draw_uniform(-10,10)
-                print i, sim_theta, naccepted
+                #print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     naccepted += 1
@@ -251,7 +278,7 @@ def smc(dx_dt, ds, eps_seq):
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
-                print i, sim_theta, error, naccepted
+                #print i, sim_theta, error, naccepted
                 if error <= epsilon:
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
@@ -313,8 +340,8 @@ if __name__ == "__main__":
     #plt.plot(times, ds[:, 0], marker='s', linestyle='', color='b')
     #plt.plot(times, ds[:, 1], marker='^', linestyle='', color='g')
     plt.show()
-    population = smc(dx_dt, ds, [30.0,16.0,12.0, 8.0, 5.0, 4.3])
+    population = mcmc_orig(dx_dt, ds)#, [30.0,16.0,6.0, 5.0, 4.3])
     
-    plot_solution(population[len(population)-1], ds)
+    plot_solution(population, ds)
     
 	   
