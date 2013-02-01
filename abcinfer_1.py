@@ -25,7 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 8
+param_number = 2
 #weighted_mu = np.zeros(param_number)
 #sigma = np.zeros((param_number, param_number))
 
@@ -285,10 +285,10 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    #population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0])
-    population = mcmc(dx_dt,ds)
+    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0])
+    #population = smc(dx_dt,ds)
     last_population = population[len(population)-1]
-    plot_solution(population, ds)
+    plot_solution(last_population, ds)
     
 
 	   
