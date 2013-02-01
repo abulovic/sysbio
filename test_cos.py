@@ -82,7 +82,8 @@ def plot_solution(population):
     
 if __name__ == "__main__":
     ds = generate_data()
-    population = abc.smc(dx_dt, ds, [30.0, 20.0, 15.0, 10.0 ,8.0])
+    population = abc.smc(dx_dt, ds, [30.0, 20.0, 15.0, 10.0, 8.0, 6.0])
+    #last_population = abc.mcmc(dx_dt, ds)
     last_population = population[len(population)-1]
     plot_solution(last_population)
     #theta = utils.colMeans(np.vstack(last_population))
