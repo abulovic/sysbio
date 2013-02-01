@@ -5,7 +5,7 @@ from scipy import array
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import abcinfer_1 as abc
+import abcinfer as abc
 import numpy as np
 import stats_util as utils
 times = (1.1, 2.4, 3.9, 5.6, 7.5, 9.6, 11.9,14.4)
