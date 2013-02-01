@@ -25,7 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 8
 #weighted_mu = np.zeros(param_number)
 #sigma = np.zeros((param_number, param_number))
 
