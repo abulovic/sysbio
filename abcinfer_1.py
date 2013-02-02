@@ -25,9 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 8
-#weighted_mu = np.zeros(param_number)
-#sigma = np.zeros((param_number, param_number))
+param_number = 2
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -160,7 +158,7 @@ def draw_uniform(start, end):
     return theta
 
 def get_pert_sigma(prev_population, sim_theta):
-    M = 20
+    M = (int) (len(prev_population) * 0.2)
     from scipy.spatial.distance import sqeuclidean
     distances = []
     for p in prev_population:
@@ -285,7 +283,7 @@ if __name__ == "__main__":
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0])
+    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
     #population = smc(dx_dt,ds)
     last_population = population[len(population)-1]
     plot_solution(last_population, ds)
