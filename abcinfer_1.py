@@ -25,7 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 8
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -39,11 +39,10 @@ def dx_dt(X,t,theta):
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
     return y
 
-def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 2])
+def generate_dataset(dx_dt, theta, init):
+    dataset = np.zeros([data_points, 3])
     t = np.arange(0, 15, 0.1)
-    X0 = array([1.0, 0.5])
-    X= integrate.odeint(dx_dt, X0, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in xrange(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
@@ -53,7 +52,7 @@ def create_datapoint(data):
     data_n = len(data)
     datapoint = np.zeros(data_n)
     for i in xrange(data_n):
-        datapoint[i] = data[i]#np.append(datapoint, x)
+        datapoint[i] = data[i]
     return datapoint
 
 def add_gaussian_noise(dataset):
@@ -175,7 +174,7 @@ def sample_from_previous(prev_population, weights):
     weighted_mu = calc_weighted_mean(prev_population, weights)
     sigma = np.cov(np.vstack(prev_population).T)
     particle = np.random.multivariate_normal(weighted_mu, sigma)
-    pert_sigma = get_pert_sigma(prev_population, particle)
+    pert_sigma = 2 * sigma#get_pert_sigma(prev_population, particle)
     pert_particle = np.random.multivariate_normal(particle, pert_sigma)
     return pert_particle
 
@@ -228,7 +227,6 @@ def smc(dx_dt, ds, eps_seq):
                     cpopulation_append(sim_theta)
                     cweights_append(1)
         else: #draw from previous population
-            #weighted_mu, sigma = calc_pert_params(populations[t-1], weights[t-1])
             while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
@@ -238,10 +236,8 @@ def smc(dx_dt, ds, eps_seq):
                 if error <= epsilon:
                     naccepted += 1
                     current_population.append(sim_theta)
-                    #cpopulation_append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
-                    current_weights.append(wei)#cweights_append(wei)
-        print current_population
+                    current_weights.append(wei)
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         current_population = []
@@ -284,8 +280,7 @@ if __name__ == "__main__":
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
     population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
-    #population = smc(dx_dt,ds)
-    last_population = population[len(population)-1]
+    last_population = population[-1:]
     plot_solution(last_population, ds)
     
 
