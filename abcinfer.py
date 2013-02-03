@@ -218,7 +218,7 @@ def sample_from_previous(prev_population, weights):
         #sigma = 0.5 * (np.max(prev_population[i]) - np.min(prev_population[i]))
         sigma = (tstd(prev_population[i]))
         particle = np.random.normal(weighted_mu, sigma)
-        pert_sigma = 2 * sigma
+        pert_sigma = 10.0#2 * sigma
         pert_particle = np.random.normal(particle, pert_sigma)
         theta = np.append(theta, pert_particle)
     return theta
@@ -267,7 +267,7 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 100:
                 i += 1
                 sim_theta = draw_uniform(-10,10)
-                #print i, sim_theta, naccepted
+                print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 if euclidian_distance(sim_dataset, ds) < epsilon:
                     naccepted += 1
@@ -279,7 +279,7 @@ def smc(dx_dt, ds, eps_seq):
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
-                #print i, sim_theta, error, naccepted
+                print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
