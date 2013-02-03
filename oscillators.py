@@ -62,6 +62,7 @@ def dA_dt(A, t, theta):
                (b1*A[0]**p / (k1 + A[0]**p) - d1*A[1])])
     return y
 
+#hes1 model as found in http://arxiv.org/abs/1106.6280
 def hes1(M, t, theta):
     P0 = theta[0]
     v = theta[1]
@@ -75,16 +76,27 @@ def hes1(M, t, theta):
     return y
 
 def main():
-    theta =  [2.4, 0.02, 0.2, 6.9 ]
+    theta = [2.4, 0.02, 0.2, 6.9 ]
+    theta1 = [  1.30650628e+03   ,5.23701418e-02   ,2.02064580e-01,  -2.24290866e+03]
     M0 = np.array([2.0, 5.0, 3.0])
-    ds = abc.generate_dataset(hes1, theta, M0)
-    print ds
+    ds = abc.generate_dataset(hes1, theta)
+    noisy_ds = abc.add_gaussian_noise(np.copy(ds))
+    populations = abc.smc(hes1, noisy_ds, [160.0, 120.0, 80.0, 60.0, 40.0, 30.0, 20.0, 15.0, 10.0,8.0, 6.0,5.0,4.3])
     sys.exit(0)
+    t = np.arange(0, 15, 0.1)
     M = integrate.odeint(hes1, M0, t, args=(theta, ))
+    M1 = integrate.odeint(hes1, M0, t, args=(theta1, ))
     m,p1,p2 = M.T
+    m1, p11, p21 = M1.T
+    plt.subplot(311)
     plt.plot(t, m, 'r-')
-    plt.plot(t, p1,'b-')
-    plt.plot(t, p2,'g-')
+    plt.plot(t, m1, 'b-')
+    plt.subplot(312)
+    plt.plot(t, p1,'r-')
+    plt.plot(t, p11,'b-')
+    plt.subplot(313)
+    plt.plot(t, p2,'r-')
+    plt.plot(t, p21,'b-')
     plt.show()
 
 def fourier():
