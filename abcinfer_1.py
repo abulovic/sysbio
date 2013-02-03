@@ -25,7 +25,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 8
+param_number = 4
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -39,8 +39,9 @@ def dx_dt(X,t,theta):
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
     return y
 
-def generate_dataset(dx_dt, theta, init):
+def generate_dataset(dx_dt, theta):
     dataset = np.zeros([data_points, 3])
+    init = np.array([2.0, 5.0, 3.0])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in xrange(data_points):
@@ -232,7 +233,7 @@ def smc(dx_dt, ds, eps_seq):
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
-                print i, sim_theta, error, naccepted
+                print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     naccepted += 1
                     current_population.append(sim_theta)
