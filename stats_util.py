@@ -15,3 +15,18 @@ def colMeans(X):
     for i in range(col_num):
         mean[i] = np.mean(X[:,i])
     return mean
+
+def average(population):
+    pop_sum = 0.0
+    for p in population:
+        pop_sum += p
+    return pop_sum / len(population)
+
+def var(population):
+     n = len(population)
+     dev_sum = 0.0
+     mean = average(population)
+     for p in population:
+         dev_sum += (p - mean)**2
+     return dev_sum / (n-1)
+

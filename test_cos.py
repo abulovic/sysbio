@@ -5,7 +5,7 @@ from scipy import array
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import abcinfer as abc
+import abcinfer_1 as abc
 import numpy as np
 import stats_util as utils
 times = (1.1, 2.4, 3.9, 5.6, 7.5, 9.6, 11.9,14.4)
@@ -79,10 +79,33 @@ def plot_solution(population):
     plt.plot(t, np.cos(t+1), 'g-', label='y(t)')
     plt.xlabel('time')
     plt.show()
-    
+
+def dist(nds, ds):
+    sum_dist = 0.0
+    for i in range(len(ds)):
+        err = (nds[i][0] - ds[i][0])**2 + (nds[i][1] - ds[i][1])**2
+        print "err: ", err
+        sum_dist += err
+    print "sum_dist: ", sum_dist
+    return sum_dist
+
+#simple clock model with 2 genes A,B
+def dA_dt(A, t, theta):
+    k = theta[0]
+    c = theta[1]
+    b = theta[2]
+    d = theta[3]
+    b1 = theta[4]
+    p = theta[5]
+    k1 = theta[6]
+    d1 = theta[7]
+    y = array([(A[1]*A[0] / (k + A[0])) - c / (b + A[1]) - d*A[0],
+               (b1*A[0]**p / (k1 + A[0]**p) - d1*A[1])])
+    return y
+
 if __name__ == "__main__":
     ds = generate_data()
-    population = abc.smc(dx_dt, ds, [30.0, 20.0, 15.0, 10.0, 8.0, 6.0])
+    population = abc.smc(dx_dt, ds, [30.0, 16.0, 12.0, 10.0, 8.0,7.5,7.0,6.5, 6.0,5.5,5.0])
     #last_population = abc.mcmc(dx_dt, ds)
     last_population = population[len(population)-1]
     plot_solution(last_population)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  11 DEC 2012 15:25
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  28 JAN 2013 11:31
 entering extended mode
  %&-line parsing enabled.
 **progress.tex
@@ -455,7 +455,7 @@ type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/
 amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm
 /cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
 /usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on progress.pdf (15 pages, 453671 bytes).
+Output written on progress.pdf (15 pages, 453469 bytes).
 PDF statistics:
  305 PDF objects out of 1000 (max. 8388607)
  71 named destinations out of 1000 (max. 500000)
