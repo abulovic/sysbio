@@ -26,7 +26,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 8
+param_number = 4
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -41,10 +41,11 @@ def dx_dt(X,t,theta):
     return y
 
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 2])
+    dataset = np.zeros([data_points, 3])
+    init = np.array([2.0, 5.0, 3.0])
     t = np.arange(0, 15, 0.1)
     X0 = array([1.0, 0.5])
-    X= integrate.odeint(dx_dt, X0, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     #plt.plot(t, X)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
@@ -209,6 +210,9 @@ def add_weights_to_list(c_weights, wei):
         c_weights[i].append(wei[i])
     return c_weights
 
+def get_pert_sigma(prev_population):
+    return 0.5*(max(prev_population) - min(prev_population))
+
 #to do: perturb particle before returning
 def sample_from_previous(prev_population, weights):
     from scipy.stats import tstd
@@ -218,8 +222,9 @@ def sample_from_previous(prev_population, weights):
         #sigma = 0.5 * (np.max(prev_population[i]) - np.min(prev_population[i]))
         sigma = (tstd(prev_population[i]))
         particle = np.random.normal(weighted_mu, sigma)
-        pert_sigma = 10.0#2 * sigma
-        pert_particle = np.random.normal(particle, pert_sigma)
+        pert_sigma = get_pert_sigma(prev_population[i])
+        #pert_particle = np.random.normal(particle, pert_sigma)
+        pert_particle = np.random.uniform(particle-pert_sigma, particle+pert_sigma)
         theta = np.append(theta, pert_particle)
     return theta
 
