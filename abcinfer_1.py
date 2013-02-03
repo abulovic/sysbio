@@ -18,6 +18,8 @@ import matplotlib.pyplot as plt
 import random
 import math
 import stats_util as utils
+from scipy.stats.mstats import mquantiles
+import sys
 
 #global vars used throughout
 epsilon = 5.0
@@ -25,7 +27,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 4
+param_number = 8
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -40,8 +42,9 @@ def dx_dt(X,t,theta):
     return y
 
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 3])
-    init = np.array([2.0, 5.0, 3.0])
+    dataset = np.zeros([data_points, 2])
+    #init = np.array([2.0, 5.0, 3.0])
+    init = np.array([1, 0.5])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in xrange(data_points):
@@ -213,17 +216,23 @@ def smc(dx_dt, ds, eps_seq):
     weights = []
     current_weights = []
     current_population = []
+    distances_prev = []
     cpopulation_append = current_population.append
     cweights_append = current_weights.append
-    for epsilon in eps_seq:
+    epsilon = eps_seq[0]
+    prev_epsilon = eps_seq[0]
+    #for epsilon in eps_seq:
+    while True:
         print "population", t
-        if eps_seq.index(epsilon) == 0: #if first population draw from prior
+        if t == 0:#eps_seq.index(epsilon) == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
                 sim_theta = draw_uniform(-10,10)
                 print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
-                if euclidian_distance(sim_dataset, ds) < epsilon:
+                error = euclidian_distance(sim_dataset, ds)
+                if error < epsilon:
+                    distances_prev.append(error)
                     naccepted += 1
                     cpopulation_append(sim_theta)
                     cweights_append(1)
@@ -235,14 +244,19 @@ def smc(dx_dt, ds, eps_seq):
                 error = euclidian_distance(sim_dataset, ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
+                    distances_prev.append(error)
                     naccepted += 1
                     current_population.append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
                     current_weights.append(wei)
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
+        epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
+        if prev_epsilon - epsilon < 0.05: break
+        else: prev_epsilon = epsilon
         current_population = []
         current_weights = []
+        distances_prev = []
         t += 1
         naccepted = 0
     return populations
