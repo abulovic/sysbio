@@ -75,6 +75,15 @@ def hes1(M, t, theta):
                 -kdeg*M[2] + k1*M[1]])
     return y
 
+def switch(S, t, theta):
+    m1 = theta[0]
+    m2 = theta[1]
+    k1 = theta[2]
+    k2 = theta[3]
+    n = theta[4]
+    y = array([k1/(1 + S[1]**n) - m1*S[0], k2/(1 + S[0]**n) - m2*S[1], k2/(1 + S[0]**n) - m2*S[2]])
+    return y
+
 def main():
     theta = [2.4, 0.02, 0.2, 6.9 ]
     theta1 = [  1.37327745e+04   ,1.46981207e-02   ,1.99460716e-01  ,-8.26157999e+04]
