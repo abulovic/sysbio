@@ -9,6 +9,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import abcinfer_1 as abc
 import math
 import sys
+from scipy.spatial.distance import euclidean
+import stats_util as utils
 
 #simple system that undergoes a hopf bifurcation
 def dX_dt(X, t):
@@ -102,32 +104,41 @@ def main():
     plt.plot(t, p21,'b-')
     plt.show()
 
+def fourier_compare(x, x1):
+    fx = np.fft.fft(x)
+    fx1 = np.fft.fft(x1)
+    main_ind = []
+    main_vals = []
+    for ind, x in enumerate(fx):
+        if x > 10.0:
+            main_ind.append(ind)
+            main_vals.append(abs(x))
+
+    main_vals1 = utils.select(fx1, main_ind)
+    return euclidean(main_vals, main_vals1)
+    
 def fourier():
     X0 = np.array([1, 0.5])
     theta = np.array([1 ,1])
-    theta1 = np.array([5 ,1])
+    theta1 = np.array([1.5, 1])
     t = np.linspace(0, 15, 100)
     X  = integrate.odeint(lv, X0, t, args=(theta,))
     X1 = integrate.odeint(lv, X0, t, args=(theta1,))
     x,y = X.T
     x1,y1 = X1.T
-    #fig = plt.figure()
-    #ax = fig.gca(projection='3d')
-    #x.plot(x, y)
     plt.figure(1)
     plt.plot(t,x1)
     plt.plot(t,y1)
     plt.figure(2)
     plt.plot(t,x)
     plt.plot(t,y)
-    fx = np.fft.fft(x)
-    fx1 = np.fft.fft(x1)
-    print fx
-    #plt.plot(t,z)
-    #plt.figure(3)
-    #hx = np.fft.fft(x)
-    #plt.plot(hx)
+    print fourier_compare(y, y1)
+    sys.exit()
+    plt.figure(3)
+    plt.plot(mfx, 'ro')
+    plt.plot(mfx1, 'bo')
+    #print "distance between transforms: ", euclidean(mfx, mfx1)
     plt.show()
     
 if __name__ == '__main__':
-    main()
+    fourier()
