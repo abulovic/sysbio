@@ -30,3 +30,9 @@ def var(population):
          dev_sum += (p - mean)**2
      return dev_sum / (n-1)
 
+def select(lst, ind):
+    filtered = [0.0] * len(ind)
+    for i, ind in enumerate(ind):
+        filtered[i] = abs(lst[ind])
+    return filtered
+
