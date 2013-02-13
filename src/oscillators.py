@@ -6,7 +6,7 @@ from scipy import spatial
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import abcinfer_1 as abc
+import abcinfer_multi_thr as abc
 import math
 import sys
 from scipy.spatial.distance import euclidean
@@ -156,6 +156,20 @@ def lv_test():
     ds = abc.add_gaussian_noise(ds)
     population = abc.smc(lv, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
     sys.exit(0)
-    
+
+#numerical differentiation
+def derive(f, a, h=0.01, epsilon = 1e-7):
+    f1 = (f(a+h)-f(a))/h
+    while True:
+        h /= 2.
+        f2 = (f(a+h)-f(a))/h
+        diff = abs(f2-f1)
+        f1 = f2
+        if diff<epsilon: break
+    return f2
+
+def derive_test():
+    print derive(lambda x: x**2 , 2)
+
 if __name__ == '__main__':
-    lv_test()
+    derive_test()
