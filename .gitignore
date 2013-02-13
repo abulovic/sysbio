@@ -1,3 +1,9 @@
-git rm -r --cached abcinfer.pyc
+git rm -r --cached *.pyc
 
-git rm --cached abcinfer.pyc
+git rm --cached *.pyc
+
+git rm --cached *.so
+
+git rm --cached *.c
+
+
