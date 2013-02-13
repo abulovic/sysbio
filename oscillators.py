@@ -12,6 +12,7 @@ import sys
 from scipy.spatial.distance import euclidean
 import stats_util as utils
 
+
 #simple system that undergoes a hopf bifurcation
 def dX_dt(X, t):
     ka = 2.5
@@ -129,7 +130,7 @@ def fourier_compare(x, x1):
 def fourier():
     X0 = np.array([1, 0.5])
     theta = np.array([1 ,1])
-    theta1 = np.array([1.5, 1])
+    theta1 = np.array([5, 8])
     t = np.linspace(0, 15, 100)
     X  = integrate.odeint(lv, X0, t, args=(theta,))
     X1 = integrate.odeint(lv, X0, t, args=(theta1,))
@@ -141,13 +142,20 @@ def fourier():
     plt.figure(2)
     plt.plot(t,x)
     plt.plot(t,y)
-    print fourier_compare(y, y1)
-    sys.exit()
-    plt.figure(3)
-    plt.plot(mfx, 'ro')
-    plt.plot(mfx1, 'bo')
+    print (fourier_compare(y, y1) + fourier_compare(x, x1)) / 2 #take the distance of the fourier spectra along all signals
+    #sys.exit()
+    #plt.figure(3)
+    #plt.plot(mfx, 'ro')
+    #plt.plot(mfx1, 'bo')
     #print "distance between transforms: ", euclidean(mfx, mfx1)
     plt.show()
+
+def lv_test():
+    theta = [1,1]
+    ds = abc.generate_dataset(lv, theta)
+    ds = abc.add_gaussian_noise(ds)
+    population = abc.smc(lv, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
+    sys.exit(0)
     
 if __name__ == '__main__':
-    fourier()
+    lv_test()
