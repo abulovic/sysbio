@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import abcinfer_1 as abc
+import abcinfer_multi_thr as abc
 
 def main():
     abc.main()
