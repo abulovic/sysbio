@@ -30,7 +30,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 4
+param_number = 2
 eta = 0.3
 
 def summary(theta):
@@ -46,9 +46,9 @@ def dx_dt(X,t,theta):
     return y
 
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 3])
-    init = np.array([2.0, 5.0, 3.0])
-    #init = np.array([1, 0.5])
+    dataset = np.zeros([data_points, 2])
+    #init = np.array([2.0, 5.0, 3.0])
+    init = np.array([1, 0.5])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in xrange(data_points):
@@ -56,8 +56,8 @@ def generate_dataset(dx_dt, theta):
     return dataset
 
 def generate_dataset_full(dx_dt, theta):
-    #init = np.array([1, 0.5])
-    init = np.array([2.0, 5.0, 3.0])
+    init = np.array([1, 0.5])
+    #init = np.array([2.0, 5.0, 3.0])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     return X
@@ -118,6 +118,10 @@ def rejector_algorithm(dx_dt, ds):
             population = add_particle_to_list(population, theta)
     return population
 
+def init_list(lst, times):
+    for i in xrange(times):
+        lst.append([])
+        
 def calc_a(sim_th, theta, sigma):
     prior_sim = uniform(-10,10)
     pth_sim = prior_sim.pdf(sim_th)
@@ -236,6 +240,15 @@ def calc_pert_params(prev_population, weights):
     sigma = np.cov(np.vstack(prev_population).T)
     return weighted_mu, sigma
 
+def split_params(c_population):
+    num_params = np.shape(c_population)[1]
+    list_params = []
+    init_list(list_params, num_params)
+    for particle in c_population:
+        for ind, item in enumerate(particle):
+            list_params[ind].append(item)
+    return list_params
+            
 #sequential monte carlo
 def smc(dx_dt, ds, eps_seq):
     i = 0
@@ -255,9 +268,9 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0:#if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(0,8)
+                sim_theta = draw_uniform(0, 8)
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(ds, sim_dataset)
+                error = fitness(sim_dataset, ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error < epsilon:
                     distances_prev.append(error)
@@ -269,7 +282,7 @@ def smc(dx_dt, ds, eps_seq):
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(ds, sim_dataset)
+                error = fitness(sim_dataset, ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     distances_prev.append(error)
@@ -277,6 +290,9 @@ def smc(dx_dt, ds, eps_seq):
                     current_population.append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
                     current_weights.append(wei)
+        list_params = split_params(current_population)
+        plt.scatter(*list_params)
+        plt.show()
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
