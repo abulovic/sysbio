@@ -7,3 +7,5 @@ for synchronisation, signalling etc.
 3. See if I can incorporate other dynamical aspects like impulse-response, phase-response curves either in the automatic inference procedure or as an automatic post-inference (kind of model selection) procedure. That will also tell me if the system is fit and robust to perturbation(entrainment signals, synchronisation signals etc.)
 
 4. Work on the dataset from Sri for the plant signalling. See if I can infer parameters and test my fitness function on it.
+
+5. Experiment with different sampling frequencies to discretise my signals. (Nyquist sampling rate etc.)
