@@ -1,0 +1,9 @@
+
+1. Try the fitness function with a more complicated example than the LV population dynamics one and see if it gives any improvement in performance(either in the quality of the solutions produced or in the simulation steps required). If it does then I can claim that it captures features of the signals of the systems that are not obvious from the data and that it reduces the amount of noise since it disregards components of the FT with low abs values.
+
+2.Investigate the relationship between the shape of the parameter population(through eigen-analysis of it) with the sensitivity of the models to specific parameters or parameter combinations. And therefore see if the models inferred are fit
+for synchronisation, signalling etc.
+
+3. See if I can incorporate other dynamical aspects like impulse-response, phase-response curves either in the automatic inference procedure or as an automatic post-inference (kind of model selection) procedure. That will also tell me if the system is fit and robust to perturbation(entrainment signals, synchronisation signals etc.)
+
+4. Work on the dataset from Sri for the plant signalling. See if I can infer parameters and test my fitness function on it.
