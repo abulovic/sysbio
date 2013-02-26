@@ -12,6 +12,7 @@ from scipy import array
 from scipy.stats import uniform
 from scipy.stats import norm
 from itertools import izip
+from scipy.stats.mstats import mquantiles
 import numpy as np
 np.seterr(all='ignore')
 import matplotlib.pyplot as plt
@@ -19,6 +20,7 @@ import random
 import math
 import stats_util as utils
 import sys
+import oscillators
 
 #global vars used throughout
 epsilon = 5.0
@@ -26,7 +28,8 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 4
+param_number = 2
+eta = 0.3
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -34,22 +37,39 @@ def summary(theta):
     return gmean(theta), mode(theta)
 
 #ode system for Lotka-Voltera model
-def dx_dt(X,t,theta):
+"""def dx_dt(X,t,theta):
     a = theta[0]
     b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
+    return y"""
+    
+def dx_dt(X, t, th):
+    kA = th[0]
+    k2 = 1.
+    k3 = th[1]
+    k4 = 1.
+    k5 = 1.
+    y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
+               -k3*X[1] + k5*X[2],
+               k4*X[0] - k5*X[2]])
     return y
-
+    
 def generate_dataset(dx_dt, theta):
+    #init = np.array([2.0, 5.0, 3.0])
     dataset = np.zeros([data_points, 3])
-    init = np.array([2.0, 5.0, 3.0])
     t = np.arange(0, 15, 0.1)
-    X0 = array([1.0, 0.5])
-    X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    init = array([1., 1., 1.])
+    X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     #plt.plot(t, X)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
+
+def generate_dataset_full(dx_dt, theta):
+    t = np.arange(0., 15, 0.1)
+    init = np.array([1., 1., 1.])
+    X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
+    return X
 
 #create a datapoint from 
 def create_datapoint(data):
@@ -58,6 +78,23 @@ def create_datapoint(data):
         datapoint = np.append(datapoint, x)
     return datapoint
 
+#returns the average distance between the signals in the 2 datasets
+def fourier_distance(dataset, sim_dataset):
+    sum_ferr = 0.
+    signals = np.shape(dataset)[1]
+    for i in xrange(signals):
+        sum_ferr += oscillators.fourier_compare(dataset[:, i], sim_dataset[:, i])
+    return sum_ferr / signals
+
+def fitness(dataset,sim_dataset, sim_theta, dx_dt):
+    global eta
+    orig_theta = [3., 1., 1., 1.]
+    sim_dataset_full = generate_dataset_full(dx_dt, sim_theta) 
+    orig_dataset_full = generate_dataset_full(dx_dt, orig_theta) 
+    fitness = (eta*fourier_distance(dataset, sim_dataset) +
+               (1-eta)*euclidian_distance(dataset, sim_dataset))
+    return fitness / 2.
+    
 def add_gaussian_noise(dataset):
     x_noise = np.random.normal(0, 0.5, data_points)
     for i in range(dataset.shape[1]):
@@ -264,17 +301,24 @@ def smc(dx_dt, ds, eps_seq):
     t = 0
     populations = []
     weights = []
+    distances_prev = []
     current_weights = init_list()
     current_population = init_list()
-    for epsilon in eps_seq:
+    #for epsilon in eps_seq:
+    epsilon = eps_seq[0]
+    prev_epsilon = eps_seq[0]
+    while True:
         print "population", t
-        if eps_seq.index(epsilon) == 0: #if first population draw from prior
+        if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(-10,10)
+                sim_theta = draw_uniform(0, 5)
                 print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
-                if euclidian_distance(sim_dataset, ds) < epsilon:
+                #error = euclidian_distance(sim_dataset, ds)
+                error = fitness(ds, sim_dataset, sim_theta, dx_dt)
+                if error < epsilon:
+                    distances_prev.append(error)
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
@@ -283,13 +327,18 @@ def smc(dx_dt, ds, eps_seq):
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
-                error = euclidian_distance(sim_dataset, ds)
+                #error = euclidian_distance(sim_dataset, ds)
+                error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
+                    distances_prev.append(error)
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
+        epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
+        if prev_epsilon - epsilon < 0.05: break
+        else: prev_epsilon = epsilon
         #print "current_weights ", t, " ", current_weights
         #show_histogram(current_population)
         populations.append(current_population)
@@ -338,16 +387,32 @@ def plot_solution(population, ds):
     plt.xlabel('time')
     plt.show()
 
-if __name__ == "__main__":
-    theta = [1,1]
-    ds = generate_dataset(dx_dt, theta)
-    #times = [t/10 for t in times]
-    ds = add_gaussian_noise(ds)
-    #plt.plot(times, ds[:, 0], marker='s', linestyle='', color='b')
-    #plt.plot(times, ds[:, 1], marker='^', linestyle='', color='g')
-    plt.show()
-    population = mcmc_orig(dx_dt, ds)#, [30.0,16.0,6.0, 5.0, 4.3])
+def solution_quality(population, ds):
+    pred_theta = []
+    X0 = np.array([1., 1., 1.])
+    t = np.arange(0, 15, 0.1)
+    for index, param in enumerate(population):
+        mean = np.mean(param)
+        pred_theta.append(mean)
+        median = sorted(param)[len(param) / 2]
+        print "parameter ", index, ": median:", median, " mean:", mean
+        print "==================="
+        plt.hist(param)
+        plt.show()
+    pred_ds = integrate.odeint(dx_dt, X0, t, args=(pred_theta,))
+    plt.figure()
+    plt.plot(t, pred_ds)
     
-    plot_solution(population, ds)
+    plt.show()
+def main():
+    theta = [3., 1.]
+    ds = generate_dataset(dx_dt, theta)
+    ds = add_gaussian_noise(np.copy(ds))
+    populations = smc(dx_dt, ds, [300.0])
+    last_population = populations[len(populations)-1]
+    solution_quality(last_population, ds)
+    
+if __name__ == "__main__":
+    main()
     
 	   
