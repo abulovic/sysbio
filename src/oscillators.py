@@ -6,7 +6,7 @@ from scipy import spatial
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import abcinfer_multi_thr as abc
+import abcinfer_multi as abc
 import math
 import sys
 from scipy.spatial.distance import euclidean
@@ -87,26 +87,27 @@ def switch(S, t, theta):
     y = array([k1/(1 + S[1]**n) - m1*S[0], k2/(1 + S[0]**n) - m2*S[1], k2/(1 + S[0]**n) - m2*S[2]])
     return y
 
+def gene_reg(X, t, th):
+    a = th[0] #dilution rate= adil + adeg
+    b = th[1] #constant pr
+    K = 2.
+    fx = b / (1 + (X[0]/K))
+    y = array([fx - a*X[0]])
+    return y
+
+def gene_reg_simple(X, t, th):
+    a = th[0]
+    b = th[1]
+    y = array(b - a*X[0])
+    return y
+    
 def main():
     theta = [2.4, 0.02, 0.2, 6.9 ]
-    theta1 = [  1.37327745e+04   ,1.46981207e-02   ,1.99460716e-01  ,-8.26157999e+04]
     M0 = np.array([2.0, 5.0, 3.0])
-    ds = abc.generate_dataset(hes1, theta)
-    noisy_ds = abc.add_gaussian_noise(np.copy(ds))
-    populations = (abc.smc(hes1, noisy_ds, [160.0, 120.0, 80.0,70.0,  60.0, 40.0, 30.0, 20.0, 15.0, 
-                                           10.0, 9.5, 9.0, 8.5, 8.0, 7.5, 7.0,6.9,6.8,6.7,6.6, 6.5,
-                                            6.0,5.9, 5.8, 5.7,5.6, 5.5,5.4, 5.3,5.2, 5.1,
-                                            5.0,4.8, 4.5,4.3, 4.0,3.8, 3.5,3.2, 3.0, 2.8, 2.5, 2.3, 2.0]))
+    ds = abc.generate_dataset_full(hes1, theta)
+    noisy_ds = abc.add_gaussian_noise_full(np.copy(ds))
+    populations = (abc.smc(hes1, noisy_ds, [300.0]))
     sys.exit(0)
-    t = np.arange(0, 15, 0.1)
-    M = integrate.odeint(hes1, M0, t, args=(theta, ))
-    M1 = integrate.odeint(hes1, M0, t, args=(theta1, ))
-    m,p1,p2 = M.T
-    m1, p11, p21 = M1.T
-    plt.subplot(311)
-    plt.plot(t, m, 'r-')
-    plt.plot(t, m1, 'b-')
-    plt.subplot(312)
     plt.plot(t, p1,'r-')
     plt.plot(t, p11,'b-')
     plt.subplot(313)
@@ -120,7 +121,7 @@ def fourier_compare(x, x1):
     main_ind = []
     main_vals = []
     for ind, x in enumerate(fx):
-        if x > 10.0:
+        if abs(x) > 10.0:
             main_ind.append(ind)
             main_vals.append(abs(x))
 
@@ -171,5 +172,31 @@ def derive(f, a, h=0.01, epsilon = 1e-7):
 def derive_test():
     print derive(lambda x: x**2 , 2)
 
+def gene_regulation():
+    theta = [1., 10.]
+    t = np.arange(0, 15, 0.1)
+    X0 = 1.
+    ds = abc.generate_dataset_full(gene_reg, theta)
+    noisy_ds = abc.add_gaussian_noise_full(np.copy(ds))
+    populations = abc.smc(gene_reg, noisy_ds, [300.0])
+    theta1 = utils.colMeans(np.vstack(populations[:-1]))
+    X = integrate.odeint(gene_reg, X0, t, args=(theta, ))
+    plt.plot(t, X, 'r-')
+    X1 = integrate.odeint(gene_reg, X0, t, args=(theta1, ))
+    plt.plot(t, X1, 'b-')
+    plt.plot(t, noisy_ds, 'go')
+    plt.show()
+
+def test():
+    theta = [2., 4.]
+    theta1 = [2., 20.]
+    t = np.arange(0, 5, 0.1)
+    X0 = 1.
+    X = integrate.odeint(gene_reg, X0, t, args=(theta,))
+    X1 = integrate.odeint(gene_reg_simple, X0, t, args=(theta1,))
+    plt.plot(t, X, 'r-')
+    plt.show()
+    
+
 if __name__ == '__main__':
-    derive_test()
+    test()
