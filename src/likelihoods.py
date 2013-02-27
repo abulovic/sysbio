@@ -86,18 +86,9 @@ def switch(X, t, theta):
 
     
 if __name__ == "__main__":
-    dx_dt = abc.dx_dt
-    t = np.linspace(0, 100, 1000)
-    theta = [2.2]
-    X0 = [1., 1., 1.]
-    X = integrate.odeint(dx_dt, X0, t, args=(theta,))
-    x1, x2, x3 = X.T
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.plot(x1, x2, x3)
-    plt.figure()
-    plt.plot(t, X)
-    plt.show()
+    t = np.linspace(0, 15, 0.1)
+    theta = [8., 1., 1., 1.5]
+    X0 = 
         
     
     
