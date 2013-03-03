@@ -1,12 +1,12 @@
 #!/usr/bin/env python
+#simple abc rejector. samples parameter vector from uniform prior, simulates datset and then compares simulated
 
-#simple abc rejector. samples parameter vector from uniform prior, simulates dataset and then compares simulated
 #dataset with actual dataset and either rejects or accepts based on the euclidian distance between the two.
 #we'll use Lotka-Voltera model(http://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equation) -> get dataset
 #with params a=b=1 and add gaussian noise
 #also added a simple mcmc based on metropolis algorithm
-#and a sequential monte carlo
 
+#and a sequential monte carlo
 from scipy import integrate
 from scipy import array
 from scipy.stats import uniform
@@ -21,56 +21,73 @@ import math
 import stats_util as utils
 import sys
 import oscillators
+from SimpleRepressilator import HillRepressilator
+from Mit_Oscillator import MitoticOscillator
+from scipy.spatial.distance import euclidean
 
 #global vars used throughout
 epsilon = 5.0
-data_points = 8
+data_points = 6
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
-times = (11, 24, 39, 56, 75, 96, 119, 144)
+#times = (11, 24, 39, 56, 75, 96, 119, 144)
+#times = (10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
+times = (10, 30, 50, 70, 90, 100)
 steps = 100000
 param_number = 2
-eta = 0.3
+eta = 0.5
 
 def summary(theta):
     from scipy.stats.mstats import gmean
-    from scipy.stats.mstats import mode
     return gmean(theta), mode(theta)
 
-#ode system for Lotka-Voltera model
-"""def dx_dt(X,t,theta):
+    from scipy.stats.mstats import mode
+    
+def lv(X,t,theta):
     a = theta[0]
-    b = theta[1]
+#ode system for Lotka-Voltera model
+    b = 1.
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
-    return y"""
+    return y
     
 def dx_dt(X, t, th):
     kA = th[0]
-    k2 = 1.
-    k3 = th[1]
+    k2 = th[1]
+    k3 = 1.
     k4 = 1.
     k5 = 1.
     y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
                -k3*X[1] + k5*X[2],
                k4*X[0] - k5*X[2]])
     return y
+               
     
 def generate_dataset(dx_dt, theta):
-    #init = np.array([2.0, 5.0, 3.0])
     dataset = np.zeros([data_points, 3])
-    t = np.arange(0, 15, 0.1)
+    t = np.linspace(0, 100, 1000)
+    #t = np.arange(0, 15, 0.1)
     init = array([1., 1., 1.])
+    #init = np.array([1, 0.5])
     X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
-    #plt.plot(t, X)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
 
 def generate_dataset_full(dx_dt, theta):
-    t = np.arange(0., 15, 0.1)
-    init = np.array([1., 1., 1.])
+    t = np.linspace(0, 100, 1000)
+    #init = np.array([1., 1., 1.])
+    init = np.array([3., 3., 3.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
+def generate_dataset_mit(theta):
+    mit_osc = MitoticOscillator(vm3 = theta[0], vm1 = theta[1])
+    mit_osc.run(times = np.linspace(0, 100, 100))
+    return mit_osc.ds
+
+def generate_dataset_rep(theta):
+    hp = HillRepressilator(alpha = theta[0], alpha0 = theta[1])
+    return hp.run(100)
+    
 #create a datapoint from 
 def create_datapoint(data):
     datapoint = np.array([])
@@ -102,6 +119,10 @@ def add_gaussian_noise(dataset):
     
     return dataset
 
+def add_gaussian_noise_full(dataset):
+    x_noise = np.random.normal(0, 10., np.shape(dataset))
+    return dataset + x_noise
+    
 def euclidian_distance(dataset, sim_dataset):
     sq_error = 0
     from scipy.spatial.distance import sqeuclidean
@@ -300,10 +321,10 @@ def smc(dx_dt, ds, eps_seq):
     naccepted = 0
     t = 0
     populations = []
+    current_population = init_list()
     weights = []
     distances_prev = []
     current_weights = init_list()
-    current_population = init_list()
     #for epsilon in eps_seq:
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
@@ -312,11 +333,11 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(0, 5)
+                sim_theta = draw_uniform(0., 8. )
                 print i, sim_theta, naccepted
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                #error = euclidian_distance(sim_dataset, ds)
-                error = fitness(ds, sim_dataset, sim_theta, dx_dt)
+                sim_dataset = generate_dataset_mit(sim_theta)
+                error = euclidean(sim_dataset, ds)
+                #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 if error < epsilon:
                     distances_prev.append(error)
                     naccepted += 1
@@ -326,13 +347,13 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                #error = euclidian_distance(sim_dataset, ds)
-                error = fitness(ds, sim_dataset, sim_theta, dx_dt)
+                sim_dataset = generate_dataset_mit(sim_theta)
+                error = euclidean(sim_dataset, ds)
+                #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
+                distances_prev.append(error)
+                naccepted += 1
                 if error <= epsilon:
-                    distances_prev.append(error)
-                    naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
@@ -350,8 +371,8 @@ def smc(dx_dt, ds, eps_seq):
     return populations
     
 def write_to_file(filename,theta):
-    f = open(filename, 'w')
     f.write("theta\n")
+    f = open(filename, 'w')
     for th in theta:
         f.write(str(th) + ",")
         
@@ -395,7 +416,8 @@ def solution_quality(population, ds):
         mean = np.mean(param)
         pred_theta.append(mean)
         median = sorted(param)[len(param) / 2]
-        print "parameter ", index, ": median:", median, " mean:", mean
+        std = np.std(param)
+        print "parameter ", index, ": median:", median, " mean:", mean, " std:", std
         print "==================="
         plt.hist(param)
         plt.show()
@@ -404,15 +426,30 @@ def solution_quality(population, ds):
     plt.plot(t, pred_ds)
     
     plt.show()
+
+    
 def main():
-    theta = [3., 1.]
+    theta = [3., 1., 1., 1., 1.]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(np.copy(ds))
     populations = smc(dx_dt, ds, [300.0])
     last_population = populations[len(populations)-1]
     solution_quality(last_population, ds)
+
+def main_rep():
+    orig_theta = [5, 0.5]
+    orig_ds = generate_dataset_hp(orig_theta)
+    populations = smc(dx_dt, orig_ds, [300.])
+    last_population = populations[len(populations)-1]
+    solution_quality(last_population, orig_ds)
+
+def main_mit():
+    mo = MitoticOscillator()
+    mo.run()
+    populations = smc(dx_dt, mo.ds, [300.])
+    sys.exit(0)
     
 if __name__ == "__main__":
-    main()
+    main_mit()
     
 	   
