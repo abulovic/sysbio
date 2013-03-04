@@ -22,6 +22,7 @@ import itertools
 from scipy.stats.mstats import mquantiles
 from multiprocessing import Process, Queue
 import sys
+import oscillators
 
 #global vars used throughout
 epsilon = 5.0
@@ -68,12 +69,37 @@ def add_gaussian_noise(dataset):
     
     return dataset
 
+def generate_dataset_full(dx_dt, theta):
+    init = np.array([1, 0.5])
+    #init = np.array([2.0, 5.0, 3.0])
+    t = np.arange(0, 15, 0.1)
+    X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    return X
+
+def add_gaussian_noise_full(dataset):
+    x_noise = np.random.normal(0, 0.5, np.shape(dataset))
+    return dataset + x_noise
+
 def euclidian_distance(dataset, sim_dataset):
     sq_error = 0
     from scipy.spatial.distance import sqeuclidean
     for i in xrange(dataset.shape[1]):
         sq_error += sqeuclidean(sim_dataset[:,i],dataset[:,i])
     return sq_error
+
+#returns the average distance between the signals in the 2 datasets
+def fourier_distance(dataset, sim_dataset):
+    sum_ferr = 0.
+    signals = np.shape(dataset)[1]
+    for i in xrange(signals):
+        sum_ferr += oscillators.fourier_compare(dataset[:, i], sim_dataset[:, i])
+    return sum_ferr / signals
+
+def fitness(dataset, sim_dataset):
+    global eta
+    fitness = (eta*fourier_distance(dataset, sim_dataset) +
+               (1-eta)*euclidean(dataset, sim_dataset))
+    return fitness / 2.
 
 #adds a particle (parameter vector) to corresponding sublists of current population
 #th1 goes to sublist for th1, th2 goes to second sublist for th2 and so on
@@ -230,8 +256,8 @@ def get_population_prior(num_particles,dx_dt, a, b, qd, qw, qp, epsilon, ds):
         i += 1
         sim_theta = draw_uniform(a,b)
         print i, sim_theta, naccepted
-        sim_dataset = generate_dataset(dx_dt, sim_theta)
-        error = euclidian_distance(sim_dataset, ds)
+        sim_dataset = generate_dataset_full(dx_dt, sim_theta)
+        error = fourier_distance(ds, sim_dataset)
         if error < epsilon:
             qd.put(error)
             naccepted += 1
@@ -259,8 +285,8 @@ def get_population_previous(num_particles, prev_population, prev_weights, dx_dt,
     while naccepted < num_particles:
         i += 1
         sim_theta = sample_from_previous(prev_population, prev_weights)
-        sim_dataset = generate_dataset(dx_dt, sim_theta)
-        error = euclidian_distance(sim_dataset, ds)
+        sim_dataset = generate_dataset_full(dx_dt, sim_theta)
+        error = fourier_distance(ds, sim_dataset)
         print i, sim_theta, error, naccepted, epsilon
         if error <= epsilon:
             qd.put(error)
@@ -282,7 +308,7 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     num_particles = 100
-    num_threads = 4
+    num_threads = 1
     while True:
         print "population", t
         distances_lst = []
@@ -358,7 +384,7 @@ def main():
     theta = [1,1]
     ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise(ds)
-    population = smc(dx_dt, ds, [30.0, 16.0, 6.0, 5.0, 4.3])
+    population = smc(dx_dt, ds, [300.0, 16.0, 6.0, 5.0, 4.3])
     last_population = population[-1:]
     plot_solution(last_population, ds)
     

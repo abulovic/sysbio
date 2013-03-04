@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import matplotlib.pyplot as plt
 from matplotlib import cm
+import matplotlib.pyplot as plt
 import numpy as np
 import abcinfer as abc
 from scipy.spatial.distance import euclidean
@@ -18,17 +18,17 @@ def log_likelihood(sim_ds, orig_ds):
     return -0.5 * sum_dist
 
 def main_hopf():
-    dx_dt = abc.lv # simplest system with hopf bifurcation
-    orig_theta = [1., 1.]
-    orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
-    orig_ds = abc.add_gaussian_noise_full(orig_ds)
-    param_range = np.arange(0, 4., 0.2)
-    param_range_1 = np.arange(0., 4, 0.2)
+    dx_dt = abc.dx_dt # simplest system with hopf bifurcation
+    orig_theta = [216., 5.]
+    orig_ds = abc.generate_dataset_rep(orig_theta)
+    #orig_ds = abc.add_gaussian_noise_full(orig_ds)
+    param_range = np.arange(213, 218., 0.2)
+    param_range_1 = np.arange(0, 2, 0.2)
     likelihood_vals = np.zeros((len(param_range), len(param_range_1)))
     for ind1, th in enumerate(param_range):
         for ind2, th1 in enumerate(param_range_1):
             
-            sim_ds = abc.generate_dataset_full(dx_dt, [th, th1])
+            sim_ds = abc.generate_dataset_rep([th, th1])
             l = log_likelihood(sim_ds, orig_ds)
             likelihood_vals[ind1, ind2] = l 
             print th, th1, l

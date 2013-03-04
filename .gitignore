@@ -1,9 +1,6 @@
-git rm -r --cached *.pyc
-
-git rm --cached *.pyc
-
-git rm --cached *.so
-
-git rm --cached *.c
+*.pyc
+*.so
+*.c
+*.old
 
 

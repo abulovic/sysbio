@@ -5,9 +5,10 @@ from scipy import array
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import abcinfer_1 as abc
+import abcinfer_multi as abc
 import numpy as np
 import stats_util as utils
+import sys
 times = (1.1, 2.4, 3.9, 5.6, 7.5, 9.6, 11.9,14.4)
 datapoints = 8
 
@@ -17,6 +18,15 @@ def generate_data():
     for i in range(datapoints):
         dataset[i] = np.array([np.cos(times[i]), np.cos(times[i] + th)])
     return dataset
+
+def generate_dataset_full():
+    th = 1
+    t = np.arange(0, 15, 0.1)
+    dataset = np.zeros([len(t), 2])
+    for ind, time in enumerate(t):
+        dataset[ind] = np.array([np.cos(time), np.cos(time + th)])
+    return dataset
+    
 
 def dn_dt(N, t, theta):
     k = theta[0]
@@ -103,29 +113,20 @@ def dA_dt(A, t, theta):
                (b1*A[0]**p / (k1 + A[0]**p) - d1*A[1])])
     return y
 
-if __name__ == "__main__":
+
+def main():
+    X0 = [1, 0.5]
+    t = np.arange(0, 15, 0.1)
     ds = generate_data()
-    population = abc.smc(dx_dt, ds, [30.0, 16.0, 12.0, 10.0, 8.0,7.5,7.0,6.5, 6.0,5.5,5.0])
-    #last_population = abc.mcmc(dx_dt, ds)
-    last_population = population[len(population)-1]
-    plot_solution(last_population)
-    #theta = utils.colMeans(np.vstack(last_population))
-    #theta = [  7.7445538,   28.26327547, -30.11870996,   2.63604665, -14.98477143,
-    #           -13.08798084, -24.30999597,   7.69635589]
+    populations = abc.smc(dx_dt, ds, [700.0])
+    last_population = populations[:-1]
+    theta = utils.colMeans(np.vstack(last_population))
+    X = integrate.odeint(dx_dt, X0, t, args=(theta,))
+    plt.plot(t,X)
+    plt.show()
     
-    #X0 = np.array([1, 0.5])
-    #t = np.arange(0, 15, 0.1)
-    #X= integrate.odeint(dx_dt, X0, t, args=(theta,))
-    #x,y = X.T
-    #plt.figure(1)
-    #plt.subplot(211)
-    #plt.plot(t, x, 'r-', label='x(t)')
-    #plt.plot(t,np.cos(t),'g-',label='x(t))')
-    #plt.subplot(212)
-    #plt.plot(t, y, 'b-', label='y(t)')
-    #plt.plot(t, np.cos(t+1), 'g-', label='y(t)')
-    #plt.xlabel('time')
-    #plt.show()
+if __name__ == "__main__":
+    main()
     
     
     

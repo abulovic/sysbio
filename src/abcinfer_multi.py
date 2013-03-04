@@ -22,7 +22,7 @@ import stats_util as utils
 from scipy.stats.mstats import mquantiles
 import sys
 import oscillators
-
+from SimpleRepressilator import HillRepressilator
 
 #global vars used throughout
 epsilon = 5.0
@@ -31,7 +31,7 @@ data_points = 8
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
 param_number = 2
-eta = 0.3
+eta = 0.
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -39,12 +39,23 @@ def summary(theta):
     return gmean(theta), mode(theta)
 
 #ode system for Lotka-Voltera model
-def dx_dt(X,t,theta):
+"""def dx_dt(X,t,theta):
     a = theta[0]
     b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
+    return y"""
+    
+def dx_dt(X, t, th):
+    kA = th[0]
+    k2 = th[1]
+    k3 = 1.
+    k4 = 1.
+    k5 = 1.
+    y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
+               -k3*X[1] + k5*X[2],
+               k4*X[0] - k5*X[2]])
     return y
-
+    
 def generate_dataset(dx_dt, theta):
     dataset = np.zeros([data_points, 2])
     #init = np.array([2.0, 5.0, 3.0])
@@ -56,12 +67,15 @@ def generate_dataset(dx_dt, theta):
     return dataset
 
 def generate_dataset_full(dx_dt, theta):
-    init = np.array([1, 0.5])
-    #init = np.array([2.0, 5.0, 3.0])
-    t = np.arange(0, 15, 0.1)
-    X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
+    t = np.arange(0., 15, 0.1)
+    init = np.array([1., 1., 1.])
+    X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
+def generate_dataset_hp(theta):
+    hp = HillRepressilator(*theta, n=3.)
+    return hp.run(20)[:, 3:]
+    
 def add_gaussian_noise_full(dataset):
     x_noise = np.random.normal(0, 0.5, np.shape(dataset))
     return dataset + x_noise
@@ -268,9 +282,9 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0:#if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(0, 8)
+                sim_theta = draw_uniform(0, 5)
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(sim_dataset, ds)
+                error = fitness(sim_dataset,ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error < epsilon:
                     distances_prev.append(error)
@@ -282,7 +296,7 @@ def smc(dx_dt, ds, eps_seq):
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(sim_dataset, ds)
+                error = fitness(sim_dataset,ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     distances_prev.append(error)
@@ -290,9 +304,10 @@ def smc(dx_dt, ds, eps_seq):
                     current_population.append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
                     current_weights.append(wei)
-        list_params = split_params(current_population)
-        plt.scatter(*list_params)
-        plt.show()
+        #list_params = split_params(current_population)
+        #plt.scatter(*list_params)
+        #plt.show()
+        #sys.exit(0)
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
@@ -335,15 +350,23 @@ def plot_solution(population, ds):
     plt.show()
 
 def main():
-    theta = [1,1]
+    theta = [3.]
+    ds = generate_dataset_hp(theta)
+    ds = add_gaussian_noise_full(ds)
+    populations = smc(dx_dt, ds, [300.])
+    plt.plot(ds)
+    plt.show()
+
+def test():
+    theta = [3., 1.]
     ds = generate_dataset_full(dx_dt, theta)
     ds = add_gaussian_noise_full(ds)
-    population = smc(dx_dt, ds, [300.0, 16.0, 6.0, 5.0, 4.3])
-    last_population = population[-1:]
-    plot_solution(last_population, ds)
+    populations = smc(dx_dt, ds, [300.])
+    plt.plot(ds)
+    plt.show()
     
 if __name__ == "__main__":
-    main()
+    test()
     
 
 	   
