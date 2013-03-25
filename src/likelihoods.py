@@ -6,9 +6,10 @@ import numpy as np
 import abcinfer as abc
 from scipy.spatial.distance import euclidean
 from scipy import integrate, array
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
 import sys
 import oscillators
+import math
 
 def log_likelihood(sim_ds, orig_ds):
     sum_dist = 0.
@@ -175,19 +176,30 @@ def main_lv():
     #plt.plot(t, orig_ds)
     plt.show()
         
+
+def get_freq_ind(tsignal):
+    abs_freq = abs(np.fft.fft(tsignal))
+    dom_freqs = []
+    for ind, val in enumerate(abs_freq):
+        if val > 500:
+            dom_freqs.append(ind)
+
+    return dom_freqs
     
 if __name__ == "__main__":
     dx_dt = abc.dx_dt
-    orig_theta = [2.2]
+    orig_theta = [3.5]
     orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
-    sim_theta = [2.5]
+    dom_freqs = get_freq_ind(orig_ds[:, 1])
+    sim_theta = [3.9]
     sim_ds = abc.generate_dataset_full(dx_dt, sim_theta)
-    plt.figure()
-    plt.plot(orig_ds)
-    plt.figure()
-    plt.plot(sim_ds)
-    print abc.euclidian_distance(orig_ds, sim_ds)
-    plt.show()
+    dom_freqs_sim = get_freq_ind(sim_ds[:, 1])
+    print dom_freqs
+    print "=========================="
+    print dom_freqs_sim
+    print "+++++++++++++++++++++++++++"
+    d = np.diag(np.subtract.outer(dom_freqs, dom_freqs_sim))
+    print math.fsum(d**2)
     
         
     
