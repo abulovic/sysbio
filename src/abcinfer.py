@@ -51,11 +51,11 @@ def lv(X,t,theta):
     
 def dx_dt(X, t, th):
     kA = th[0]
-    k2 = th[1]
+    k2 = 1.
     k3 = 1.
     k4 = 1.
     k5 = 1.
-    y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
+    y = array([(kA- k4)*X[0] - k2*X[0]*X[1] ,
                -k3*X[1] + k5*X[2],
                k4*X[0] - k5*X[2]])
     return y
@@ -72,10 +72,9 @@ def generate_dataset(dx_dt, theta):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
 
-def generate_dataset_full(dx_dt, theta):
+def generate_dataset_full(dx_dt, theta, init=np.array([1., 1., 1.])):
     t = np.linspace(0, 100, 1000)
     #init = np.array([1., 1., 1.])
-    init = np.array([3., 3., 3.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
@@ -85,7 +84,7 @@ def generate_dataset_mit(theta):
     return mit_osc.ds
 
 def generate_dataset_rep(theta):
-    hp = HillRepressilator(alpha = theta[0], alpha0 = theta[1])
+    hp = HillRepressilator(alpha = theta[0], beta=theta[1])
     return hp.run(100)
     
 #create a datapoint from 

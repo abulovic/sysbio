@@ -17,18 +17,21 @@ def log_likelihood(sim_ds, orig_ds):
         sum_dist += dist**2
     return -0.5 * sum_dist
 
+def log_likelihood_fourier(sim_ds, orig_ds):
+    return -0.5*abc.fourier_distance(sim_ds, orig_ds)
+    
 def main_hopf():
     dx_dt = abc.dx_dt # simplest system with hopf bifurcation
-    orig_theta = [216., 5.]
-    orig_ds = abc.generate_dataset_rep(orig_theta)
+    orig_theta = [3., 1.]
+    orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
     #orig_ds = abc.add_gaussian_noise_full(orig_ds)
-    param_range = np.arange(213, 218., 0.2)
-    param_range_1 = np.arange(0, 2, 0.2)
+    param_range = np.arange(1., 4., 0.1)
+    param_range_1 = np.arange(0.5, 3, 0.1)
     likelihood_vals = np.zeros((len(param_range), len(param_range_1)))
     for ind1, th in enumerate(param_range):
         for ind2, th1 in enumerate(param_range_1):
             
-            sim_ds = abc.generate_dataset_rep([th, th1])
+            sim_ds = abc.generate_dataset_full(dx_dt, [th, th1])
             l = log_likelihood(sim_ds, orig_ds)
             likelihood_vals[ind1, ind2] = l 
             print th, th1, l
@@ -56,7 +59,7 @@ def main_hopf():
 
 def main_hopf_1():
     dx_dt = abc.dx_dt # simplest system with hopf bifurcation
-    orig_theta = [3.8]
+    orig_theta = [2.2]
     orig_ds = abc.generate_dataset(dx_dt, orig_theta)
     #orig_ds = abc.add_gaussian_noise_full(orig_ds)
     param_range = np.arange(1, 4, 0.05)
@@ -71,16 +74,51 @@ def main_hopf_1():
     plt.show()
 
 def main_rep():
-    orig_theta = [216.]
-    orig_ds = abc.generate_dataset_hp(orig_theta)
+    orig_theta = [216., 205.]
+    orig_ds = abc.generate_dataset_rep(orig_theta)
     param_range = np.arange(0, 250, 5.)
     likelihood_vals = []
     for th in param_range:
-        sim_ds = abc.generate_dataset_hp([th])
-        likelihood_vals.append(log_likelihood(sim_ds, orig_ds))
+        sim_ds = abc.generate_dataset_rep([th])
+        likelihood_vals.append(log_likelihood_fourier(sim_ds, orig_ds))
     plt.plot(param_range, likelihood_vals)
     plt.show()
 
+def main_rep_1():
+    orig_theta = [5., 5.]
+    orig_ds = abc.generate_dataset_rep(orig_theta)
+    #orig_ds = abc.add_gaussian_noise_full(orig_ds)
+    param_range = np.arange(3., 7., 0.1)
+    param_range_1 = np.arange(3, 7, 0.1)
+    likelihood_vals = np.zeros((len(param_range), len(param_range_1)))
+    for ind1, th in enumerate(param_range):
+        for ind2, th1 in enumerate(param_range_1):
+            sim_ds = abc.generate_dataset_rep([th, th1])
+            l = log_likelihood(sim_ds, orig_ds)
+            likelihood_vals[ind1, ind2] = l 
+            print th, th1, l
+
+    print "========================"
+    i,j = np.unravel_index(likelihood_vals.argmax(), likelihood_vals.shape)
+    print "max likelihood ", likelihood_vals[i, j], " at: ()",  i, " ,", j, ")"
+    
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+
+    m1, m2 = np.meshgrid(param_range, param_range_1)
+    print np.shape(m1), np.shape(m2), np.shape(likelihood_vals)
+    surf = ax.plot_surface(m1, m2, likelihood_vals.T, rstride=1,  cstride=1, cmap=cm.jet, linewidth=0.1, antialiased=True)
+
+
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    
+    ax.set_xlabel('alpha')
+    ax.set_ylabel('beta')
+    ax.set_zlabel('likelihood')
+    plt.figure()
+    plt.imshow(likelihood_vals)
+    plt.show()
+    
 def fisher_information(kA):
     dx_dt = abc.dx_dt # simplest system with hopf bifurcation
     ka_range = np.linspace(2, 3.8, 19)
@@ -139,7 +177,17 @@ def main_lv():
         
     
 if __name__ == "__main__":
-    main_hopf()
+    dx_dt = abc.dx_dt
+    orig_theta = [2.2]
+    orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
+    sim_theta = [2.5]
+    sim_ds = abc.generate_dataset_full(dx_dt, sim_theta)
+    plt.figure()
+    plt.plot(orig_ds)
+    plt.figure()
+    plt.plot(sim_ds)
+    print abc.euclidian_distance(orig_ds, sim_ds)
+    plt.show()
     
         
     
