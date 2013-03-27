@@ -27,11 +27,11 @@ from scipy.spatial.distance import euclidean
 
 #global vars used throughout
 epsilon = 5.0
-data_points = 6
+data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
-#times = (11, 24, 39, 56, 75, 96, 119, 144)
 #times = (10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
-times = (10, 30, 50, 70, 90, 100)
+times = (11, 24, 39, 56, 75, 96, 119, 144)
+#times = (10, 30, 50, 70, 90, 100)
 steps = 100000
 param_number = 2
 eta = 0.5
@@ -45,7 +45,7 @@ def summary(theta):
 def lv(X,t,theta):
     a = theta[0]
 #ode system for Lotka-Voltera model
-    b = 1.
+    b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
     return y
     
@@ -62,19 +62,20 @@ def dx_dt(X, t, th):
                
     
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 3])
-    t = np.linspace(0, 100, 1000)
-    #t = np.arange(0, 15, 0.1)
-    init = array([1., 1., 1.])
-    #init = np.array([1, 0.5])
+    dataset = np.zeros([data_points, 2])
+    #t = np.linspace(0, 100, 1000)
+    
+    t = np.arange(0, 15, 0.1)
+    #init = array([1., 0.5])
+    init = np.array([1, 0.5])
     X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
 
 def generate_dataset_full(dx_dt, theta, init=np.array([1., 1., 1.])):
-    t = np.linspace(0, 100, 1000)
-    #init = np.array([1., 1., 1.])
+    t = np.linspace(0, 15, 100)
+    init = np.array([1., .5])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
@@ -334,8 +335,8 @@ def smc(dx_dt, ds, eps_seq):
                 i += 1
                 sim_theta = draw_uniform(0., 8. )
                 print i, sim_theta, naccepted
-                sim_dataset = generate_dataset_mit(sim_theta)
-                error = euclidean(sim_dataset, ds)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 if error < epsilon:
                     distances_prev.append(error)
@@ -346,17 +347,18 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset_mit(sim_theta)
-                error = euclidean(sim_dataset, ds)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
-                distances_prev.append(error)
-                naccepted += 1
                 if error <= epsilon:
+                    distances_prev.append(error)
+                    naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     wei = calculate_weights(populations[t-1], weights[t-1], sim_theta)
                     current_weights = add_weights_to_list(current_weights, wei)
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
+        print prev_epsilon, epsilon
         if prev_epsilon - epsilon < 0.05: break
         else: prev_epsilon = epsilon
         #print "current_weights ", t, " ", current_weights
@@ -399,8 +401,8 @@ def plot_solution(population, ds):
     plt.subplot(211)
     plt.plot(t, x, 'r-', label='x(t)')
     plt.plot(t, x1,'g-',label='x(t))')
-    plt.plot(ti, ds[:, 0], marker='s', linestyle='', color='g')
     plt.subplot(212)
+    plt.plot(ti, ds[:, 0], marker='s', linestyle='', color='g')
     plt.plot(t, y, 'b-', label='y(t)')
     plt.plot(t, y1, 'g-', label='y(t)')
     plt.plot(ti, ds[:, 1], marker='^', linestyle='', color='g')
@@ -449,6 +451,10 @@ def main_mit():
     sys.exit(0)
     
 if __name__ == "__main__":
-    main_mit()
+    orig_theta = [1, 1]
+    orig_ds = generate_dataset(lv, orig_theta)
+    orig_ds_n = add_gaussian_noise(np.copy(orig_ds))
+    populations = smc(lv, orig_ds_n, [30.])
+    
     
 	   
