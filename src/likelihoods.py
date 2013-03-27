@@ -20,6 +20,10 @@ def log_likelihood(sim_ds, orig_ds):
 
 def log_likelihood_fourier(sim_ds, orig_ds):
     return -0.5*abc.fourier_distance(sim_ds, orig_ds)
+
+def log_likelihood_distance(sim_ds, orig_ds):
+    pass
+
     
 def main_hopf():
     dx_dt = abc.dx_dt # simplest system with hopf bifurcation
@@ -181,27 +185,58 @@ def get_freq_ind(tsignal):
     abs_freq = abs(np.fft.fft(tsignal))
     dom_freqs = []
     for ind, val in enumerate(abs_freq):
-        if val > 500:
+        if val > 100:
             dom_freqs.append(ind)
 
     return dom_freqs
     
+def create_comparables(dom_freqs, dom_freqs_sim):
+    dom_freqs_comp = np.zeros(len(dom_freqs))
+    for val in dom_freqs_sim:
+        ind = min(range(len(dom_freqs)), key=lambda i: abs(dom_freqs[i]-val))
+        dom_freqs_comp[ind] = val
+
+    return dom_freqs, dom_freqs_comp
+    
+def shape_sim_score(dom_freqs, dom_freqs_sim):
+    gap_score = 5.
+    sim_score = 0.
+    if len(dom_freqs) > len(dom_freqs_sim):
+        seq1, seq_2 = create_comparables(dom_freqs, dom_freqs_sim)
+    else:
+        seq1, seq_2 = create_comparables(dom_freqs_sim, dom_freqs)
+
+    for val1, val2 in zip(seq1, seq_2):
+        if (val1 == 0) ^ (val2 == 0):
+            sim_score += gap_score
+        else:
+            sim_score += abs(val1 - val2)
+
+    return (sim_score / len(seq1)) * 20
+
+def get_shape_sim(orig_ds, sim_ds):
+    sim_score = 0.
+    #get similarity scores between all signal components of datasets
+    num_comps = np.shape(orig_ds)[1]
+    for i in range(1):
+        dom_freqs = get_freq_ind(orig_ds[:,i])
+        dom_freqs_sim = get_freq_ind(sim_ds[:,i])
+        sign_sim = shape_sim_score(dom_freqs, dom_freqs_sim)
+        sim_score += sign_sim
+        
+    return sim_score / num_comps
+    
 if __name__ == "__main__":
     dx_dt = abc.dx_dt
-    orig_theta = [3.5]
+    orig_theta = [3.]
     orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
-    dom_freqs = get_freq_ind(orig_ds[:, 1])
-    sim_theta = [3.9]
-    sim_ds = abc.generate_dataset_full(dx_dt, sim_theta)
-    dom_freqs_sim = get_freq_ind(sim_ds[:, 1])
-    print dom_freqs
-    print "=========================="
-    print dom_freqs_sim
-    print "+++++++++++++++++++++++++++"
-    d = np.diag(np.subtract.outer(dom_freqs, dom_freqs_sim))
-    print math.fsum(d**2)
-    
-        
-    
-    
+    param_range = np.arange(1., 4., .1)
+    likelihood_vals = []
+    for th in param_range:
+        sim_ds = abc.generate_dataset_full(dx_dt, [th])
+        likelihood_vals.append(-get_shape_sim(orig_ds, sim_ds))
+
+    print likelihood_vals
+    plt.plot(param_range, likelihood_vals)
+    plt.show()
     
