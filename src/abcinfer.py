@@ -455,6 +455,10 @@ if __name__ == "__main__":
     orig_ds = generate_dataset(lv, orig_theta)
     orig_ds_n = add_gaussian_noise(np.copy(orig_ds))
     populations = smc(lv, orig_ds_n, [30.])
+    last_population = populations[len(populations) - 1]
+    plt.scatter(last_population[0], last_population[1])
+    plt.show()
+    
     
     
 	   
