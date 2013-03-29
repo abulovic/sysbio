@@ -24,6 +24,7 @@ import oscillators
 from SimpleRepressilator import HillRepressilator
 from Mit_Oscillator import MitoticOscillator
 from scipy.spatial.distance import euclidean
+from numpy import mean,cov,linalg
 
 #global vars used throughout
 epsilon = 5.0
@@ -51,7 +52,7 @@ def lv(X,t,theta):
     
 def dx_dt(X, t, th):
     kA = th[0]
-    k2 = 1.
+    k2 = th[1]
     k3 = 1.
     k4 = 1.
     k5 = 1.
@@ -62,12 +63,12 @@ def dx_dt(X, t, th):
                
     
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 2])
+    dataset = np.zeros([data_points, 3])
     #t = np.linspace(0, 100, 1000)
     
     t = np.arange(0, 15, 0.1)
     #init = array([1., 0.5])
-    init = np.array([1, 0.5])
+    init = np.array([1., 1., 1.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
@@ -75,7 +76,7 @@ def generate_dataset(dx_dt, theta):
 
 def generate_dataset_full(dx_dt, theta, init=np.array([1., 1., 1.])):
     t = np.linspace(0, 15, 100)
-    init = np.array([1., .5])
+    init = np.array([1., 1., 1.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
@@ -333,7 +334,7 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(0., 8. )
+                sim_theta = draw_uniform(0., 5. )
                 print i, sim_theta, naccepted
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
@@ -449,16 +450,32 @@ def main_mit():
     mo.run()
     populations = smc(dx_dt, mo.ds, [300.])
     sys.exit(0)
-    
+
 if __name__ == "__main__":
-    orig_theta = [1, 1]
-    orig_ds = generate_dataset(lv, orig_theta)
+    orig_theta = [3., 1.]
+    orig_ds = generate_dataset(dx_dt, orig_theta)
+    #plt.plot(orig_ds)
+    #plt.show()
     orig_ds_n = add_gaussian_noise(np.copy(orig_ds))
-    populations = smc(lv, orig_ds_n, [30.])
+    populations = smc(dx_dt, orig_ds_n, [60.])
     last_population = populations[len(populations) - 1]
-    plt.scatter(last_population[0], last_population[1])
-    plt.show()
+    last_p = np.transpose(np.array(last_population))
+    #plt.scatter(last_p[:, 0], last_p[:, 1])
+    #plt.figure()
+    m = mean(last_p, axis=0)
+    last_p = last_p - m
+    plt.scatter(last_p[:, 0], last_p[:, 1])
+    last_p = np.transpose(last_p)
+    sigma = np.cov(last_p)
+    w, v = np.linalg.eig(sigma)
+    print "w1 ", w[0], w[0] / np.trace(sigma)
+    print "w2 ", w[1], w[1] / np.trace(sigma)
+    print "v1 ", v[0]
+    print "v2 ", v[1]
+    pcx = [0., v[0][0], 0.,  v[1][0]]
+    pcy = [0., v[0][1], 0. ,v[1][1]]
+    #plt.plot(pcx, pcy, 'r--')
+    #plt.show()
     
     
     
-	   
