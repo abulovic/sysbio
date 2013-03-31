@@ -28,13 +28,14 @@ from numpy import mean,cov,linalg
 
 #global vars used throughout
 epsilon = 5.0
-data_points = 8
+data_points = 12
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 #times = (10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
-times = (11, 24, 39, 56, 75, 96, 119, 144)
+#times = (11, 24, 39, 56, 75, 96, 119, 144)
 #times = (10, 30, 50, 70, 90, 100)
+times = (6, 42, 62, 86, 134, 160, 214, 276, 344, 398, 406, 456)
 steps = 100000
-param_number = 2
+param_number = 4
 eta = 0.5
 
 def summary(theta):
@@ -52,8 +53,8 @@ def lv(X,t,theta):
     
 def dx_dt(X, t, th):
     kA = th[0]
-    k2 = th[1]
-    k3 = 1.
+    k2 = 1.
+    k3 = th[1]
     k4 = 1.
     k5 = 1.
     y = array([(kA- k4)*X[0] - k2*X[0]*X[1] ,
@@ -86,8 +87,12 @@ def generate_dataset_mit(theta):
     return mit_osc.ds
 
 def generate_dataset_rep(theta):
-    hp = HillRepressilator(alpha = theta[0], beta=theta[1])
-    return hp.run(100)
+    hp = HillRepressilator(alpha = theta[0], alpha0=theta[1], beta=theta[2],n=theta[3] )
+    ds = hp.run(T=50)
+    dataset = np.zeros([data_points, 3])
+    for ind, time in enumerate(times):
+        dataset[ind, :] = ds[time, :]
+    return dataset
     
 #create a datapoint from 
 def create_datapoint(data):
@@ -249,10 +254,10 @@ def init_list():
     return lst
 
 #returns an np.array with values drawn from uniform(start, end)
-def draw_uniform(start, end):
+def draw_uniform(bounds):
     theta = np.array([])
     for i in range(param_number):
-        theta = np.append(theta, np.random.uniform(start, end))
+        theta = np.append(theta, np.random.uniform(bounds[i][0], bounds[i][1]))
     return theta
 
 #adds a particle (parameter vector) to corresponding sublists of current population
@@ -334,10 +339,10 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform(0., 5. )
+                sim_theta = draw_uniform([[500, 1500], [0, 5], [0, 10], [0, 5]])
                 print i, sim_theta, naccepted
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                error = euclidian_distance(sim_dataset, ds)
+                sim_dataset = generate_dataset_rep(sim_theta)
+                error = euclidean(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 if error < epsilon:
                     distances_prev.append(error)
@@ -345,11 +350,11 @@ def smc(dx_dt, ds, eps_seq):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            while naccepted < 100:
+            while naccepted < 50:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                error = euclidian_distance(sim_dataset, ds)
+                sim_dataset = generate_dataset_rep(sim_theta)
+                error = euclidean(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
@@ -370,6 +375,9 @@ def smc(dx_dt, ds, eps_seq):
         current_weights = init_list()
         t += 1
         naccepted = 0
+    print "="*20
+    print "steps taken ", i
+    print "="*20
     return populations
     
 def write_to_file(filename,theta):
@@ -451,31 +459,38 @@ def main_mit():
     populations = smc(dx_dt, mo.ds, [300.])
     sys.exit(0)
 
-if __name__ == "__main__":
-    orig_theta = [3., 1.]
-    orig_ds = generate_dataset(dx_dt, orig_theta)
-    #plt.plot(orig_ds)
-    #plt.show()
-    orig_ds_n = add_gaussian_noise(np.copy(orig_ds))
-    populations = smc(dx_dt, orig_ds_n, [60.])
-    last_population = populations[len(populations) - 1]
+def pca_sensitivity(last_population):
     last_p = np.transpose(np.array(last_population))
-    #plt.scatter(last_p[:, 0], last_p[:, 1])
-    #plt.figure()
     m = mean(last_p, axis=0)
     last_p = last_p - m
-    plt.scatter(last_p[:, 0], last_p[:, 1])
     last_p = np.transpose(last_p)
     sigma = np.cov(last_p)
     w, v = np.linalg.eig(sigma)
-    print "w1 ", w[0], w[0] / np.trace(sigma)
-    print "w2 ", w[1], w[1] / np.trace(sigma)
-    print "v1 ", v[0]
-    print "v2 ", v[1]
-    pcx = [0., v[0][0], 0.,  v[1][0]]
-    pcy = [0., v[0][1], 0. ,v[1][1]]
-    #plt.plot(pcx, pcy, 'r--')
-    #plt.show()
+    return w, v, sigma
+
+
+if __name__ == "__main__":
+    orig_theta = [1000, 1, 5, 2]
+    orig_ds = generate_dataset_rep(orig_theta)
+    orig_ds_n  = add_gaussian_noise_full(np.copy(orig_ds))
+    populations = smc(dx_dt, orig_ds_n, [150.])
+    last_population = populations[len(populations)-1]
+    for ind, pop in enumerate(last_population):
+        print "="*25
+        print "param " + str(ind)
+        print "mean: ", np.mean(pop)
+        print "var: ", np.cov(pop)
+        print "="*25
+    """
+    w, v, sigma = pca_sensitivity(last_population)
+    print "="*25
+    print "Cov"
+    print sigma
+    print "="*25
+    for vl, vc in zip(w, v):
+        print vl, vl / np.trace(sigma), vc
     
     
     
+    
+"""
