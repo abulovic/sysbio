@@ -28,14 +28,14 @@ from numpy import mean,cov,linalg
 
 #global vars used throughout
 epsilon = 5.0
-data_points = 12
+data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 #times = (10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
-#times = (11, 24, 39, 56, 75, 96, 119, 144)
+times = (11, 24, 39, 56, 75, 96, 119, 144)
 #times = (10, 30, 50, 70, 90, 100)
-times = (6, 42, 62, 86, 134, 160, 214, 276, 344, 398, 406, 456)
+#times = (3, 21, 31, 43, 67, 80, 112, 138, 172, 199, 203, 228)
 steps = 100000
-param_number = 3
+param_number = 4
 eta = 0.5
 
 def summary(theta):
@@ -55,8 +55,8 @@ def dx_dt(X, t, th):
     kA = th[0]
     k2 = 1.
     k3 = th[1]
-    k4 = 1.
-    k5 = 1.
+    k4 = th[2]
+    k5 = th[3]
     y = array([(kA- k4)*X[0] - k2*X[0]*X[1] ,
                -k3*X[1] + k5*X[2],
                k4*X[0] - k5*X[2]])
@@ -87,7 +87,7 @@ def generate_dataset_mit(theta):
     return mit_osc.ds
 
 def generate_dataset_rep(theta):
-    hp = HillRepressilator(alpha0=theta[0], beta=theta[1],n=theta[2])
+    hp = HillRepressilator(beta=theta[0])
     ds = hp.run(T=50)
     dataset = np.zeros([data_points, 3])
     for ind, time in enumerate(times):
@@ -339,10 +339,10 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform([[0, 5], [0, 10], [0, 5]])
+                sim_theta = draw_uniform([[0, 5], [0, 5], [0, 5], [0, 5], [0, 5] ])
                 print i, sim_theta, naccepted
-                sim_dataset = generate_dataset_rep(sim_theta)
-                error = euclidean(sim_dataset, ds)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 if error < epsilon:
                     distances_prev.append(error)
@@ -353,8 +353,8 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 50:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset_rep(sim_theta)
-                error = euclidean(sim_dataset, ds)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
@@ -470,10 +470,10 @@ def pca_sensitivity(last_population):
 
 
 if __name__ == "__main__":
-    orig_theta = [1, 5, 2]
-    orig_ds = generate_dataset_rep(orig_theta)
+    orig_theta = [3., 1., 1., 1.]
+    orig_ds = generate_dataset(dx_dt, orig_theta)
     orig_ds_n  = add_gaussian_noise_full(np.copy(orig_ds))
-    populations = smc(dx_dt, orig_ds_n, [150.])
+    populations = smc(dx_dt, orig_ds_n, [1050.])
     last_population = populations[len(populations)-1]
     for ind, pop in enumerate(last_population):
         print "="*25
@@ -481,7 +481,7 @@ if __name__ == "__main__":
         print "mean: ", np.mean(pop)
         print "var: ", np.cov(pop)
         print "="*25
-    """
+
     w, v, sigma = pca_sensitivity(last_population)
     print "="*25
     print "Cov"
@@ -493,4 +493,3 @@ if __name__ == "__main__":
     
     
     
-"""
