@@ -35,7 +35,7 @@ data_points = 12
 #times = (10, 30, 50, 70, 90, 100)
 times = (6, 42, 62, 86, 134, 160, 214, 276, 344, 398, 406, 456)
 steps = 100000
-param_number = 4
+param_number = 3
 eta = 0.5
 
 def summary(theta):
@@ -87,7 +87,7 @@ def generate_dataset_mit(theta):
     return mit_osc.ds
 
 def generate_dataset_rep(theta):
-    hp = HillRepressilator(alpha = theta[0], alpha0=theta[1], beta=theta[2],n=theta[3] )
+    hp = HillRepressilator(alpha0=theta[0], beta=theta[1],n=theta[2])
     ds = hp.run(T=50)
     dataset = np.zeros([data_points, 3])
     for ind, time in enumerate(times):
@@ -339,7 +339,7 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform([[500, 1500], [0, 5], [0, 10], [0, 5]])
+                sim_theta = draw_uniform([[0, 5], [0, 10], [0, 5]])
                 print i, sim_theta, naccepted
                 sim_dataset = generate_dataset_rep(sim_theta)
                 error = euclidean(sim_dataset, ds)
@@ -470,7 +470,7 @@ def pca_sensitivity(last_population):
 
 
 if __name__ == "__main__":
-    orig_theta = [1000, 1, 5, 2]
+    orig_theta = [1, 5, 2]
     orig_ds = generate_dataset_rep(orig_theta)
     orig_ds_n  = add_gaussian_noise_full(np.copy(orig_ds))
     populations = smc(dx_dt, orig_ds_n, [150.])
