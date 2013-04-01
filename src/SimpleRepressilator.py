@@ -3,8 +3,8 @@ import scipy, scipy.integrate, scipy.optimize, pylab, copy
 class HillRepressilator:
     def __init__(self, alpha=216., alpha0=0.216, beta=5., n=2.,
                  K_m=scipy.log(2.)/120., K_p=scipy.log(2.)/600.,
-                 T=20., K_b=1600.,
-                 y0=[0.1,0.2,0.3,0.,0.,0.]):
+                 T=50., K_b=1600.,
+                 y1=[0.1,0.2,0.3,0.,0.,0.], y0=[0, 0, 0, 2, 1, 3]):
         """Initiate a HillRepressilator (i.e., a Repressilator where the
         protein-DNA interaction is subsumed in a simple Hill function).
         Initialize instance parameters based on the input parameters
@@ -52,7 +52,8 @@ class HillRepressilator:
         trajectory had been created."""
         if times is None:
             if dT is None:
-                times = scipy.linspace(self.t, self.t+T, nT)
+                #times = scipy.linspace(self.t, self.t+T, nT)
+                times = scipy.arange(0., 50., 0.1)
             else:
                 times = scipy.arange(self.t, self.t+T, dT)
         traj = scipy.integrate.odeint(self.dydt, self.y, times, \
@@ -68,7 +69,7 @@ class HillRepressilator:
             self.y = self.traj[-1]
             self.times = scipy.concatenate((self.times, times))
             self.t = self.times[-1]
-        return traj
+        return traj[:, :3]#assume only mRna conc known
         
     def reset(self):
         self.t = 0.
