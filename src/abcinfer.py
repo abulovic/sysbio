@@ -25,6 +25,7 @@ from SimpleRepressilator import HillRepressilator
 from Mit_Oscillator import MitoticOscillator
 from scipy.spatial.distance import euclidean
 from numpy import mean,cov,linalg
+from Genetic_Oscillator import Oscillator
 
 #global vars used throughout
 epsilon = 5.0
@@ -35,7 +36,7 @@ times = (11, 24, 39, 56, 75, 96, 119, 144)
 #times = (10, 30, 50, 70, 90, 100)
 #times = (3, 21, 31, 43, 67, 80, 112, 138, 172, 199, 203, 228)
 steps = 100000
-param_number = 4
+param_number = 2
 eta = 0.5
 
 def summary(theta):
@@ -93,7 +94,12 @@ def generate_dataset_rep(theta):
     for ind, time in enumerate(times):
         dataset[ind, :] = ds[time, :]
     return dataset
-    
+
+def generate_dataset_osc(theta):
+    osc = Oscillator(deg_rate=theta[0], rep_strength=theta[1])
+    osc.run()
+    return osc.ds
+
 #create a datapoint from 
 def create_datapoint(data):
     datapoint = np.array([])
@@ -339,10 +345,10 @@ def smc(dx_dt, ds, eps_seq):
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform([[0, 5], [0, 5], [0, 5], [0, 5], [0, 5] ])
+                sim_theta = draw_uniform([[0, 20], [0, 5]])
                 print i, sim_theta, naccepted
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                error = euclidian_distance(sim_dataset, ds)
+                sim_dataset = generate_dataset_osc(sim_theta)
+                error = euclidean(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 if error < epsilon:
                     distances_prev.append(error)
@@ -353,8 +359,8 @@ def smc(dx_dt, ds, eps_seq):
             while naccepted < 50:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
-                error = euclidian_distance(sim_dataset, ds)
+                sim_dataset = generate_dataset_osc(sim_theta)
+                error = euclidean(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
@@ -470,6 +476,16 @@ def pca_sensitivity(last_population):
 
 
 if __name__ == "__main__":
+    orig_theta = [ 12,   1 ]
+    orig_ds = generate_dataset_osc(orig_theta)
+    populations = smc(dx_dt, orig_ds, [1000. ])
+    
+    """
+    sim_theta = [2.92908403,1.03987174,3, 1, -1]
+    sim_ds = generate_dataset_full(dx_dt, sim_theta)
+    orig_theta = [3., 1., 1., 1., 1.]
+    plt.plot(sim_ds)
+    plt.show()
     orig_theta = [3., 1., 1., 1.]
     orig_ds = generate_dataset(dx_dt, orig_theta)
     orig_ds_n  = add_gaussian_noise_full(np.copy(orig_ds))
@@ -489,7 +505,7 @@ if __name__ == "__main__":
     print "="*25
     for vl, vc in zip(w, v):
         print vl, vl / np.trace(sigma), vc
-    
+    """
     
     
     
