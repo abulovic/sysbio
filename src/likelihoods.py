@@ -10,6 +10,7 @@ from scipy import integrate, array
 import sys
 import oscillators
 import math
+from Genetic_Oscillator import Oscillator
 
 def log_likelihood(sim_ds, orig_ds):
     sum_dist = 0.
@@ -27,11 +28,11 @@ def log_likelihood_distance(sim_ds, orig_ds):
     
 def main_hopf():
     dx_dt = abc.dx_dt # simplest system with hopf bifurcation
-    orig_theta = [3., 1.]
+    orig_theta = [2.2, 1.]
     orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
     #orig_ds = abc.add_gaussian_noise_full(orig_ds)
-    param_range = np.arange(1., 4., 0.1)
-    param_range_1 = np.arange(0.5, 3, 0.1)
+    param_range = np.arange(.5, 7., 0.2)
+    param_range_1 = np.arange(4, 7, 0.2)
     likelihood_vals = np.zeros((len(param_range), len(param_range_1)))
     for ind1, th in enumerate(param_range):
         for ind2, th1 in enumerate(param_range_1):
@@ -225,18 +226,23 @@ def get_shape_sim(orig_ds, sim_ds):
         sim_score += sign_sim
         
     return sim_score / num_comps
-    
+
+def generate_dataset_osc(theta):
+    osc = Oscillator(deg_rate=theta[0])
+    osc.run()
+    return osc.ds
+
 if __name__ == "__main__":
-    dx_dt = abc.dx_dt
-    orig_theta = [3.]
-    orig_ds = abc.generate_dataset_full(dx_dt, orig_theta)
-    param_range = np.arange(1., 4., .1)
+#    main_hopf()
+    orig_theta = [12.]
+    orig_ds = generate_dataset_osc(orig_theta)
+    param_range = np.arange(0, 40, 0.1)
     likelihood_vals = []
     for th in param_range:
-        sim_ds = abc.generate_dataset_full(dx_dt, [th])
-        likelihood_vals.append(-get_shape_sim(orig_ds, sim_ds))
+        print th
+        sim_ds = generate_dataset_osc([th])
+        likelihood_vals.append(log_likelihood(sim_ds, orig_ds))
 
-    print likelihood_vals
     plt.plot(param_range, likelihood_vals)
     plt.show()
-    
+        
