@@ -92,9 +92,38 @@ $\mathbf{y}_{t_{k}} =\{ x_{1}^{t_{k}},  x_{2}^{t_{k}}, \dots,  x_{n}^{t_{k}} \}$
 \begin{equation*}
 \theta^* = \underset{\theta}{\arg\min}(d(\mathbf{Y_{d}},\mathbf{Y}_{s})) 
 \end{equation*}
-where $d$ is some distance metric or the cost function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.
+where $d$ is some distance metric or the cost function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.  %outline approach: pick parameter set, simulate, compute objective function..pick again..how to move in parameter space..all classic algorithms for optimisation..miniimising an objective function apply..levenbuerg-marquardt, steepest-descent..genetic-simulated-annealing..mendes paper, mention tool..no best tool for every application
+
+%then formulate the problem as maximum likelihood, equivalent under some assumptions(baker paper) to least squares fit with different schemes
+
+%then talk about ABC, older methods and newer based on simulation to approximate likelihood
+
+%talk about how to use the information given by SMC to get info about sensitivity
+
+%then effect of global dynamics on parameter estimatin process, although the effect has been demonstrated ...no research is concerned..how the shape of the likelihhod function which is crucial in the parameter inference process, outline connection between the 2 is affected by global dynamics(bifurcations) and thereofre that affects the parameter estimation process
+
+%then that's it for background, move to methods
 
 \section{Parameter Estimation}
+
+%starting talking a bit about software side..talk about the choice of python and the relative merits...talk about how the algorithms are implements and the structure of the code a bit
+
+% then to the business...talk and explain ABC in details
+
+%rejection sampler, MCMC with bacterial chemotaxis, SMC(talk about different perturbation kernels, adaptive epsilon  schedule etc.)
+
+%testing phase, LV dybnamics(small section on mathematical analysis to kinda link it through), choose another system(with dynamical analysis too)
+%get results with different kernels adaptive schedule etc.
+
+
+%second part
+
+%sensitivity with PCA on information from last population of smc blah blah
+
+
+%link the shape of the likelihhod function with parameter estimation process, get practical results...choose a system ...graph the likelihhood function both sites of a bifurcation point etc. etc., do a 2 parameter likelihhood surface plot as well
+
+
 \subsection{Methods}
 
 \subsection{Results}
