@@ -72,11 +72,27 @@ The problem therefore is to estimate those parameter values from experimental me
 \end{figure}
 
 Work on the first task of this project has led to some observations that potentially link the parameter estimation procedure with some more theoretical tools and aspects of the systems in question.  
-As has been previously discussed systems dynamics play an important role in our understanding of complex biological systems. The language of choice for their description(differential equations) enables us to use some of the tools developed in the field of dynamical systems to investigate the dynamics. Simple models like the one for the negative autoregulation network motif described previously are easy to understand intuitively but as the models grow intuition alone cannot help. Sensitivity analysis on these models tells us how much the observable behaviour of the system depends on specific parameters of the model. The second part of this study is firstly concerned with the connection between the practical considerations of parameter estimation and the more theoretical tool of sensitivity analysis. Is there a connection between the estimate for a parameter and the model's sensitivity to it? Bifurcation is a change in a system's dynamics as one of its parameters passes through a bifurcation point. In parameter estimation the effects of global dynamics are hardly ever considered despite the fact that their importance in understanding biological systems has been demonstrated. Do these global dynamics affect the parameter estimation procedure? This is also something that we try to address in the second part of this study.
+As has been previously discussed systems dynamics play an important role in our understanding of complex biological systems. The language of choice for their description(differential equations) enables us to use some of the tools developed in the field of dynamical systems to investigate the dynamics. Simple models like the one for the negative autoregulation network motif described previously are easy to understand intuitively but as the models grow intuition alone cannot help. Sensitivity analysis on these models tells us how much the observable behaviour of the system depends on specific parameters of the model. The second part of this study is firstly concerned with the connection between the practical considerations of parameter estimation and the more theoretical tool of sensitivity analysis. Is there a connection between the estimate for a parameter and the model's sensitivity to it? Bifurcation is a change in a system's dynamics as one of its parameters passes through a bifurcation point. In parameter estimation the effects of global dynamics are hardly ever considered despite the fact that their importance in understanding biological systems has been demonstrated\cite{}. Do these global dynamics affect the parameter estimation procedure? This is also something that we try to address in the second part of this study.
 
 
-\section{Background}
+\section{Background Research}
 \label{sec:background}
+The parameter estimation problem as posed in the previous section is the inverse problem of going from world observables to models that represent those observables. To formalise this problem, we have a proposed model for our system which describes the evolution of all variables(components) $\mathbf{x} = \{x_1, x_2, \dots, x_n\}$ like so:
+\begin{equation}
+\label{eq:system}
+\begin{array}{lcl}
+\dot x_1 & = & f(\mathbf{x}, t, \theta) \\
+\dot x_2& = & f(\mathbf{x}, t, \theta) \\
+\vdots \\
+\dot x_n & = & f(\mathbf{x}, t, \theta) \\
+\end{array}
+\end{equation}
+We also have the observations of the world in the form of experimental data at $N$ different time points like so $\mathbf{Y_d} = \{\mathbf{y}_{t_{1}},  \mathbf{y}_{t_{2}}, \dots, \mathbf{y}_{t_{N}}\}$ where the obseration at time point $t_{k}$ tells the state of the system(concentration of $n$ variables) at that point so 
+$\mathbf{y}_{t_{k}} =\{ x_{1}^{t_{k}},  x_{2}^{t_{k}}, \dots,  x_{n}^{t_{k}} \}$. The problem then become to find the parameter vector $\theta^*$ from the set of all the possible parameter vectors $\mathbf{\Theta}$ so that the model $\mathbf{\dot x} = \mathbf{F}(\mathbf{x}, t, \mathbf{\theta^*})$  \ref{eq:system} fits the experimental data best. The fitness of a particular parameter vector $\theta_{s}$ can be assessed with a distance metric between the experimental data $\mathbf{Y}_{d}$ and a simulated solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$. Then the problem becomes the minimisation of this distance metric. Then this is a common optimisation problem formulation: 
+\begin{equation*}
+\theta^* = \underset{\theta}{\arg\min}(d(\mathbf{Y_{d}},\mathbf{Y}_{s})) 
+\end{equation*}
+where $d$ is some distance metric or the cost function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.
 
 \section{Parameter Estimation}
 \subsection{Methods}
