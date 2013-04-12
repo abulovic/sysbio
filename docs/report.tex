@@ -90,9 +90,9 @@ The parameter estimation problem as posed in the previous section is the inverse
 We also have the observations of the world in the form of experimental data at $N$ different time points like so $\mathbf{Y_d} = \{\mathbf{y}_{t_{1}},  \mathbf{y}_{t_{2}}, \dots, \mathbf{y}_{t_{N}}\}$ where the obseration at time point $t_{k}$ tells the state of the system(concentration of $n$ variables) at that point so 
 $\mathbf{y}_{t_{k}} =\{ x_{1}^{t_{k}},  x_{2}^{t_{k}}, \dots,  x_{n}^{t_{k}} \}$. The problem then become to find the parameter vector $\theta^*$ from the set of all the possible parameter vectors $\mathbf{\Theta}$ so that the model $\mathbf{\dot x} = \mathbf{F}(\mathbf{x}, t, \mathbf{\theta^*})$  \ref{eq:system} fits the experimental data best. The fitness of a particular parameter vector $\theta_{s}$ can be assessed with a distance metric between the experimental data $\mathbf{Y}_{d}$ and a simulated solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$. Then the problem becomes the minimisation of this distance metric. Then this is a common optimisation problem formulation: 
 \begin{equation*}
-\theta^* = \underset{\theta}{\arg\min}(d(\mathbf{Y_{d}},\mathbf{Y}_{s})) 
+\theta^* = \underset{\theta}{\arg\min}(\Delta(\mathbf{Y_{d}},\mathbf{Y}_{s})) 
 \end{equation*}
-where $d$ is some distance metric or the cost function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.  Generally optimisation algorithms have the same outline:
+where $\Delta$ is some distance metric or the cost function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.  Generally optimisation algorithms have the same outline:
 \begin{enumerate}[noitemsep]
 \item{Start with some choice $\theta_{s}$ for model's adjuastable parameters from $\mathbf{\Theta}$}
 \item{Simulate solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$ and evaluate distance/cost function}
@@ -100,7 +100,7 @@ where $d$ is some distance metric or the cost function in optimisation language.
 \item{Generate a new guess $\theta_{s}$ from $\mathbf{\Theta}$}
 \item{Return to 2}
 \end{enumerate}
-Then the difference between different choices for optimisation algorithms is how to more efficiently search the parameter space $\mathbf{\Theta}$ and all the classic techniques like steepest-descent, variants of Newton's method, Levenberg–Marquardt have been used in different applications with varying degrees of success\cite{mendes1998non}. Other optimisation techniques used in some application include simulated annealing\cite{kirkpatrick1983optimization} which makes stochastic decisions for the movement in the search space $\mathbf{\Theta}$ to avoid common problems of classic optimisation algorithms like getting stuck at local optima. Attemps to compare different optimisation techniques generally come to the conclusion that the success of the algorithm depends on the applicaiton and that there is no single algorithm that outperforms the others in all applications where there is the risk that some algorithms even though they perform well in some problems they might even completely fail in others(for a full treatment and comparison of a number of different methods see \cite{mendes1998non}). 
+Then the difference between different choices for optimisation algorithms is how to more efficiently search the parameter space $\mathbf{\Theta}$ and all the classic techniques like steepest-descent, variants of Newton's method, Levenberg–Marquardt have been used in different applications with varying degrees of success\cite{mendes1998non}. Other optimisation techniques used in some application include simulated annealing\cite{kirkpatrick1983optimization} which makes stochastic decisions for the movement in the search space $\mathbf{\Theta}$ to avoid common problems of classic optimisation algorithms like getting stuck at local extrema. Attemps to compare different optimisation techniques generally come to the conclusion that the success of the algorithm depends on the applicaiton and that there is no single algorithm that outperforms the others in all applications where there is the risk that some algorithms even though they perform well in some problems they might even completely fail in others(for a full treatment and comparison of a number of different methods see \cite{mendes1998non}). 
 
 A maximum-likelihood approach to parameter estimation in this domain has also been used for some applications. In this formulation of the problem one tries to find the values of the parameters that are more likely to have been used to generate the observed data in other words trying the maximise the likelihood function of obtaining the data. Likelihood functions are generally associated with probabilistic models but subject to some assumptions it reduces to traditional least-square data fitting. These assumptions are:
 \begin{itemize}[noitemsep]
@@ -118,12 +118,25 @@ There have been a few attempts to capture some qualitative features like the sha
 So there is a wide variety of techniques available to use in the problem but as far as application tools go the choice is not that big. There are a few tools (\href{http://www.math.pitt.edu/~bard/xpp/xpp.html}{XPP-Auto}, GRIND, \href{http://www.copasi.org/tiki-view_articles.php}{COPASI}) that are used because they allow modelers to get an intuition and greater understanding of the model in question usually by graphical means such as plotting bifurcation diagrams and allowing them to see the changes in the dynamics of the system as parameters change. And although they help in parameter estimation they do not address the problem directly. One tool that addresses the problem directly is the ABC-Sysbio\cite{liebe2010abcpy} which can be embedded in external code or used as a stand-alone application. This tool does automatic parameter estimation using Sequential Monte Carlo method.
 
 \section{Parameter Estimation}
-\subsection{Implementation details}
-The language of choice for the implementation of the tool is Python. It is a highly extensible language leading to the development of a hige number of third party libraries for many tasks. There exist many scientific packages in Python like scipy\cite{scipy}, numpy with a large and lively community of users. It is also a free language therefore easily available making it a good choice for the development of tools that can be accessible to large user-base. Its use in systems biology is also increasing\cite{myers2007python, olivier2002modelling}.
+In this study we have mainly focused on ABC methods as outlined in the previous section. The use of ABC methods arose in applications where the computation of the likelihhood function,
+\begin{equation*}
+L(\theta) = f(\mathbf{Y_{d}} | \theta),
+\end{equation*}
+where $\mathbf{Y_{d}}$ are realisation of the data and $\theta$ is the parameter vector associataed with the model. The main theme in ABC approaches is the use of systematic comparison between real data and simulated data to approximate the Likelihood function and therefore arrive at the desired posteriror distribution,
+\begin{equation*}
+p(\theta|\mathbf{Y_{d}}) \propto f(\mathbf{Y_{d}|\theta})\pi(\theta),
+\end{equation*}
+where $\pi(\theta)$ is the prior distribution of parameters $\theta$. Typically simulating from $f(\mathbf{Y_{d}} | \theta)$ is straightforward. We then compare the simulated dataset $\mathbf{Y_{s}}$ with the real data $\mathbf{Y_{d}}$ and accept only those simulations where some distance metric between the two $\Delta(\mathbf{Y_{s}}, \mathbf{Y_{d}})$ falls below a certain threshold value $\epsilon$.  Generally ABC methods have the following form:\begin{enumerate}[noitemsep]
+\item{Sample a parameter vector $\theta^*$ from a proposal distribution $\pi(\theta) $}
+\item{Simulate a dataset $\mathbf{Y_{s}}$ from the model characterised by conditional probability distribution $f(\mathbf{Y_{d}}|\theta)$}
+\item{Compare the simulated dataset $\mathbf{Y_{s}}$ and observations $\mathbf{Y_{d}}$ according to some distance function $\Delta$. If $\Delta(\mathbf{Y_{s}}, \mathbf{Y_{d}}) < \epsilon$ where $\epsilon$ is the error tolerance of accepted solutions, then accept $\theta*$ otherwise reject. }
+\end{enumerate}
+%wrte about how that if epsilon is small enough then what we will get back is a sample from the true posterior..also write the integral
+%write some stuff about inefficiencies of sampling from areas of parameter space with low-likelihood...how that led to other methods
 \subsection{Methods}
 
 \subsection{Results}
-%starting talking a bit about software side..talk about the choice of python and the relative merits...talk about how the algorithms are implements and the structure of the code a bit
+
 
 % then to the business...talk and explain ABC in details
 
@@ -133,14 +146,17 @@ The language of choice for the implementation of the tool is Python. It is a hig
 %get results with different kernels adaptive schedule etc.
 
 
+
+\subsection{Implementation details}
+%starting talking a bit about software side..talk about the choice of python and the relative merits...talk about how the algorithms are implements and the structure of the code a bit
+The language of choice for the implementation of the tool is Python. It is a highly extensible language leading to the development of a huge number of third party libraries for many tasks. There exist many scientific packages in Python like scipy\cite{scipy}, numpy with a large and lively community of users. It is also a free language therefore easily available making it a good choice for the development of tools that can be accessible to large user-base. Its use in systems biology is also increasing\cite{myers2007python, olivier2002modelling}.
+\section{Parameter Inference linked to system dynamics}
 %second part
 
 %sensitivity with PCA on information from last population of smc blah blah
 
 
 %link the shape of the likelihhod function with parameter estimation process, get practical results...choose a system ...graph the likelihhood function both sites of a bifurcation point etc. etc., do a 2 parameter likelihhood surface plot as well
-\section{Parameter Inference linked to system dynamics}
-
 \section{Discussion and Future Work}
 
 \newpage
