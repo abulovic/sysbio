@@ -17,7 +17,10 @@
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
 \begin{document}
-
+%\abovedisplayskip=2pt
+%\abovedisplayshortskip=2pt
+%\belowdisplayskip=2pt
+%\belowdisplayshortskip=2pt
 \input{./title.tex}
 \begin{abstract}
 Recent advances in experimental technology have given us detailed and comprehensive information on networks of biological interactions governing various functions of living organisms. This had led to an increase in the use of theoretical mathematical models to describe dynamic biological systems which has in turn led to an increasing need for computational tools to assist in the process of constructing these models and estimating their parameters from available experimental data. Although there is a rich literature on parameter estimation using a number of different techniques, very few attempts have been made to systematically attack the parameter estimation problem for these kinds of systems. From those, almost all of them attempt a mere reproduction of experimental data, disregarding important properties of those systems like their qualitative features and the effect of global system dynamics. 
@@ -100,7 +103,7 @@ $\mathbf{y}_{t_{k}} =\{ x_{1}^{t_{k}},  x_{2}^{t_{k}}, \dots,  x_{n}^{t_{k}} \}$
 \end{equation*}
 where $\Delta$ is some distance metric, also called cost or objective function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods\cite{Moles2003param}.  Generally optimisation algorithms have the same outline:
 \begin{enumerate}[noitemsep]
-\item{Start with some choice $\theta_{s}$ for model's adjuastable parameters from $\mathbf{\Theta}$}
+\item{Start with some choice $\theta_{s}$ for model's adjustable parameters from $\mathbf{\Theta}$}
 \item{Simulate solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$ and evaluate distance/cost function}
 \item{Stop if some termination criterion is met, for example cost function is less than some threshold value $\epsilon$}
 \item{Generate a new guess $\theta_{s}$ from $\mathbf{\Theta}$}
@@ -149,44 +152,104 @@ The output of the ABC algorithm is a sample from a distribution of the form,
 \begin{equation}
 p_\epsilon(\theta|\mathbf{Y_{d}}) \propto \int f(\mathbf{Y_{s}}|\theta)  (\Delta(\mathbf{Y_{d}}, \mathbf{Y_{s}} \leq \epsilon) \pi(\theta)  \text{ }\mathrm{d}\mathbf{Y_{s}},
 \end{equation}
-If the chosen value for $\epsilon$ is small enough then the obtained distribution $p_\epsilon(\theta | \mathbf{Y_{d}})$ will be a good approximation for $p(\theta | \mathbf{Y_{d}})$. Sometimes when the comparison between real and simulated datasets is difficult summary statistics of the datasets, $S(\mathbf{Y_{d}})$ and $S(\mathbf{Y_{s}})$ can be compared instead. The ABC scheme as outlined above is not very efficient in its search of the parameters space as it spends a lot of time in areas of very low likelihhood where the simulated solution will no resemble the data. To this direction different computational schemes have been devised like Markov Chain Monte Carlo\cite{marjoram2003markov} where previous good choices advise the next choices thus creating a Marko Chain with stationary distributiont the posterior and Sequential Monte Carlo methods where you sample with a decreasing $\epsilon$-schedule and from a series of distributions that increasingly resemble the target posterior\cite{del2006sequential, sisson2007sequential, toni2009abc}. These are the basic flavours of ABC methods although there are variants of each and these were the methods implemented and incorporated for the parameter estimation tool. In the next section there are more detailed accounts for the implemented algorithms followed by test results on 2 systems.
+If the chosen value for $\epsilon$ is small enough then the obtained distribution $p_\epsilon(\theta | \mathbf{Y_{d}})$ will be a good approximation for $p(\theta | \mathbf{Y_{d}})$. Sometimes when the comparison between real and simulated datasets is difficult summary statistics of the datasets, $S(\mathbf{Y_{d}})$ and $S(\mathbf{Y_{s}})$ can be compared instead. The ABC scheme as outlined above is not very efficient in its search of the parameters space as it spends a lot of time in areas of very low likelihood where the simulated solution will no resemble the data. To this direction different computational schemes have been devised like Markov Chain Monte Carlo\cite{marjoram2003markov} where previous good choices advise the next choices thus creating a Markov Chain with stationary distribution the posterior and Sequential Monte Carlo methods where you sample with a decreasing $\epsilon$-schedule and from a series of distributions that increasingly resemble the target posterior\cite{del2006sequential, sisson2007sequential, toni2009abc}. These are the basic flavours of ABC methods although there are variants of each and these were the methods implemented and incorporated for the parameter estimation tool. In the next section there are more detailed accounts for the implemented algorithms followed by test results on 2 systems.
 
 \subsection{Simple Rejection Sampler}
-The simpler ABC algorithm is a simple rejection sampler\cite{pritchard1999population} which basically follows the general form as outlined before without any modifcations. It samples from a prior distribution without taking into account correct guesses and 'blindly' continues to draw samples from the prior:
+\label{sec:rejection_sampler}
+The simpler ABC algorithm is a simple rejection sampler\cite{pritchard1999population} which basically follows the general form as outlined before without any modifications. It samples from a prior distribution without taking into account correct guesses and 'blindly' continues to draw samples from the prior:
 \begin{enumerate}[noitemsep]
 \item{Sample a parameter $\theta ^*$ from prior distribution $\pi(\theta)$.}
 \item{Simulate a dataset $\mathbf{y}^*$  from model with parameters $\theta ^*$.}
 \item{If $\Delta(\mathbf{Y_{s}}, \mathbf{Y}) < \epsilon$ accept $\theta^*$, otherwise reject.}
 \end{enumerate}
-The distance function used is a simple Euclidean distance metric defined as usual by: 
+The distance function used is a simple Euclidean distance metric,
 \begin{equation}
 \sum_{i=0}^{N} (\mathbf{Y_{d}}^{i} -\mathbf{Y_{s}}^{i})^2,
 \end{equation}
-where $\mathbf{Y_{s}}$ is the simulated dataset and $\mathbf{Y_{d}}$ is the observed dataset. This distance metric is related to traditional Maximum Likelihhod Estimation subject to some assumptions and we will show that in details in later section. Obviously the acceptance rate for this algorithm is really low if the prior distribution is very different from the posterior since it does not take into account previous good guesses to inform the search and keeps 'blindly' jumping in parameter space. This low acceptance rate means a high number of simulation steps are needed to get a reasonable number of accepted samples to approximate the posterior and although the simulation does not have a high computational cost the number of steps needed make this algorithm a poor choice and it was just implemented as a reference point to see the improvements with the more sophisticated algorithms. For precise results see later section.
+where $\mathbf{Y_{s}}$ is the simulated dataset and $\mathbf{Y_{d}}$ is the observed dataset. This distance metric is related to traditional Maximum Likelihood Estimation subject to some assumptions and we will show that in detail in a later section. Obviously the acceptance rate for this algorithm is really low if the prior distribution is very different from the posterior since it does not take into account previous good guesses to inform the search and keeps 'blindly' jumping in parameter space. This low acceptance rate means a high number of simulation steps are needed to get a reasonable number of accepted samples to approximate the posterior and although the simulation does not have a high computational cost the number of steps needed make this algorithm a poor choice and it was just implemented as a reference point to see the improvements with the more sophisticated algorithms. For precise results see later section.
 \subsection{Markov Chain Monte Carlo(MCMC)}
+An improvement to the random search of the simple rejection sampler is offered by a Markov Chain Monte Carlo method in the spirit of the traditional Metropolis-Hastings algorithm but slightly modified to fit this problem\cite{marjoram2003markov}. The intuition behind this algorithm is that you use previous good guesses as a basis for the next sampling thereby creating a Markov Chain with stationary distribution the goal posterior:
+\begin{enumerate}[noitemsep]
+\item{Initialise $\theta_{i}, i = 0$.}
+\item{Sample a candidate parameter vector $\theta^*$ from a proposal distribution $q(\theta^* | \theta_{i})$.}
+\item{Simulate a dataset $\mathbf{y}^*$ from model with parameters $\theta^*$.}
+\item{If $d(\mathbf{y}^*, \mathbf{Y}) < \epsilon$ jump to new value $\theta^*$ - making it the next value in the chain, $\theta_{i+1} = \theta^*$- with a probability given by:
+\begin{equation*}
+a = min \left(1, \frac{\pi(\theta^*)q(\theta_{i} | \theta^*)}{\pi(\theta_{i}q(\theta^*|\theta_{i})}\right)
+\end{equation*}}
+\item{Set i=i+1 and continue from 2.}
+\end{enumerate}
+One of the decisions that was taken was to use an adaptive Gaussian distribution as a proposal distribution $q$. The proposal Gaussian from which we sample has big variance at first so that it will make big jumps in the parameter space. Once a good sample is found the variance of the proposal distribution is decreased to stay in the area. But that has the problem of getting stuck at local optimum areas for a long period of time so a rejection count is employed. If in the close vicinity we keep rejecting then the variance of the proposal distribution is increased to move out of that area. That way areas with many accepted samples are oversampled in the final population. It should be noted that univariate Gaussians were used for the proposal distributions, with each parameter in the parameter vector $\theta$ coming from a different proposal distribution. The relations between the parameters are however captured in the fact that when a sample is accepted it is accepted as whole. Despite the attempts to avoid the problem of getting stuck at local sub-optima, this algorithm is still prone to doing exactly that. One possible improvement is to change it to the original Metropolis-Hastings and therefore accepting (with low probability) samples that do not come close to the observed data. That way sometimes jumps will be made to other areas which can result in better exploration of the parameter space. This can also give a resulting population with more than one candidate value and then other criteria can be used to evaluate the fitness of the model with both set of candidate parameters. 
 \subsection{Sequential Monte Carlo(SMC)}
+Another variation of the ABC form is the Sequential Monte Carlo approach\cite{toni2009abc} which combines the common ABC algorithm form with a Sequential Monte Carlo approach.  In this algorithm instead of having a single $\epsilon$ value as tolerance we have an $\epsilon$ schedule of a series of decreasing values $\epsilon_T < \epsilon_{T-1} \dots < \epsilon_{1}$. We start by sampling from the prior $\pi(\theta)$ as before at algorithmic time $t=1$ with a tolerance level $\epsilon_{1}$. Then we accept or reject the generated samples with a comparison between real and simulated data in the standard ABC fashion. The population of accepted particles is therefore an approximation for $p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$. Then at algorithmic time $t=2$ instead of sampling again from the prior $\pi(\theta)$ we sample from the distribution obtained at the previous step $p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$. The new samples are perturbed with a perturbation kernel. The perturbed particles are then accepted or rejected as before subject to new tolerance level $\epsilon_{2}$ thus creating the second population. This procedure is repeated for all all $T$ tolerance levels in the $\epsilon$-schedule therefore creating distributions \{$p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$,$p_{\epsilon_{2}}(\mathbf{Y_{d}}|\theta), $\dots, $p_{\epsilon_{T}}(\mathbf{Y_{d}}|\theta)$\} along the way. If the final $\epsilon_{T}$ is small enough then the final population should be a good approximation of the target posterior.  The algorithm therefore describes a particle-filtering procedure -we pass and filter a population of parameter values sampled from a prior $\pi(\theta)$  from a series of distributions with the decreasing $\epsilon$-schedule so that the intermediate distributions gradually go towards the posterior(this particle-filtering view can be better seen with Figure\ref{fig:smc}). The particular SMC algorithm that we use is from \cite{toni2009abc} which also uses the notion of importance sampling, assigning weights to each particle in the population and then in the next step sampling from the weighted distribution,
+\begin{figure}
+\centering
+\includegraphics[width=0.5\linewidth]{ABCSMC}
+\caption{In the SMC algorithm a sample from the prior distribution $\pi(\theta)$ is passed through filtering steps where the probability of the particles to represent the data best is updated during the algorithm via intermediate distributions. The final distribution $p_{\epsilon_{T}}$ is an approximation of the posterior distribution. The SMC  algorithm follows a particle-filtering approach.}
+\label{fig:smc}
+\end{figure}
+
+\begin{enumerate}[noitemsep]
+\item{Initialise the $\epsilon$-sequence $\epsilon_{1}, \dots, \epsilon_{T}$}
+\item{If $t=0$, sample $\theta^**$ from prior $\pi(\theta)$\\
+Else, sample $\theta^*$ from previous population $\theta_{t-1}^{i}$ with weights $w_{t-1}$ and perturb it with a perturbation kernel $K_{t}(\theta|\theta^*) $ to get particle $\theta^{**}$.}
+\item{Simulate dataset $\mathbf{y}^*$ from model with parameters $\theta^{**}$.}
+\item{if $d(\mathbf{y}^*, \mathbf{Y}) > \epsilon_{t}$ go back to 2, otherwise accept particle -set $\theta_{t}^{(i)} = \theta^{**}$- and calculate its associated weight by:
+\begin{equation*}
+w_{t}^{(i)} = \begin{cases} 1, & \mbox{if } t\mbox{ = 0} \\ \frac{\pi(\theta_{t}^{(i)})}{\sum_{j-1}^N w_{t-1}^{(j)}K_{t}(\theta_{t-1}^{(j)}, \theta_{t}^{(i)}} , & \mbox{if } \mbox{$ t > 0$} \end{cases}
+\end{equation*} }
+\item{Continue for all $\epsilon \in \left\{{\epsilon_{1}, \dots, \epsilon_{T}}\right\}$}
+\end{enumerate}
+
+It should be noted that in the special case where $T=1$ the algorithm reduces to the simple rejection algorithm described in section \ref{sec:rejection_sampler}.  The success of the algorithm both in computational and quality of the solution depends on the choice of the $\epsilon$ schedule and the perturbation kernel $K_{t}$. The effect of the $\epsilon$-schedule is easy to see: if two successive tolerance levels $\epsilon_{t}$ and $\epsilon_{t+1}$ are close to each other then the corresponding intermediate distributions $p_{\epsilon_{t}}(\mathbf{Y_{d}}|\theta)$ and $p_{\epsilon_{t+1}}(\mathbf{Y_{d}}|\theta)$  will be similar and therefore the acceptance rate of the filtering procedure at that step will be high with the disadvantage however that the procedure will not much progress towards the posterior.  A slowly decreasing $\epsilon$-schedule will therefore results in a high number of filtering steps(large value of $T$). On the other hand if two successive tolerance values are further apart the opposite holds: the acceptance rate will suffer but the progress of the algorithm will be faster with a lower number of iterations. Despite the easy to understand intuition determining what tolerance values are close and which ones are not depends on the application at hand. Therefore there is the danger that the algorithms completely fails with particular choices of the $\epsilon$-schedule. The common choice until recently was to manually fix the schedule of tolerance values beforehand according to the model however there have been proposals for an adaptive schedule. Although we started with a hand-tuned schedule we changed that to an adaptive choice. At step $t+1$ the choice for the tolerance level, $\epsilon_{t+1}$ at that step is based on the $a$-th quantile of the distances between the accepted simulated data $\{\mathbf{Y_{s}}^{(i,t)}\}_{1 \le i \le N}$ and real data $\mathbf{Y_{d}}$ at previous step $t$. We have found that the adaptive choice for the schedule with the correct choice of $a$ improves the efficiency of the algorithm significantly for our tests cases. However in \cite{silk2012optimizing} it is argued that some choices of $a$ may result in the algorithm not converging to the required posterior $p_{\epsilon}(\cdot| \theta)$ so the value of the choice of the quantile is an important one.
+
+The second algorithm setting that affects the performance is the choice for the perturbation kernel $K_{t}$. A local perturbation kernel hardly moves the particles and therefore results in high acceptance rates in the filtering steps if the successive tolerance levels are close enough.  A perturbation kernel with higher variance spreads the search more resulting in better exploration of the parameter space but at the cost of low acceptance rates. Various perturbation kernels have been proposed, component-wise normal and uniform, multivariate normal and uniform, more local ones depending on a part of the previous population or on the local Fisher Information. In \cite{filippi2011optimal} they also try to find optimality criteria for these kernels. In our implementation at first a component-wise perturbation uniform kernel was used so each parameter was sampled and perturbed independently. The $k$-th component of parameter vector $\theta$ was perturbed with uniform kernel $\sim \mathcal{U}(\theta_{k}-\sigma_{j}^{t}, \theta_{k}+\sigma_{j}^{t})$.  We set the value for $\sigma_{j}^{t}$ to the scale of the previous population,
+\begin{equation*}
+\sigma_{j}^{t} \approx ( \underset{1 \le j \le N}{\max}\{\theta_{k}^{t-1}\} - \underset{1 \le j \le N}{\min}\{\theta_{k}^{t-1}\}).
+\end{equation*} 
+We have also tried multivariate kernels and in particular one with M-nearest neighbours.  This proceeds in the following way:  for each sampled particle $\theta$ its M nearest neighbours from the previous population $\{ \theta^{(\i, t-1)}m 1 \le i \le N\}$ are selected and the particle is perturbed according to a multivariate Gaussian distribution with mean $\theta$ and covariance matrix the empirical covariance matrix of those M-nearest neighbours, $\Sigma_{\theta, M}^{(t)}$.  
+
+We provide some results in the Results section\ref{sec:results} in an attempt to compare the efficiency between the different settings of the algorithm but for a more detailed and formal treaty of the topic we refer to \cite{filippi2011optimal}. 
+\subsubsection{Using Fourier Distance as a distance metric}
+In the work of \cite{konopka2010gene}, the observations for the system's variables are treated as signals and their Fourier Transforms are used as a tool for model selection. We try to use the Fourier Transform as part of the distance function $\Delta$ that is used to compare real and simulated data in the SMC algorithms in order to try and capture some qualitative features of the system in question like the shape of the functions.For example this is particularly important for applications that require the presence of oscillations. In those cases a mere reproduction of the experimental data is not enough. We created a new value called 'Fourier Distance' between real $\mathbf{Y_{d}}$ and simulated datasets $\mathbf{Y_{S}}$
+
 \subsection{Results}
+\label{sec:results}
+\subsubsection{Parameter inference for Lotka-Volterra model}
+\subsubsection{Parameter inference for other model}
 
-
-% then to the business...talk and explain ABC in details
-
-%rejection sampler, MCMC with bacterial chemotaxis, SMC(talk about different perturbation kernels, adaptive epsilon  schedule etc.)
-
-%testing phase, LV dybnamics(small section on mathematical analysis to kinda link it through), choose another system(with dynamical analysis too)
 %get results with different kernels adaptive schedule etc.
-
-
 
 \subsection{Implementation details}
 %starting talking a bit about software side..talk about the choice of python and the relative merits...talk about how the algorithms are implements and the structure of the code a bit
 The language of choice for the implementation of the tool is Python. It is a highly extensible language leading to the development of a huge number of third party libraries for many tasks. There exist many scientific packages in Python like scipy\cite{scipy}, numpy with a large and lively community of users. It is also a free language therefore easily available making it a good choice for the development of tools that can be accessible to large user-base. Its use in systems biology is also increasing\cite{myers2007python, olivier2002modelling}.
+
+
+
+
+%=======================================================================================================================================================================================================================
+%=======================================================================================================================================================================================================================
+%=======================================================================================================================================================================================================================
+
+
+
 \section{Parameter Inference linked to system dynamics}
 %second part
-
+\subsection{Parameter inferecence and Sensitivity analysis}
 %sensitivity with PCA on information from last population of smc blah blah
-
+\subsection{Effect of global dynamics on parameter inference}
 
 %link the shape of the likelihhod function with parameter estimation process, get practical results...choose a system ...graph the likelihhood function both sites of a bifurcation point etc. etc., do a 2 parameter likelihhood surface plot as well
+
+
+
+
+%=======================================================================================================================================================================================================================
+%=======================================================================================================================================================================================================================
+%=======================================================================================================================================================================================================================
+
+
+
 \section{Discussion and Future Work}
 
 \newpage
