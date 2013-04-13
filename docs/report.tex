@@ -11,6 +11,7 @@
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{listings}
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage[nottoc]{tocbibind}
@@ -211,12 +212,7 @@ We have also tried multivariate kernels and in particular one with M-nearest nei
 
 We provide some results in the Results section\ref{sec:results} in an attempt to compare the efficiency between the different settings of the algorithm but for a more detailed and formal treaty of the topic we refer to \cite{filippi2011optimal}. 
 \subsubsection{Using Fourier Distance as a distance metric}
-In the work of \cite{konopka2010gene}, the observations for the system's variables are treated as signals and their Fourier Transforms are used as a tool for model selection. We try to use the Fourier Transform as part of the distance function $\Delta$ that is used to compare real and simulated data in the SMC algorithms in order to try and capture some qualitative features of the system in question like the shape of the functions.For example this is particularly important for applications that require the presence of oscillations. In those cases a mere reproduction of the experimental data is not enough. We created a new value called 'Fourier Distance' between real $\mathbf{Y_{d}}$ and simulated datasets $\mathbf{Y_{S}}$
-
-\subsection{Results}
-\label{sec:results}
-\subsubsection{Parameter inference for Lotka-Volterra model}
-\subsubsection{Parameter inference for other model}
+In the work of \cite{konopka2010gene}, the observations for the system's variables are treated as signals and their Fourier Transforms are used as a tool for model selection. We try to use the Fourier Transform as part of the distance function $\Delta$ that is used to compare real and simulated data in the SMC algorithms in order to try and capture some qualitative features of the system in question like the shape of the functions.For example this is particularly important for applications that require the presence of oscillations. In those cases a mere reproduction of the experimental data is not enough. We created a new value called 'Fourier Distance' between real $\mathbf{Y_{d}}$ and simulated datasets $\mathbf{Y_{s}}$ defined as the average distance between the dominant components of the Fourier Transforms of the constituent signals(variables) of the two. In pseudocode:
 
 %get results with different kernels adaptive schedule etc.
 
