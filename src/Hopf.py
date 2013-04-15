@@ -71,26 +71,24 @@ def main_snic():
 def main_hopf():
     X0 = [1, 1]
     t = np.linspace(0, 100, 1000)
-    orig_theta = [-0.2, 1, 1]
+    orig_theta = [0.4,1, 1]
     ds = integrate.odeint(hopf, X0, t,  args=(orig_theta,))
-    plt.plot(t, ds)
-    plt.figure()
-    plt.plot(ds[:,0], ds[:, 1])
-    plt.show()
-    """
-    param_range = np.arange(-2, 2, 0.1)
+
+    param_range = np.arange(-2, 2, 0.01)
     likelihood_vals = []
     for th in param_range:
         print th
         sim_ds = integrate.odeint(hopf, X0, t,  args=([th],))
         likelihood_vals.append(log_likelihood(sim_ds, ds))
 
-        
+    print max(likelihood_vals)
     plt.plot(param_range, likelihood_vals)
-    plt.figure()
-    plt.plot(t, ds)
+    plt.plot(0.4, 0, 'ro', linewidth=15.0)
+    plt.xlabel('$\mu$')
+    plt.ylabel('$ln(L(\mu))$')
+    plt.title("$\mathbf{Y_d}(\mu^*=0.4)$")
+    plt.ylim((-2000, 100))
     plt.show()
-    """
     
     
 def main_polar():
