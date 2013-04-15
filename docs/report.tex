@@ -39,7 +39,7 @@ However recent advances in experimental technology like microarray experiments w
 These common network motifs can then be assembled and be parts of larger networks of interactions that perform more complicated functions.  Such networks that their network structure is though to be well understood and have been the subject of much study both experimentally but even more theoretically include circadian oscillators and metabolic pathways\cite{bass2010circadian, sahar2012regulation, mirsky2009model}. As their name suggests one of the main properties of such networks of interactions is their structure, what are the interacting components and which one acts on what. The traditional way to capture this structure is with schematic means with the aid of a diagram an example of which can be seen in Figure \ref{fig:diagram_example}. Components of the networks are gene mRNA products and proteins which can either serve a biochemical function or act as transcription factors for genes. Transcription factors can act on genes to either activate:increase the rate of production or repress:decrease the rate of production of one or more genes. The gene products themselves though control the production of other proteins which can act as transcription factors(activators or repressors) to other genes or even themselves thus creating networks of interactions of varying complexity. The components of the network are the nodes of the diagram with their differences highlighted with the use of different shapes or colours while the interactions(regulations) are the edges differentiated by their ends; for example the flat end signifies repression while the arrow signifies activation. Several attempts to standardise these diagrams in the example of circuit diagrams in electronics (Molecular Interaction Maps\cite{kohn2006molecular}) have not been widely adopted so they still vary considerably across publications.
 \begin{figure}
 \centering
-\includegraphics[width=0.9\linewidth]{clock_metabolism}
+\includegraphics[width=0.9\linewidth]{mcmc500th1}
 \caption{Networks of interactions between circadian clock and metabolic pathways\cite{sahar2012regulation}}
 
 \label{fig:diagram_example}
@@ -55,7 +55,7 @@ Systems can be thought of as stochastic processes as they are subject to molecul
  These describe the evolution in the concentrations of components of the systems(variables) over time and are parameterised by $\mathbf{\theta}$ which mainly describes the kinetic rates of the reactions/regulation or other constants like initial concentrations. So the evolution of the concentration of component $x1$ might be described by $f(\mathbf{x}, t, \theta)$ which tells us how the concentration is altered through the effects of other variables(components) or itself over time. These equations are translations of the diagrams and the duality of the representation can be seen through an example. Let's consider the a simple synthetic network motif seen in Figure\ref{fig:simple_motif}. 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\linewidth]{neg_autoregulation}
+\includegraphics[width=0.5\linewidth]{mcmc500th1}
 \caption{Negative autoregulation network motif: Gene X and its protein product are regulated by A. Protein product X also represses its own production\cite{alon2007introduction}(chapter 1)}
 \label{fig:simple_motif}
 \end{figure}
@@ -72,7 +72,7 @@ The problem therefore is to estimate those parameter values from experimental me
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\linewidth]{inference}
+\includegraphics[width=0.5\linewidth]{mcmc500th1}
 \caption{Parameter inference methods combine experimental data with the knowledge about the underlying structure of a dynamical system to be investigated. Unknown model parameter (here k1, k2, k3 and k4) can be estimated.}
 \label{fig:inference}
 \end{figure}
@@ -186,7 +186,7 @@ One of the decisions that was taken was to use an adaptive Gaussian distribution
 Another variation of the ABC form is the Sequential Monte Carlo approach\cite{toni2009abc} which combines the common ABC algorithm form with a Sequential Monte Carlo approach.  In this algorithm instead of having a single $\epsilon$ value as tolerance we have an $\epsilon$ schedule of a series of decreasing values $\epsilon_T < \epsilon_{T-1} \dots < \epsilon_{1}$. We start by sampling from the prior $\pi(\theta)$ as before at algorithmic time $t=1$ with a tolerance level $\epsilon_{1}$. Then we accept or reject the generated samples with a comparison between real and simulated data in the standard ABC fashion. The population of accepted particles is therefore an approximation for $p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$. Then at algorithmic time $t=2$ instead of sampling again from the prior $\pi(\theta)$ we sample from the distribution obtained at the previous step $p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$. The new samples are perturbed with a perturbation kernel. The perturbed particles are then accepted or rejected as before subject to new tolerance level $\epsilon_{2}$ thus creating the second population. This procedure is repeated for all all $T$ tolerance levels in the $\epsilon$-schedule therefore creating distributions \{$p_{\epsilon_{1}}(\mathbf{Y_{d}}|\theta)$,$p_{\epsilon_{2}}(\mathbf{Y_{d}}|\theta), $\dots, $p_{\epsilon_{T}}(\mathbf{Y_{d}}|\theta)$\} along the way. If the final $\epsilon_{T}$ is small enough then the final population should be a good approximation of the target posterior.  The algorithm therefore describes a particle-filtering procedure -we pass and filter a population of parameter values sampled from a prior $\pi(\theta)$  from a series of distributions with the decreasing $\epsilon$-schedule so that the intermediate distributions gradually go towards the posterior(this particle-filtering view can be better seen with Figure\ref{fig:smc}). The particular SMC algorithm that we use is from \cite{toni2009abc} which also uses the notion of importance sampling, assigning weights to each particle in the population and then in the next step sampling from the weighted distribution,
 \begin{figure}
 \centering
-\includegraphics[width=0.5\linewidth]{ABCSMC}
+\includegraphics[width=0.5\linewidth]{mcmc500th1}
 \caption{In the SMC algorithm a sample from the prior distribution $\pi(\theta)$ is passed through filtering steps where the probability of the particles to represent the data best is updated during the algorithm via intermediate distributions. The final distribution $p_{\epsilon_{T}}$ is an approximation of the posterior distribution. The SMC  algorithm follows a particle-filtering approach.}
 \label{fig:smc}
 \end{figure}
@@ -280,8 +280,27 @@ likelihood function is equivalent to minimising the distance function $d$. Obvio
 \subsection{Results}
 %Hopf bifurcation=============================
 \subsubsection{Hopf Bifurcation}
-To understand the effects of Hopf bifurcation we plot the log-likelihood function, $\text{ln}(L(\mu | \mathbf{Y_{d}}(\mu^*)))$.  for parameter $\mu$ which is the control parameter for the bifurcation, for different values of $\mu^*$ both sides of the bifurcation point.  
+To understand the effects of Hopf bifurcation we plot the log-likelihood function, $\text{ln}(L(\mu | \mathbf{Y_{d}}(\mu^*)))$ for parameter $\mu$ which is the control parameter for the bifurcation, for different values of $\mu^*$ both sides of the bifurcation point. The resulting plots are in \ref{fig:hopf}. As expected the maximum likelihood estimator is at the true value. However there is a big qualitative change in the shape of the log-likelihood functions when $\mu > 0$ and when $\mu < 0$. 
 
+For the landscape of the log-likelihood plot for values $\mu^* < 0$ we observe a relatively flat region in the interval [-2.0, 0.0] and then a relatively steep part with negative gradient in the interval [0.0, 2.0]. The flat part in the region $-2 \le \mu \le 0$ tells us that parameter estimates on that domain are all highly likely.This is easy to understand as the corresponding solutions for estimates in that domain  are qualitatevely similar to each other and to the solution for $\mu^*$. Therefore the distance between them and also between them and the solution for $\mu^*$ is small which is reflected on the likelihood plot. As the value of $\mu$ goes through the bifurcation point, the estimates become increasingly unlikely which can also be explained by the fact that the solutions corresponding to estimates in this domain are qualitatevely very different from the solution for $\mu^*$. Moreover the bifurcation point at $\mu = 0$ which marks the point of change in system dynamics also marks the change in the behaviour of the likelihood function.
+
+For the landscape of the log-likelihood plot at the other side of the bifurcation for values $\mu^* > 0$ we observe
+
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale=0.4]{likelihood_hopf08m}&\includegraphics[scale=0.4]{likelihood_hopf04m}\\
+\newline
+\includegraphics[scale=0.4]{likelihood_hopf0}&\includegraphics[scale=0.4]{likelihood_hopf04}\\
+\newline
+\includegraphics[scale=0.4]{likelihood_hopf08}&\includegraphics[scale=0.4]{likelihood_hopf12}\\
+\end{tabular}
+\caption{Log-likehood plots for different values of $\mu^*$ specified in the header. The maximum likelihood is denoted by the red dot which is as expected at the true value.}
+\label{fig:hopf}
+\end{table}
 \subsubsection{SNIC}
 
 
