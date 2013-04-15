@@ -53,7 +53,7 @@ class HillRepressilator:
         if times is None:
             if dT is None:
                 #times = scipy.linspace(self.t, self.t+T, nT)
-                times = scipy.arange(0., 50., 0.1)
+                times = scipy.arange(0., 50., 0.2)
             else:
                 times = scipy.arange(self.t, self.t+T, dT)
         traj = scipy.integrate.odeint(self.dydt, self.y, times, \

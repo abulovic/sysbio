@@ -6,7 +6,7 @@ from scipy import spatial
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import abcinfer_multi as abc
+import abcinfer as abc
 import math
 import sys
 from scipy.spatial.distance import euclidean

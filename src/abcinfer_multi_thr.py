@@ -30,7 +30,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 5
 
 def summary(theta):
     from scipy.stats.mstats import gmean
@@ -38,10 +38,21 @@ def summary(theta):
     return gmean(theta), mode(theta)
 
 #ode system for Lotka-Voltera model
-def dx_dt(X,t,theta):
-    a = theta[0]
-    b = theta[1]
-    y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
+#def dx_dt(X,t,theta):
+#    a = theta[0]
+#    b = theta[1]
+#    y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
+#    return y
+
+def dx_dt(X, t, th):
+    kA = th[0]
+    k2 = th[1]
+    k3 = th[2]
+    k4 = th[3]
+    k5 = th[4]
+    y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
+               -k3*X[1] + k5*X[2],
+               k4*X[0] - k5*X[2]])
     return y
 
 def generate_dataset(dx_dt, theta):
@@ -70,7 +81,7 @@ def add_gaussian_noise(dataset):
     return dataset
 
 def generate_dataset_full(dx_dt, theta):
-    init = np.array([1, 0.5])
+    init = np.array([1, 1., 1.])
     #init = np.array([2.0, 5.0, 3.0])
     t = np.arange(0, 15, 0.1)
     X= integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
@@ -257,7 +268,7 @@ def get_population_prior(num_particles,dx_dt, a, b, qd, qw, qp, epsilon, ds):
         sim_theta = draw_uniform(a,b)
         print i, sim_theta, naccepted
         sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-        error = fourier_distance(ds, sim_dataset)
+        error = euclidean(sim_dataset, ds)
         if error < epsilon:
             qd.put(error)
             naccepted += 1
@@ -286,7 +297,7 @@ def get_population_previous(num_particles, prev_population, prev_weights, dx_dt,
         i += 1
         sim_theta = sample_from_previous(prev_population, prev_weights)
         sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-        error = fourier_distance(ds, sim_dataset)
+        error = euclidean(sim_dataset, ds)
         print i, sim_theta, error, naccepted, epsilon
         if error <= epsilon:
             qd.put(error)
@@ -308,7 +319,7 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     num_particles = 100
-    num_threads = 1
+    num_threads = 4
     while True:
         print "population", t
         distances_lst = []
@@ -325,7 +336,7 @@ def smc(dx_dt, ds, eps_seq):
             weights_lst.append(qw)
             if t == 0:
                 p = (Process(target=get_population_prior, args=(num_particles_thread,
-                                                                dx_dt, -10, 10, qd, qw,
+                                                                dx_dt, 0, 5, qd, qw,
                                                                 qp, epsilon, ds,)))
             else:
                 p = (Process(target=get_population_previous, args=(num_particles_thread,
@@ -341,7 +352,7 @@ def smc(dx_dt, ds, eps_seq):
         
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
-        epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[1]
+        epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[2]
         if prev_epsilon - epsilon < 0.05: break
         else: prev_epsilon = epsilon
         current_population = []
@@ -381,12 +392,12 @@ def plot_solution(population, ds):
     plt.show()
 
 def main():
-    theta = [1,1]
-    ds = generate_dataset(dx_dt, theta)
-    ds = add_gaussian_noise(ds)
+    theta = [3, 1, 1, 1, 1]
+    ds = generate_dataset_full(dx_dt, theta)
+    ds = add_gaussian_noise_full(ds)
     population = smc(dx_dt, ds, [300.0, 16.0, 6.0, 5.0, 4.3])
-    last_population = population[-1:]
-    plot_solution(last_population, ds)
+    #last_population = population[-1:]
+    #plot_solution(last_population, ds)
     
 if __name__ == "__main__":
     main()

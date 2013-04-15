@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 #simple abc rejector. samples parameter vector from uniform prior, simulates datset and then compares simulated
 
@@ -26,6 +27,8 @@ from Mit_Oscillator import MitoticOscillator
 from scipy.spatial.distance import euclidean
 from numpy import mean,cov,linalg
 from Genetic_Oscillator import Oscillator
+from Oscillator import VanderpolOscillator
+import Hopf as models
 
 #global vars used throughout
 epsilon = 5.0
@@ -36,7 +39,7 @@ times = (11, 24, 39, 56, 75, 96, 119, 144)
 #times = (10, 30, 50, 70, 90, 100)
 #times = (3, 21, 31, 43, 67, 80, 112, 138, 172, 199, 203, 228)
 steps = 100000
-param_number = 4
+param_number = 2
 eta = 0.5
 
 def summary(theta):
@@ -57,7 +60,7 @@ def dx_dt(X, t, th):
     k2 = th[1]
     k3 = th[2]
     k4 = th[3]
-    k5 = 1.
+    k5 = th[4]
     y = array([(kA- k4)*X[0] - k2*X[0]*X[1] ,
                -k3*X[1] + k5*X[2],
                k4*X[0] - k5*X[2]])
@@ -65,12 +68,12 @@ def dx_dt(X, t, th):
                
     
 def generate_dataset(dx_dt, theta):
-    dataset = np.zeros([data_points, 3])
+    dataset = np.zeros([data_points, 2])
     #t = np.linspace(0, 100, 1000)
     
     t = np.arange(0, 15, 0.1)
     #init = array([1., 0.5])
-    init = np.array([1., 1., 1.])
+    init = np.array([.1, .1])
     X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
@@ -78,7 +81,7 @@ def generate_dataset(dx_dt, theta):
 
 def generate_dataset_full(dx_dt, theta, init=np.array([1., 1., 1.])):
     t = np.linspace(0, 15, 100)
-    init = np.array([1., 1., 1.])
+    #init = np.array([1., 1., 1.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
@@ -97,6 +100,11 @@ def generate_dataset_rep(theta):
 
 def generate_dataset_osc(theta):
     osc = Oscillator(deg_rate=theta[0], rep_strength=theta[1])
+    osc.run()
+    return osc.ds
+
+def generate_dataset_vdp(theta):
+    osc = VanderpolOscillator(B=theta[0], d=theta[1])
     osc.run()
     return osc.ds
 
@@ -341,29 +349,31 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     while True:
-        print "population", t
+        print "===========population=============", t, epsilon
         if t == 0: #if first population draw from prior
             while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform([[0, 5], [0, 5], [0, 5], [0, 5]])
+                sim_theta = draw_uniform([[-5, 1], [0, 5]])
                 
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
-                print i, sim_theta, naccepted, error
+                #print i, sim_theta, naccepted, error
+                #print naccepted
                 if error < epsilon:
                     distances_prev.append(error)
                     naccepted += 1
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            while naccepted < 50:
+            while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
-                print i, sim_theta, error, naccepted, epsilon
+                #print i, sim_theta, error, naccepted, epsilon
+                #print naccepted
                 if error <= epsilon:
                     distances_prev.append(error)
                     naccepted += 1
@@ -372,7 +382,7 @@ def smc(dx_dt, ds, eps_seq):
                     current_weights = add_weights_to_list(current_weights, wei)
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
         print prev_epsilon, epsilon
-        if prev_epsilon - epsilon < 0.05: break
+        if prev_epsilon - epsilon < 0.1: break
         else: prev_epsilon = epsilon
         #print "current_weights ", t, " ", current_weights
         #show_histogram(current_population)
@@ -477,11 +487,11 @@ def pca_sensitivity(last_population):
 
 
 if __name__ == "__main__":
-    orig_theta = [3., 1., 1., 1.]
+    orig_theta = [1.2, 1.]
+    dx_dt = models.hopf
     orig_ds = generate_dataset(dx_dt, orig_theta)
-    populations = smc(dx_dt, orig_ds, [100. ])
-    
 
+    populations = smc(dx_dt, orig_ds, [30. ])
     last_population = populations[len(populations)-1]
     for ind, pop in enumerate(last_population):
         print "="*25
@@ -497,6 +507,8 @@ if __name__ == "__main__":
     print "="*25
     for vl, vc in zip(w, v):
         print vl, vl / np.trace(sigma), vc
+
+
 
     
     

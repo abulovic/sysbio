@@ -39,7 +39,7 @@ def main_hopf_test():
 
 def hopf(X, t, theta):
     mi = theta[0]
-    omega = 1.
+    omega = 2.
     b = 1.
     y = array([mi*X[0] - omega*X[1] - X[0]*X[1]**2 - b*X[1]*X[0]**2 - X[0]**3 - b*X[1]**3,
                mi*X[1] + omega*X[0] - X[1]*X[0]**2 + b*X[0]*X[1]**2 - X[1]**3 + b*X[0]**3])
@@ -69,12 +69,16 @@ def main_snic():
     plt.show()
     
 def main_hopf():
-    X0 = [.1, .1]
+    X0 = [1, 1]
     t = np.linspace(0, 100, 1000)
-    orig_theta = [-1.2, 1, 1]
+    orig_theta = [-0.2, 1, 1]
     ds = integrate.odeint(hopf, X0, t,  args=(orig_theta,))
-
-    param_range = np.arange(-5, 5, 0.1)
+    plt.plot(t, ds)
+    plt.figure()
+    plt.plot(ds[:,0], ds[:, 1])
+    plt.show()
+    """
+    param_range = np.arange(-2, 2, 0.1)
     likelihood_vals = []
     for th in param_range:
         print th
@@ -86,6 +90,8 @@ def main_hopf():
     plt.figure()
     plt.plot(t, ds)
     plt.show()
+    """
+    
     
 def main_polar():
     X0 = [1, 1]
@@ -99,4 +105,4 @@ def main_polar():
 
 
 if __name__ == "__main__":
-    main_snic()
+    main_hopf()

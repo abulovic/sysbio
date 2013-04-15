@@ -23,6 +23,7 @@ from scipy.stats.mstats import mquantiles
 import sys
 import oscillators
 from SimpleRepressilator import HillRepressilator
+import Hopf as models
 
 #global vars used throughout
 epsilon = 5.0
@@ -39,18 +40,18 @@ def summary(theta):
     return gmean(theta), mode(theta)
 
 #ode system for Lotka-Voltera model
-"""def dx_dt(X,t,theta):
+def lv(X,t,theta):
     a = theta[0]
     b = theta[1]
     y = array([a*X[0] - X[0]*X[1], b*X[0]*X[1] - X[1]])
-    return y"""
+    return y
     
 def dx_dt(X, t, th):
     kA = th[0]
     k2 = th[1]
-    k3 = 1.
-    k4 = 1.
-    k5 = 1.
+    k3 = th[2]
+    k4 = th[3]
+    k5 = th[4]
     y = array([(kA- k4)*X[0] - k2*X[0]*X[1],
                -k3*X[1] + k5*X[2],
                k4*X[0] - k5*X[2]])
@@ -66,9 +67,9 @@ def generate_dataset(dx_dt, theta):
         dataset[i] = create_datapoint(X[times[i]])
     return dataset
 
-def generate_dataset_full(dx_dt, theta):
+def generate_dataset_full(dx_dt, theta, init = np.array([1., 1., 1.])):
     t = np.arange(0., 15, 0.1)
-    init = np.array([1., 1., 1.])
+    #init = np.array([1., 1., 1.])
     X = integrate.odeint(dx_dt, init, t, args=(theta,), mxstep=1000)
     return X
 
@@ -278,26 +279,26 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     while True:
-        print "population", t
+        print "==========population===========", t
         if t == 0:#if first population draw from prior
             while naccepted < 100:
                 i += 1
                 sim_theta = draw_uniform(0, 5)
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
                 error = fitness(sim_dataset,ds)
-                print i, sim_theta, error, naccepted, epsilon
+                #print i, sim_theta, error, naccepted, epsilon
                 if error < epsilon:
                     distances_prev.append(error)
                     naccepted += 1
                     cpopulation_append(sim_theta)
                     cweights_append(1)
         else: #draw from previous population
-            while naccepted < 100:
+            while naccepted < 50:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset_full(dx_dt, sim_theta)
                 error = fitness(sim_dataset,ds)
-                print i, sim_theta, error, naccepted, epsilon
+                #print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     distances_prev.append(error)
                     naccepted += 1
@@ -311,7 +312,7 @@ def smc(dx_dt, ds, eps_seq):
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
-        if prev_epsilon - epsilon < 0.05: break
+        if prev_epsilon - epsilon < 0.5: break
         else: prev_epsilon = epsilon
         current_population = []
         current_weights = []
@@ -358,15 +359,17 @@ def main():
     plt.show()
 
 def test():
-    theta = [3., 1.]
-    ds = generate_dataset_full(dx_dt, theta)
+    theta = [1, 1]
+    ds = generate_dataset(dx_dt, theta)
     ds = add_gaussian_noise_full(ds)
     populations = smc(dx_dt, ds, [300.])
     plt.plot(ds)
     plt.show()
     
 if __name__ == "__main__":
-    test()
-    
+    orig_theta = [1.2, 1.]
+    dx_dt = models.hopf
+    orig_ds = generate_dataset(dx_dt, orig_theta)
+    t = np.linspace(
 
 	   

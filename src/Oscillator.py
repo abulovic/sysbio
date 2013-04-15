@@ -5,26 +5,23 @@ import pylab as plt
 
 class VanderpolOscillator:
 
-    def __init__(self, B=10, d=2., A=0., omega=1.7, x0=[0., 0.]):
+    def __init__(self, B=10, d=2., x0=[2.5, 2.5]):
         self.B = B
         self.d = d
-        self.A = A
-        self.omega = omega
         self.times = None
         self.ds = None
         self.x0 = x0
 
 
     @staticmethod
-    def dx_dt(X, t, B, d, A, omega):
-        y = array([X[1], -(B*X[0]**2 - d)*X[1] - X[0] + A*np.cos(omega*t)])
+    def dx_dt(X, t, B, d):
+        y = array([X[1], -(B*X[0]**2 - d)*X[1] - X[0]])
                     
         return y
 
     def run(self, times=np.linspace(0, 50, 50)):
         self.times = times
-        ds = integrate.odeint(self.dx_dt, self.x0, self.times, args=(self.B, self.d,
-                                                                     self.A, self.omega))
+        ds = integrate.odeint(self.dx_dt, self.x0, self.times, args=(self.B, self.d))
         self.ds = ds
 
     def plot(self):

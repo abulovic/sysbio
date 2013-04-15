@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  11 MAR 2013 12:30
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  13 APR 2013 16:25
 entering extended mode
  %&-line parsing enabled.
 **progress.tex
@@ -358,11 +358,126 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.27 \newpage
-              [1] [2] [3] [4] [5] [6] [7]
-<mcmc500th1.png, id=172, 586.8324pt x 442.2924pt>
+              [1]
+
+LaTeX Warning: Citation `bass2010circadian' on page 2 undefined on input line 3
+4.
+
+
+LaTeX Warning: Citation `lazebnik2002can' on page 2 undefined on input line 34.
+
+
+
+LaTeX Warning: Citation `becker2004modeling' on page 2 undefined on input line 
+34.
+
+
+LaTeX Warning: Citation `mirsky2009model' on page 2 undefined on input line 34.
+
+
+
+LaTeX Warning: Citation `tyson2003sniffers' on page 2 undefined on input line 3
+4.
+
+[2]
+
+LaTeX Warning: Citation `gonze2011modeling' on page 3 undefined on input line 4
+0.
+
+
+LaTeX Warning: Citation `moles2003parameter' on page 3 undefined on input line 
+40.
+
+
+LaTeX Warning: Citation `filippi2011optimal' on page 3 undefined on input line 
+42.
+
+
+LaTeX Warning: Citation `toni2009abc' on page 3 undefined on input line 43.
+
+
+LaTeX Warning: Citation `Walsh04markovchain' on page 3 undefined on input line 
+43.
+
+
+LaTeX Warning: Citation `pritchard1999population' on page 3 undefined on input 
+line 43.
+
+
+LaTeX Warning: Citation `marjoram2003markov' on page 3 undefined on input line 
+43.
+
+
+LaTeX Warning: Citation `toni2009abc' on page 3 undefined on input line 43.
+
+[3]
+
+LaTeX Warning: Citation `liebe2010abcpy' on page 4 undefined on input line 45.
+
+
+LaTeX Warning: Citation `pfeuty2011robust' on page 4 undefined on input line 47
+.
+
+
+LaTeX Warning: Citation `konopka2010gene' on page 4 undefined on input line 47.
+
+
+
+LaTeX Warning: Citation `kirk2008parameter' on page 4 undefined on input line 4
+7.
+
+
+LaTeX Warning: Citation `lipinski2011high' on page 4 undefined on input line 49
+.
+
+
+LaTeX Warning: Citation `das2012dupl' on page 4 undefined on input line 49.
+
+
+LaTeX Warning: Citation `scipy' on page 4 undefined on input line 51.
+
+
+LaTeX Warning: Citation `myers2007python' on page 4 undefined on input line 51.
+
+
+
+LaTeX Warning: Citation `olivier2002modelling' on page 4 undefined on input lin
+e 51.
+
+[4]
+
+LaTeX Warning: Citation `pritchard1999population' on page 5 undefined on input 
+line 61.
+
+[5]
+
+LaTeX Warning: Citation `marjoram2003markov' on page 6 undefined on input line 
+69.
+
+
+LaTeX Warning: Citation `toni2009abc' on page 6 undefined on input line 82.
+
+[6]
+
+LaTeX Warning: Citation `filippi2011optimal' on page 7 undefined on input line 
+94.
+
+
+LaTeX Warning: Citation `del2012adaptive' on page 7 undefined on input line 94.
+
+
+
+LaTeX Warning: Citation `filippi2011optimal' on page 7 undefined on input line 
+96.
+
+
+LaTeX Warning: Citation `lotka1925elements' on page 7 undefined on input line 9
+8.
+
+[7] <mcmc500th1.png, id=115, 586.8324pt x 442.2924pt>
 File: mcmc500th1.png Graphic file (type png)
  <use mcmc500th1.png>
-<mcmc500th2.png, id=174, 586.8324pt x 442.2924pt>
+<mcmc500th2.png, id=117, 586.8324pt x 442.2924pt>
 File: mcmc500th2.png Graphic file (type png)
  <use mcmc500th2.png>
 Overfull \hbox (36.23132pt too wide) in paragraph at lines 110--122
@@ -370,44 +485,44 @@ Overfull \hbox (36.23132pt too wide) in paragraph at lines 110--122
  []
 
 [8 <./mcmc500th1.png> <./mcmc500th2.png>]
-<p1th1_4.png, id=190, 586.8324pt x 442.2924pt>
+<p1th1_4.png, id=133, 586.8324pt x 442.2924pt>
 File: p1th1_4.png Graphic file (type png)
  <use p1th1_4.png>
-<p1th2_4.png, id=191, 586.8324pt x 442.2924pt>
+<p1th2_4.png, id=134, 586.8324pt x 442.2924pt>
 File: p1th2_4.png Graphic file (type png)
  <use p1th2_4.png>
-<p2th1_4.png, id=192, 586.8324pt x 442.2924pt>
+<p2th1_4.png, id=135, 586.8324pt x 442.2924pt>
 File: p2th1_4.png Graphic file (type png)
  <use p2th1_4.png>
-<p2th2_4.png, id=193, 586.8324pt x 442.2924pt>
+<p2th2_4.png, id=136, 586.8324pt x 442.2924pt>
 File: p2th2_4.png Graphic file (type png)
  <use p2th2_4.png>
-<p3th1_4.png, id=194, 586.8324pt x 442.2924pt>
+<p3th1_4.png, id=137, 586.8324pt x 442.2924pt>
 File: p3th1_4.png Graphic file (type png)
  <use p3th1_4.png>
-<p3th2_4.png, id=195, 586.8324pt x 442.2924pt>
+<p3th2_4.png, id=138, 586.8324pt x 442.2924pt>
 File: p3th2_4.png Graphic file (type png)
  <use p3th2_4.png>
-<p4th1_4.png, id=196, 586.8324pt x 442.2924pt>
+<p4th1_4.png, id=139, 586.8324pt x 442.2924pt>
 File: p4th1_4.png Graphic file (type png)
  <use p4th1_4.png>
-<p4th2_4.png, id=197, 586.8324pt x 442.2924pt>
+<p4th2_4.png, id=140, 586.8324pt x 442.2924pt>
 File: p4th2_4.png Graphic file (type png)
  <use p4th2_4.png>
-<p5th1_4.png, id=198, 586.8324pt x 442.2924pt>
+<p5th1_4.png, id=141, 586.8324pt x 442.2924pt>
 File: p5th1_4.png Graphic file (type png)
  <use p5th1_4.png>
-<p5th2_4.png, id=199, 586.8324pt x 442.2924pt>
+<p5th2_4.png, id=142, 586.8324pt x 442.2924pt>
 File: p5th2_4.png Graphic file (type png)
  <use p5th2_4.png>
-<smc500_x1.png, id=200, 502.9992pt x 198.0198pt>
+<smc500_x1.png, id=143, 502.9992pt x 198.0198pt>
 File: smc500_x1.png Graphic file (type png)
  <use smc500_x1.png>
 Overfull \hbox (5.89165pt too wide) in paragraph at lines 161--162
  [][] 
  []
 
-<smc500_x2.png, id=201, 510.9489pt x 186.4566pt>
+<smc500_x2.png, id=144, 510.9489pt x 186.4566pt>
 File: smc500_x2.png Graphic file (type png)
  <use smc500_x2.png>
 Overfull \hbox (18.76874pt too wide) in paragraph at lines 167--168
@@ -421,43 +536,47 @@ Overfull \hbox (9.06128pt too wide) in paragraph at lines 159--171
 
 [9 <./p1th1_4.png> <./p1th2_4.png> <./p2th1_4.png> <./p2th2_4.png> <./p3th1_4.p
 ng> <./p3th2_4.png> <./p4th1_4.png> <./p4th2_4.png> <./p5th1_4.png> <./p5th2_4.
-png>] [10 <./smc500_x1.png> <./smc500_x2.png>] (./progress.bbl [11])
-<gantt1.png, id=229, 903.375pt x 190.7125pt>
+png>] [10 <./smc500_x1.png> <./smc500_x2.png>]
+No file progress.bbl.
+<gantt1.png, id=165, 903.375pt x 190.7125pt>
 File: gantt1.png Graphic file (type png)
  <use gantt1.png>
-<gantt2.png, id=230, 919.435pt x 186.6975pt>
+<gantt2.png, id=166, 919.435pt x 186.6975pt>
 File: gantt2.png Graphic file (type png)
  <use gantt2.png>
 Overfull \hbox (6.74847pt too wide) in paragraph at lines 187--188
  [][] 
  []
 
-[12 <./gantt1.png (PNG copy)>] [13 <./gantt2.png (PNG copy)>] (./progress.aux) 
-) 
+[11 <./gantt1.png (PNG copy)> <./gantt2.png (PNG copy)>] (./progress.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6279 strings out of 493848
- 92589 string characters out of 1152824
+ 6246 strings out of 493848
+ 92007 string characters out of 1152824
  174398 words of memory out of 3000000
- 9381 multiletter control sequences out of 15000+50000
- 10984 words of font info for 39 fonts, out of 3000000 for 9000
+ 9378 multiletter control sequences out of 15000+50000
+ 10637 words of font info for 38 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  38i,12n,38p,2065b,485s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-tex
-live/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texmf-texlive/fo
-nts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/p
-ublic/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
-nts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi8
-.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/s
-hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-t
-exlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts/
-type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/
-amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm
-/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
-/usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on progress.pdf (15 pages, 453674 bytes).
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texmf-texlive/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/
+public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi
+8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+
+Output written on progress.pdf (13 pages, 421878 bytes).
 PDF statistics:
- 305 PDF objects out of 1000 (max. 8388607)
- 71 named destinations out of 1000 (max. 500000)
- 161 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 231 PDF objects out of 1000 (max. 8388607)
+ 44 named destinations out of 1000 (max. 500000)
+ 153 words of extra memory for PDF output out of 10000 (max. 10000000)
 
