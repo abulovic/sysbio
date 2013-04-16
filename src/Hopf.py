@@ -56,8 +56,9 @@ def snic(X, t, theta):
 def main_snic():
     X0 = [.5, .5]
     t = np.linspace(0, 100, 1000)
-    orig_theta = [-0.55]
+    orig_theta = [-0.05]
     orig_ds = integrate.odeint(snic, X0, t,  args=(orig_theta,))
+    """
     param_range = np.arange(-2, 2, 0.01)
     likelihood_vals = []
     for th in param_range:
@@ -66,22 +67,26 @@ def main_snic():
         likelihood_vals.append(log_likelihood(sim_ds, orig_ds))
 
     plt.plot(param_range, likelihood_vals)
-    plt.plot(-0.55, 0, 'ro', linewidth=15.0)
+    plt.plot(-0.25, 0, 'ro', linewidth=15.0)
     plt.xlabel('$\mu$')
     plt.ylabel('$ln(L(\mu))$')
-    plt.title("$\mathbf{Y_d}(\mu^*=-0.55)$")
+    plt.title("$\mathbf{Y_d}(\mu^*=-0.25)$")
     plt.ylim((-2000, 100))
-    plt.figure()
-    plt.plot(ds[:, 0], ds[:, 1])
+    """
+    plt.plot(orig_ds[:,0], orig_ds[:, 1])
+    plt.title("Phase plane $\mu=-0.05$")
+    plt.xlabel('r', fontsize=20)
+    plt.ylabel(r'$\theta$', fontsize=20)
     plt.show()
 
     
 def main_hopf():
     X0 = [1, 1]
     t = np.linspace(0, 100, 1000)
-    orig_theta = [0.8,1, 1]
+    orig_theta = [-0.8, 1, 1]
     ds = integrate.odeint(hopf, X0, t,  args=(orig_theta,))
 
+    """
     param_range = np.arange(-2, 2, 0.01)
     likelihood_vals = []
     for th in param_range:
@@ -89,6 +94,7 @@ def main_hopf():
         sim_ds = integrate.odeint(hopf, X0, t,  args=([th],))
         likelihood_vals.append(log_likelihood(sim_ds, ds))
 
+    
     print max(likelihood_vals)
     plt.plot(param_range, likelihood_vals)
     plt.plot(0.8, 0, 'ro', linewidth=15.0)
@@ -97,6 +103,10 @@ def main_hopf():
     plt.title("$\mathbf{Y_d}(\mu^*=0.4)$")
     plt.ylim((-2000, 100))
     plt.figure()
+    """
+    plt.title("Phase plane $\mu=-0.8$")
+    plt.xlabel('r', fontsize=20)
+    plt.ylabel(r'$\theta$', fontsize=20)
     plt.plot(ds[:, 0], ds[:, 1])
     plt.show()
     

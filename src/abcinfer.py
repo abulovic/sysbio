@@ -70,7 +70,6 @@ def dx_dt(X, t, th):
 def generate_dataset(dx_dt, theta):
     dataset = np.zeros([data_points, 2])
     #t = np.linspace(0, 100, 1000)
-    
     t = np.arange(0, 15, 0.1)
     #init = array([1., 0.5])
     init = np.array([.1, .1])
@@ -351,14 +350,14 @@ def smc(dx_dt, ds, eps_seq):
     while True:
         print "===========population=============", t, epsilon
         if t == 0: #if first population draw from prior
-            while naccepted < 100:
+            while naccepted < 500:
                 i += 1
-                sim_theta = draw_uniform([[-5, 1], [0, 5]])
+                sim_theta = draw_uniform([[0, 8], [0, 8]])
                 
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
-                #print i, sim_theta, naccepted, error
+                print i, sim_theta, naccepted, error
                 #print naccepted
                 if error < epsilon:
                     distances_prev.append(error)
@@ -366,7 +365,7 @@ def smc(dx_dt, ds, eps_seq):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            while naccepted < 100:
+            while naccepted < 500:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
                 sim_dataset = generate_dataset(dx_dt, sim_theta)
@@ -436,22 +435,25 @@ def plot_solution(population, ds):
     plt.show()
 
 def solution_quality(population, ds):
+    orig_theta = [1., 1.]
     pred_theta = []
-    X0 = np.array([1., 1., 1.])
+    X0 = np.array([1., 1.])
     t = np.arange(0, 15, 0.1)
     for index, param in enumerate(population):
         mean = np.mean(param)
         pred_theta.append(mean)
         median = sorted(param)[len(param) / 2]
         std = np.std(param)
-        print "parameter ", index, ": median:", median, " mean:", mean, " std:", std
-        print "==================="
         plt.hist(param)
         plt.show()
-    pred_ds = integrate.odeint(dx_dt, X0, t, args=(pred_theta,))
+    pred_ds = integrate.odeint(lv, X0, t, args=(pred_theta,))
+    orig_ds = integrate.odeint(lv, X0, t, args=(orig_theta,))
     plt.figure()
-    plt.plot(t, pred_ds)
-    
+    plt.plot(t, pred_ds[:,0])
+    plt.plot(t, orig_ds[:,0])
+    plt.figure()
+    plt.plot(t, pred_ds[:,1])
+    plt.plot(t, orig_ds[:,1])
     plt.show()
 
     
@@ -487,11 +489,12 @@ def pca_sensitivity(last_population):
 
 
 if __name__ == "__main__":
-    orig_theta = [1.2, 1.]
-    dx_dt = models.hopf
-    orig_ds = generate_dataset(dx_dt, orig_theta)
-
-    populations = smc(dx_dt, orig_ds, [30. ])
+    orig_theta = [1., 1.]
+    orig_ds = generate_dataset(lv, orig_theta)
+    ds = add_gaussian_noise(np.copy(orig_ds))
+    populations = smc(lv, ds, [30. ])
+    
+    
     last_population = populations[len(populations)-1]
     for ind, pop in enumerate(last_population):
         print "="*25
@@ -508,6 +511,7 @@ if __name__ == "__main__":
     for vl, vc in zip(w, v):
         print vl, vl / np.trace(sigma), vc
 
+    solution_quality(last_population, ds)
 
 
     
