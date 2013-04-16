@@ -31,7 +31,7 @@ from Oscillator import VanderpolOscillator
 import Hopf as models
 
 #global vars used throughout
-epsilon = 5.0
+epsilon = 4.3
 data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 #times = (10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
@@ -71,8 +71,8 @@ def generate_dataset(dx_dt, theta):
     dataset = np.zeros([data_points, 2])
     #t = np.linspace(0, 100, 1000)
     t = np.arange(0, 15, 0.1)
-    #init = array([1., 0.5])
-    init = np.array([.1, .1])
+    init = array([1., 0.5])
+    #init = np.array([.1, .1])
     X = integrate.odeint(dx_dt, init, t, args=(theta,),mxhnil=0,hmin=1e-20)
     for i in range(data_points):
         dataset[i] = create_datapoint(X[times[i]])
@@ -90,7 +90,7 @@ def generate_dataset_mit(theta):
     return mit_osc.ds
 
 def generate_dataset_rep(theta):
-    hp = HillRepressilator(beta=theta[0])
+    hp = HillRepressilator(alpha=theta[0],alpha0=theta[1], beta=theta[2], n=theta[3])
     ds = hp.run(T=50)
     dataset = np.zeros([data_points, 3])
     for ind, time in enumerate(times):
@@ -154,9 +154,9 @@ def rejector_algorithm(dx_dt, ds):
     i = 0
     population = init_list()
     #draw sample from uniform prior in the interval [-10,10]
-    while naccepted < 200:
+    while naccepted < 500:
         i += 1
-        theta = np.random.uniform(-10,10,param_number)
+        theta = np.random.uniform(-5, 5, param_number)
         sim_dataset = generate_dataset(dx_dt,theta)
         error = euclidian_distance(ds, sim_dataset)
         print i, theta, error, naccepted
@@ -166,7 +166,7 @@ def rejector_algorithm(dx_dt, ds):
     return population
 
 def calc_a(sim_th, theta, sigma):
-    prior_sim = uniform(-10,10)
+    prior_sim = uniform(-5, 5)
     pth_sim = prior_sim.pdf(sim_th)
     pth = prior_sim.pdf(theta)
     jumping_dist_sim = norm(sim_th,sigma)
@@ -350,11 +350,11 @@ def smc(dx_dt, ds, eps_seq):
     while True:
         print "===========population=============", t, epsilon
         if t == 0: #if first population draw from prior
-            while naccepted < 500:
+            while naccepted < 100:
                 i += 1
-                sim_theta = draw_uniform([[0, 8], [0, 8]])
+                sim_theta = draw_uniform([[0, 500], [0, 5], [3, 8], [0, 5]])
                 
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                sim_dataset = generate_dataset_rep(sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
                 print i, sim_theta, naccepted, error
@@ -365,13 +365,13 @@ def smc(dx_dt, ds, eps_seq):
                     current_population = add_particle_to_list(current_population, sim_theta)
                     current_weights = add_weights_to_list(current_weights, np.ones(param_number))
         else: #draw from previous population
-            while naccepted < 500:
+            while naccepted < 100:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                sim_dataset = generate_dataset_rep(sim_theta)
                 error = euclidian_distance(sim_dataset, ds)
                 #error = fitness(ds, sim_dataset, sim_theta, dx_dt)
-                #print i, sim_theta, error, naccepted, epsilon
+                print i, sim_theta, error, naccepted, epsilon
                 #print naccepted
                 if error <= epsilon:
                     distances_prev.append(error)
@@ -487,13 +487,31 @@ def pca_sensitivity(last_population):
     w, v = np.linalg.eig(sigma)
     return w, v, sigma
 
+def check_lv_rejection(population):
+    th1 = population[0]
+    th2 = population[1]
 
+    print "="*25
+    print "mean: ", np.mean(th1)
+    print "var: ", np.cov(th1)
+    plt.hist(th1)
+    plt.figure()
+    print "="*25
+    print "="*25
+    print "mean: ", np.mean(th2)
+    print "var: ", np.cov(th2)
+    plt.hist(th2)
+    print "="*25
+    plt.show()
+    
 if __name__ == "__main__":
     orig_theta = [1., 1.]
     orig_ds = generate_dataset(lv, orig_theta)
     ds = add_gaussian_noise(np.copy(orig_ds))
-    populations = smc(lv, ds, [30. ])
-    
+    population = mcmc(lv, orig_ds)
+    #print population
+    check_lv_rejection(population)
+    """
     
     last_population = populations[len(populations)-1]
     for ind, pop in enumerate(last_population):
@@ -512,8 +530,4 @@ if __name__ == "__main__":
         print vl, vl / np.trace(sigma), vc
 
     solution_quality(last_population, ds)
-
-
-    
-    
-    
+  """
