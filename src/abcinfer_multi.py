@@ -24,6 +24,7 @@ import sys
 import oscillators
 from SimpleRepressilator import HillRepressilator
 import Hopf as models
+import time
 
 #global vars used throughout
 epsilon = 5.0
@@ -278,37 +279,35 @@ def smc(dx_dt, ds, eps_seq):
     cweights_append = current_weights.append
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
+    steps = []
     while True:
         print "==========population===========", t
         if t == 0:#if first population draw from prior
-            while naccepted < 100:
+            while naccepted < 500:
                 i += 1
-                sim_theta = draw_uniform(0, 5)
-                sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(sim_dataset,ds)
-                #print i, sim_theta, error, naccepted, epsilon
+                sim_theta = draw_uniform(-5, 5)
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset,ds)
+                print i, sim_theta, error, naccepted, epsilon
                 if error < epsilon:
                     distances_prev.append(error)
                     naccepted += 1
                     cpopulation_append(sim_theta)
                     cweights_append(1)
         else: #draw from previous population
-            while naccepted < 50:
+            while naccepted < 500:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset_full(dx_dt, sim_theta)
-                error = fitness(sim_dataset,ds)
-                #print i, sim_theta, error, naccepted, epsilon
+                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                error = euclidian_distance(sim_dataset,ds)
+                print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
                     distances_prev.append(error)
                     naccepted += 1
                     current_population.append(sim_theta)
                     wei = calculate_weight(populations[t-1], weights[t-1], sim_theta)
                     current_weights.append(wei)
-        #list_params = split_params(current_population)
-        #plt.scatter(*list_params)
-        #plt.show()
-        #sys.exit(0)
+
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
         epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
@@ -317,9 +316,11 @@ def smc(dx_dt, ds, eps_seq):
         current_population = []
         current_weights = []
         distances_prev = []
+        steps.append(i)
+        i = 0
         t += 1
         naccepted = 0
-    return populations
+    return populations, steps
     
 def write_to_file(filename,theta):
     f = open(filename, 'w')
@@ -367,9 +368,23 @@ def test():
     plt.show()
     
 if __name__ == "__main__":
-    orig_theta = [1.2, 1.]
-    dx_dt = models.hopf
-    orig_ds = generate_dataset(dx_dt, orig_theta)
-    t = np.linspace(
-
+    orig_theta = [1., 1.]
+    orig_ds = generate_dataset(lv, orig_theta)
+    ds = add_gaussian_noise(np.copy(orig_ds))
+    start_time = time.time()
+    populations = smc(lv, ds, [30.])
+    time_taken = time.time() - start_time
+    
+    f1 = open("population_smc_multi_lv.txt", "wb")
+    f2 = open("steps_smc_multi_lv.txt", "wb")
+    f3 = open("ds_smc_multi_lv.txt", "wb")
+    f4 = open("time_smc_multi_lv", "wb")
+    pickle.dump(population, f1)
+    pickle.dump(steps, f2)
+    pickle.dump(ds, f3)
+    pickle.dump(time_taken, f4)
+    f1.close()
+    f2.close()
+    f3.close()
+    f4.close()
 	   
