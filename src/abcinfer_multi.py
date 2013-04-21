@@ -25,6 +25,7 @@ import oscillators
 from SimpleRepressilator import HillRepressilator
 import Hopf as models
 import time
+import pickle
 
 #global vars used throughout
 epsilon = 5.0
@@ -280,7 +281,8 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     steps = []
-    while True:
+    #while True:
+    for epsilon in eps_seq:
         print "==========population===========", t
         if t == 0:#if first population draw from prior
             while naccepted < 500:
@@ -310,9 +312,9 @@ def smc(dx_dt, ds, eps_seq):
 
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
-        epsilon = mquantiles(distances_prev, prob=[0.1, 0.25, 0.5, 0.75])[0]
-        if prev_epsilon - epsilon < 0.5: break
-        else: prev_epsilon = epsilon
+        #epsilon = mquantiles(distances_prev, prob=[0.18, 0.25, 0.5, 0.75])[0]
+        #if prev_epsilon - epsilon < 0.5: break
+        #else: prev_epsilon = epsilon
         current_population = []
         current_weights = []
         distances_prev = []
@@ -372,14 +374,14 @@ if __name__ == "__main__":
     orig_ds = generate_dataset(lv, orig_theta)
     ds = add_gaussian_noise(np.copy(orig_ds))
     start_time = time.time()
-    populations = smc(lv, ds, [30.])
+    populations,steps = smc(lv, ds, [30., 16., 6., 5., 4.3])
     time_taken = time.time() - start_time
     
     f1 = open("population_smc_multi_lv.txt", "wb")
     f2 = open("steps_smc_multi_lv.txt", "wb")
     f3 = open("ds_smc_multi_lv.txt", "wb")
     f4 = open("time_smc_multi_lv", "wb")
-    pickle.dump(population, f1)
+    pickle.dump(populations, f1)
     pickle.dump(steps, f2)
     pickle.dump(ds, f3)
     pickle.dump(time_taken, f4)
