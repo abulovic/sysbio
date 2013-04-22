@@ -33,7 +33,7 @@ data_points = 8
 #times = (0, 10, 20, 30, 40, 50, 60, 70)
 times = (11, 24, 39, 56, 75, 96, 119, 144)
 steps = 100000
-param_number = 2
+param_number = 4
 eta = 0.
 
 def summary(theta):
@@ -78,7 +78,15 @@ def generate_dataset_full(dx_dt, theta, init = np.array([1., 1., 1.])):
 def generate_dataset_hp(theta):
     hp = HillRepressilator(*theta, n=3.)
     return hp.run(20)[:, 3:]
-    
+
+def generate_dataset_rep(theta):
+    hp = HillRepressilator(alpha=theta[0],alpha0=theta[1], beta=theta[2], n=theta[3])
+    ds = hp.run(T=50)
+    dataset = np.zeros([data_points, 3])
+    for ind, time in enumerate(times):
+        dataset[ind, :] = ds[time, :]
+    return dataset
+
 def add_gaussian_noise_full(dataset):
     x_noise = np.random.normal(0, 0.5, np.shape(dataset))
     return dataset + x_noise
@@ -204,10 +212,10 @@ def calc_weighted_mean(population, weights):
     return wsum / sum_weights
 
 #returns an np.array with values drawn from uniform(start, end)
-def draw_uniform(start, end):
+def draw_uniform(bounds):
     theta = np.array([])
     for i in xrange(param_number):
-        theta = np.append(theta, np.random.uniform(start, end))
+        theta = np.append(theta, np.random.uniform(bounds[i][0], bounds[i][1]))
     return theta
 
 def get_pert_sigma(prev_population, sim_theta):
@@ -281,14 +289,14 @@ def smc(dx_dt, ds, eps_seq):
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
     steps = []
-    #while True:
-    for epsilon in eps_seq:
+    while True:
+    #for epsilon in eps_seq:
         print "==========population===========", t
         if t == 0:#if first population draw from prior
-            while naccepted < 500:
+            while naccepted < 10:
                 i += 1
-                sim_theta = draw_uniform(-5, 5)
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                sim_theta = draw_uniform([[0, 500], [0, 5], [3, 8], [0, 5]])
+                sim_dataset = generate_dataset_rep(sim_theta)
                 error = euclidian_distance(sim_dataset,ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error < epsilon:
@@ -297,10 +305,10 @@ def smc(dx_dt, ds, eps_seq):
                     cpopulation_append(sim_theta)
                     cweights_append(1)
         else: #draw from previous population
-            while naccepted < 500:
+            while naccepted < 10:
                 i += 1
                 sim_theta = sample_from_previous(populations[t-1], weights[t-1])
-                sim_dataset = generate_dataset(dx_dt, sim_theta)
+                sim_dataset = generate_dataset_rep(sim_theta)
                 error = euclidian_distance(sim_dataset,ds)
                 print i, sim_theta, error, naccepted, epsilon
                 if error <= epsilon:
@@ -312,9 +320,9 @@ def smc(dx_dt, ds, eps_seq):
 
         populations.append(current_population)
         weights.append(norm_weights(current_weights))
-        #epsilon = mquantiles(distances_prev, prob=[0.18, 0.25, 0.5, 0.75])[0]
-        #if prev_epsilon - epsilon < 0.5: break
-        #else: prev_epsilon = epsilon
+        epsilon = mquantiles(distances_prev, prob=[0.18, 0.25, 0.5, 0.75])[0]
+        if prev_epsilon - epsilon < 0.5: break
+        else: prev_epsilon = epsilon
         current_population = []
         current_weights = []
         distances_prev = []
@@ -370,11 +378,11 @@ def test():
     plt.show()
     
 if __name__ == "__main__":
-    orig_theta = [1., 1.]
-    orig_ds = generate_dataset(lv, orig_theta)
+    orig_theta = [216., .216, 5., 2.]
+    orig_ds = generate_dataset_rep(orig_theta)
     ds = add_gaussian_noise(np.copy(orig_ds))
     start_time = time.time()
-    populations,steps = smc(lv, ds, [30., 16., 6., 5., 4.3])
+    populations,steps = smc(lv, ds, [5000., 16.,12., 6., 5., 4.3])
     time_taken = time.time() - start_time
     
     f1 = open("population_smc_multi_lv.txt", "wb")

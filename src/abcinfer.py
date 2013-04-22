@@ -29,6 +29,7 @@ from numpy import mean,cov,linalg
 from Genetic_Oscillator import Oscillator
 from Oscillator import VanderpolOscillator
 import Hopf as models
+import pickle
 
 #global vars used throughout
 epsilon = 4.3
@@ -159,11 +160,11 @@ def rejector_algorithm(dx_dt, ds):
         theta = np.random.uniform(-5, 5, param_number)
         sim_dataset = generate_dataset(dx_dt,theta)
         error = euclidian_distance(ds, sim_dataset)
-        print i, theta, error, naccepted
+        #print i, theta, error, naccepted
         if error <= epsilon:#accept
             naccepted += 1
             population = add_particle_to_list(population, theta)
-    return population
+    return population, i
 
 def calc_a(sim_th, theta, sigma):
     prior_sim = uniform(-5, 5)
@@ -347,6 +348,7 @@ def smc(dx_dt, ds, eps_seq):
     #for epsilon in eps_seq:
     epsilon = eps_seq[0]
     prev_epsilon = eps_seq[0]
+    steps = []
     while True:
         print "===========population=============", t, epsilon
         if t == 0: #if first population draw from prior
@@ -390,11 +392,11 @@ def smc(dx_dt, ds, eps_seq):
         current_population = init_list()
         current_weights = init_list()
         t += 1
+        steps.append(i)
+        i = 0
         naccepted = 0
-    print "="*20
-    print "steps taken ", i
-    print "="*20
-    return populations
+
+    return populations, steps
     
 def write_to_file(filename,theta):
     f.write("theta\n")
@@ -508,10 +510,20 @@ if __name__ == "__main__":
     orig_theta = [1., 1.]
     orig_ds = generate_dataset(lv, orig_theta)
     ds = add_gaussian_noise(np.copy(orig_ds))
-    population = mcmc(lv, orig_ds)
+    population, steps = rejector_algorithm(lv, orig_ds)
+    f1 = open("population_rej_lv.txt", "wb")
+    f2 = open("steps_rej_lv.txt", "wb")
+    f3 = open("ds_rej_lv.txt", "wb")
+    pickle.dump(population, f1)
+    pickle.dump(steps, f2)
+    pickle.dump(ds, f3)
+    f1.close()
+    f2.close()
+    f3.close()
     #print population
-    check_lv_rejection(population)
     """
+    check_lv_rejection(population)
+   
     
     last_population = populations[len(populations)-1]
     for ind, pop in enumerate(last_population):
