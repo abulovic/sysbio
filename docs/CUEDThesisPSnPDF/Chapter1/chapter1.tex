@@ -1,0 +1,61 @@
+% \pagebreak[4]
+% \hspace*{1cm}
+% \pagebreak[4]
+% \hspace*{1cm}
+% \pagebreak[4]
+
+\chapter{Background Research}
+\ifpdf
+    \graphicspath{{Chapter1/Chapter1Figs/PNG/}{Chapter1/Chapter1Figs/PDF/}{Chapter1/Chapter1Figs/}}
+\else
+    \graphicspath{{Chapter1/Chapter1Figs/EPS/}{Chapter1/Chapter1Figs/}}
+\fi
+
+\label{sec:background}
+The parameter estimation problem as posed in the previous section is the inverse problem of going from world observables to models that represent those observables. To formalise this problem, we have a proposed model for our system which describes the evolution of all variables(components) $\mathbf{x} = \{x_1, x_2, \dots, x_n\}$,
+\begin{equation}
+\label{eq:system}
+\begin{array}{lcl}
+\dot x_1 & = & f(\mathbf{x}, t, \theta) \\
+\dot x_2& = & f(\mathbf{x}, t, \theta) \\
+\vdots \\
+\dot x_n & = & f(\mathbf{x}, t, \theta), \\
+\end{array}
+\end{equation}
+We also have the observations of the world in the form of experimental data at $N$ different time points, $\mathbf{Y_d} = \{\mathbf{y}_{t_{1}},  \mathbf{y}_{t_{2}}, \dots, \mathbf{y}_{t_{N}}\}$ where the observation at time point $t_{k}$ is the state of the system(concentration of $n$ variables) at that point so 
+$\mathbf{y}_{t_{k}} =\{ x_{1}^{t_{k}},  x_{2}^{t_{k}}, \dots,  x_{n}^{t_{k}} \}$. The problem then become to find the parameter vector $\theta^*$ from the set of all the possible parameter vectors $\mathbf{\Theta}$ so that the model $\mathbf{\dot x} = \mathbf{F}(\mathbf{x}, t, \mathbf{\theta^*})$  \ref{eq:system} fits the experimental data best. The fitness of a particular parameter vector $\theta_{s}$ can be assessed with a distance metric between the experimental data $\mathbf{Y}_{d}$ and a simulated solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$. Then the problem becomes the minimisation of this distance metric and this is the common optimisation problem formulation: 
+\begin{equation*}
+\theta^* = \underset{\theta}{\arg\min}(\Delta(\mathbf{Y_{d}},\mathbf{Y}_{\theta})) 
+\end{equation*}
+where $\Delta$ is some distance metric, also called cost or objective function in optimisation language. Naturally much attention has been given on parameter estimation for deterministic systems with local and global optimisation methods \cite[] {Moles2003param}.  Generally optimisation algorithms have the same outline:
+\begin{enumerate}[noitemsep]
+\item{Start with some choice $\theta_{s}$ for model's adjustable parameters from $\mathbf{\Theta}$}
+\item{Simulate solution $\mathbf{Y}_{s}$ for proposed parameter $\theta_{s}$ and evaluate distance/cost function}
+\item{Stop if some termination criterion is met, for example cost function is less than some threshold value $\epsilon$}
+\item{Generate a new guess $\theta_{s}$ from $\mathbf{\Theta}$}
+\item{Return to 2}
+\end{enumerate}
+Then the difference between different choices for optimisation algorithms is how to more efficiently search the parameter space $\mathbf{\Theta}$ and all the classic techniques like steepest-descent, variants of Newton's method, Levenberg-Marquardt have been used in different applications with varying degrees of success \cite[] {mendes1998non}. Other optimisation techniques used in some application include simulated annealing \cite[]{kirkpatrick1983optimization} which makes stochastic decisions for the movement in the search space $\mathbf{\Theta}$ to avoid common problems of classic optimisation algorithms like getting stuck at local extrema. Attempts to compare different optimisation techniques generally come to the conclusion that the success of the algorithm depends on the application and that there is no single algorithm that outperforms the others in all applications while there is also the risk that some algorithms that perform well in some problems might even fail completely in others(for a full treatment and comparison of a number of different methods see \cite[] {mendes1998non}). 
+
+A maximum-likelihood approach to parameter estimation in this domain has also been used for some applications. In this formulation of the problem, one tries to find the values of the parameters that are more likely to have been used to generate the observed data in other words trying the maximise the likelihood function of the data given the parameters. Likelihood functions are generally associated with probabilistic models and Maximum Likelihood Estimation(MLE) with information-theoretic approaches but subject to some assumptions MLE reduces to traditional least-square data fitting,
+\begin{itemize}[noitemsep]
+\item{The observational errors are normally distributed}
+\item{Equivalent positive and negative deviations from the expected values differ by equal amounts}
+\item{The errors between samples are independent.}
+\end{itemize}
+(We will use these assumptions later in the chapter 2 to plot and investigate the shape of the likelihood functions under different values of the bifurcation parameter for different models). The models generally involve non-linear combination of the parameters so the least-squares formulated problem has no closed form solution. Then one has to resort to numerical optimisation techniques like the ones outlined in the previous paragraph. These general optimisation routines are commonly available in many packages for many programming languages and popular programming environments for scientific computation like \href{http://www.mathworks.co.uk/products/optimization/}{MATLAB} , \href{http://www.gnu.org/software/octave/doc/interpreter/Optimization.html}{Octave}, \href{http://docs.scipy.org/doc/scipy/reference/tutorial/optimize.html}{scipy(Python)}.
+
+In population genetics applications Approximate Bayesian Computation(we will to refer to them as ABC from now on) in its most basic rejection sampling form has been used \cite[] {pritchard1999population}. The traditional Bayesian formulation of the problem is to try to find the posterior distribution of the parameters $\theta$ given data $\mathbf{Y}_{d}$, $\pi(\theta | \mathbf{Y}_{d})$ given in this setting by $\pi(\theta | \mathbf{Y}_{d}) = L(\theta)\pi(\theta)$ where $L(\theta)$ is the likelihood function and $\pi(\theta)$ is the prior distribution of the parameters. ABC methods use a simulation-based procedure to eliminate the computation of the likelihood function in cases where it is intractable or impossible to do so. Other forms of ABC which build and improved on the same idea include Markov Chain Monte Carlo methods \cite[] {marjoram2003markov} and different variants of Sequential Monte Carlo \cite[] {del2006sequential, sisson2007sequential, toni2009abc}. These became more popular recently due to the increase in computational power and that can be seen by the amount of recent publications. It is with these different forms of these ABC methods that we will be concerned with in this study. These methods have been shown to work without considerable modification in a diverse range of applications \cite[] {toni2009abc} and also provide richer information which can be used to get some insight into some aspects of the dynamical systems in question as we will do in the second part of this report.
+
+One of the problems with these numerical approaches is that they disregard qualitative features of the models that are equally if not more important than quantitative and exact replication of experimental data. Some qualitative feature which their importance has been discussed and that do not show up in the numeric data include specific phase-response curves for circadian oscillators \cite[] {pfeuty2011robust}%probable need to add another example here!
+There have been a few attempts to capture some qualitative features like the shape of the data for model selection purposes. They rely on comparisons of the Fourier Transform of the original dataset and simulated dataset to select the model that best fits \cite[] {konopka2010gene}. We use this comparison between Fourier Transforms as part of the distance function we use for the comparison of original and simulated dataset in the ABC implementations with various degrees of success.
+
+So there is a wide variety of techniques available to use in the problem but as far as application tools go the choice is not that big. There are a few tools (\href{http://www.math.pitt.edu/~bard/xpp/xpp.html}{XPP-Auto}, GRIND, \href{http://www.copasi.org/tiki-view_articles.php}{COPASI}) that are used because they allow modelers to get an intuition and greater understanding of the model in question usually by graphical means such as plotting bifurcation diagrams and allowing them to see the changes in the dynamics of the system as parameters change. And although they help in parameter estimation they do not address the problem directly. One tool that addresses the problem directly is the ABC-Sysbio \cite [] {liebe2010abcpy} which can be embedded in external code or used as a stand-alone application. This tool does automatic parameter estimation using Sequential Monte Carlo method.
+
+% ------------------------------------------------------------------------
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../thesis"
+%%% End: 

@@ -1,0 +1,200 @@
+\begin{thebibliography}{28}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Alon(2007)]{alon2007introduction}
+Uri Alon.
+\newblock \emph{An introduction to systems biology: design principles of
+  biological circuits}, volume~10.
+\newblock Chapman \& Hall/CRC, 2007.
+
+\bibitem[Bass and Takahashi(2010)]{bass2010circadian}
+J.~Bass and J.S. Takahashi.
+\newblock Circadian integration of metabolism and energetics.
+\newblock \emph{Science Signalling}, 330\penalty0 (6009):\penalty0 1349, 2010.
+
+\bibitem[Del~Moral et~al.(2006)Del~Moral, Doucet, and Jasra]{del2006sequential}
+Pierre Del~Moral, Arnaud Doucet, and Ajay Jasra.
+\newblock Sequential monte carlo samplers.
+\newblock \emph{Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 68\penalty0 (3):\penalty0 411--436, 2006.
+
+\bibitem[{Filippi} et~al.(2011){Filippi}, {Barnes}, {Cornebise}, and
+  {Stumpf}]{filippi2011optimal}
+S.~{Filippi}, C.~{Barnes}, J.~{Cornebise}, and M.~P.~H {Stumpf}.
+\newblock {On optimality of kernels for approximate Bayesian computation using
+  sequential Monte Carlo}.
+\newblock \emph{ArXiv e-prints}, June 2011.
+
+\bibitem[Garcia-Ojalvo et~al.(2004)Garcia-Ojalvo, Elowitz, and
+  Strogatz]{garcia2004modeling}
+Jordi Garcia-Ojalvo, Michael~B Elowitz, and Steven~H Strogatz.
+\newblock Modeling a synthetic multicellular clock: repressilators coupled by
+  quorum sensing.
+\newblock \emph{Proceedings of the National Academy of Sciences of the United
+  States of America}, 101\penalty0 (30):\penalty0 10955--10960, 2004.
+
+\bibitem[Gibson and Bruck(2000)]{gibson2000efficient}
+Michael~A Gibson and Jehoshua Bruck.
+\newblock Efficient exact stochastic simulation of chemical systems with many
+  species and many channels.
+\newblock \emph{The journal of physical chemistry A}, 104\penalty0
+  (9):\penalty0 1876--1889, 2000.
+
+\bibitem[Gillespie(1977)]{gillespie1977exact}
+Daniel~T Gillespie.
+\newblock Exact stochastic simulation of coupled chemical reactions.
+\newblock \emph{The journal of physical chemistry}, 81\penalty0 (25):\penalty0
+  2340--2361, 1977.
+
+\bibitem[Gillespie(2001)]{gillespie2001approximate}
+Daniel~T Gillespie.
+\newblock Approximate accelerated stochastic simulation of chemically reacting
+  systems.
+\newblock \emph{The Journal of Chemical Physics}, 115:\penalty0 1716, 2001.
+
+\bibitem[Guantes and Poyatos(2006)]{guantes2006dynamical}
+Ra{\'u}l Guantes and Juan~F Poyatos.
+\newblock Dynamical principles of two-component genetic oscillators.
+\newblock \emph{PLoS computational biology}, 2\penalty0 (3):\penalty0 e30,
+  2006.
+
+\bibitem[Kirkpatrick et~al.(1983)Kirkpatrick, Jr., and
+  Vecchi]{kirkpatrick1983optimization}
+Scott Kirkpatrick, D.~Gelatt Jr., and Mario~P Vecchi.
+\newblock Optimization by simulated annealing.
+\newblock \emph{science}, 220\penalty0 (4598):\penalty0 671--680, 1983.
+
+\bibitem[Kitano(2002)]{kitano2002computational}
+Hiroaki Kitano.
+\newblock Computational systems biology.
+\newblock \emph{Nature}, 420\penalty0 (6912):\penalty0 206--210, 2002.
+
+\bibitem[Kohn et~al.(2006)Kohn, Aladjem, Weinstein, and
+  Pommier]{kohn2006molecular}
+Kurt~W Kohn, Mirit~I Aladjem, John~N Weinstein, and Yves Pommier.
+\newblock Molecular interaction maps of bioregulatory networks: a general
+  rubric for systems biology.
+\newblock \emph{Molecular biology of the cell}, 17\penalty0 (1):\penalty0
+  1--13, 2006.
+
+\bibitem[Konopka and Rooman(2010)]{konopka2010gene}
+T.~Konopka and M.~Rooman.
+\newblock Gene expression model (in) validation by fourier analysis.
+\newblock \emph{BMC systems biology}, 4\penalty0 (1):\penalty0 123, 2010.
+
+\bibitem[Liepe et~al.(2010)Liepe, Barnes, Cule, Erguler, Kirk, Toni, and
+  Stumpf]{liebe2010abcpy}
+Juliane Liepe, Chris Barnes, Erika Cule, Kamil Erguler, Paul Kirk, Tina Toni,
+  and Michael~P.H. Stumpf.
+\newblock Abc-sysbio approximate bayesian computation in python with gpu
+  support.
+\newblock \emph{Bioinformatics}, 26\penalty0 (14):\penalty0 1797--1799, 2010.
+\newblock \doi{10.1093/bioinformatics/btq278}.
+\newblock URL
+  \url{http://bioinformatics.oxfordjournals.org/content/26/14/1797.abstract}.
+
+\bibitem[Lotka(1925)]{lotka1925elements}
+A.J. Lotka.
+\newblock \emph{Elements of physical biology}.
+\newblock Williams \& Wilkins Baltimore, 1925.
+
+\bibitem[Marjoram et~al.(2003)Marjoram, Molitor, Plagnol, and
+  Tavar{\'e}]{marjoram2003markov}
+P.~Marjoram, J.~Molitor, V.~Plagnol, and S.~Tavar{\'e}.
+\newblock Markov chain monte carlo without likelihoods.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 100\penalty0
+  (26):\penalty0 15324--15328, 2003.
+
+\bibitem[Mendes and Kell(1998)]{mendes1998non}
+Pedro Mendes and D~Kell.
+\newblock Non-linear optimization of biochemical pathways: applications to
+  metabolic engineering and parameter estimation.
+\newblock \emph{Bioinformatics}, 14\penalty0 (10):\penalty0 869--883, 1998.
+
+\bibitem[Mirsky et~al.(2009)Mirsky, Liu, Welsh, Kay, and
+  Doyle]{mirsky2009model}
+H.P. Mirsky, A.C. Liu, D.K. Welsh, S.A. Kay, and F.J. Doyle.
+\newblock A model of the cell-autonomous mammalian circadian clock.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 106\penalty0
+  (27):\penalty0 11107--11112, 2009.
+
+\bibitem[Moles et~al.(2003)Moles, Mendes, and Banga]{Moles2003param}
+Carmen~G. Moles, Pedro Mendes, and Julio~R. Banga.
+\newblock Parameter estimation in biochemical pathways: A comparison of global
+  optimization methods.
+\newblock \emph{Genome Research}, 13\penalty0 (11):\penalty0 2467--2474, 2003.
+\newblock \doi{10.1101/gr.1262503}.
+\newblock URL \url{http://genome.cshlp.org/content/13/11/2467.abstract}.
+
+\bibitem[{Pfeuty} et~al.(2011){Pfeuty}, {Thommen}, and
+  {Lefranc}]{pfeuty2011robust}
+B.~{Pfeuty}, Q.~{Thommen}, and M.~{Lefranc}.
+\newblock {Robust Entrainment of Circadian Oscillators Requires Specific Phase
+  Response Curves}.
+\newblock \emph{Biophysical Journal}, 100:\penalty0 2557--2565, June 2011.
+\newblock \doi{10.1016/j.bpj.2011.04.043}.
+
+\bibitem[Pritchard et~al.(1999)Pritchard, Seielstad, Perez-Lezaun, and
+  Feldman]{pritchard1999population}
+J.K. Pritchard, M.T. Seielstad, A.~Perez-Lezaun, and M.W. Feldman.
+\newblock Population growth of human y chromosomes: a study of y chromosome
+  microsatellites.
+\newblock \emph{Molecular Biology and Evolution}, 16\penalty0 (12):\penalty0
+  1791--1798, 1999.
+
+\bibitem[Rosenfeld et~al.(2002)Rosenfeld, Elowitz, Alon,
+  et~al.]{rosenfeld2002negative}
+N.~Rosenfeld, M.B. Elowitz, U.~Alon, et~al.
+\newblock Negative autoregulation speeds the response times of transcription
+  networks.
+\newblock \emph{Journal of molecular biology}, 323\penalty0 (5):\penalty0
+  785--793, 2002.
+
+\bibitem[Sahar and Sassone-Corsi(2012)]{sahar2012regulation}
+Saurabh Sahar and Paolo Sassone-Corsi.
+\newblock Regulation of metabolism: the circadian clock dictates the time.
+\newblock \emph{Trends in Endocrinology \& Metabolism}, 23\penalty0
+  (1):\penalty0 1--8, 2012.
+
+\bibitem[Silk et~al.(2012)Silk, Filippi, and Stumpf]{silk2012optimizing}
+Daniel Silk, Saran Filippi, and Michael~PH Stumpf.
+\newblock Optimizing threshold-schedules for approximate bayesian computation
+  sequential monte carlo samplers: Applications to molecular systems.
+\newblock \emph{arXiv preprint arXiv:1210.3296}, 2012.
+
+\bibitem[Sisson et~al.(2007)Sisson, Fan, and Tanaka]{sisson2007sequential}
+SA~Sisson, Y~Fan, and Mark~M Tanaka.
+\newblock Sequential monte carlo without likelihoods.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 104\penalty0
+  (6):\penalty0 1760--1765, 2007.
+
+\bibitem[Strogatz(2001)]{strogatz2001nonlinear}
+Steven Strogatz.
+\newblock Nonlinear dynamics and chaos: with applications to physics, biology,
+  chemistry and engineering.
+\newblock 2001.
+
+\bibitem[Toni et~al.(2009)Toni, Welch, Strelkowa, Ipsen, and
+  Stumpf]{toni2009abc}
+Tina Toni, David Welch, Natalja Strelkowa, Andreas Ipsen, and Michael~P.H
+  Stumpf.
+\newblock Approximate bayesian computation scheme for parameter inference and
+  model selection in dynamical systems.
+\newblock \emph{Journal of The Royal Society Interface}, 6\penalty0
+  (31):\penalty0 187--202, 2009.
+\newblock \doi{10.1098/rsif.2008.0172}.
+\newblock URL
+  \url{http://rsif.royalsocietypublishing.org/content/6/31/187.abstract}.
+
+\bibitem[Tyson et~al.(2003)Tyson, Chen, and Novak]{tyson2003sniffers}
+J.J. Tyson, K.C. Chen, and B.~Novak.
+\newblock Sniffers, buzzers, toggles and blinkers: dynamics of regulatory and
+  signaling pathways in the cell.
+\newblock \emph{Current opinion in cell biology}, 15\penalty0 (2):\penalty0
+  221--231, 2003.
+
+\end{thebibliography}

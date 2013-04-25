@@ -1,0 +1,23 @@
+\BOOKMARK [0][]{section*.2}{Contents}{}
+\BOOKMARK [0][]{section*.4}{List of Figures}{}
+\BOOKMARK [0][]{chapter.1}{1 Introduction}{}
+\BOOKMARK [0][]{chapter.2}{2 Background Research}{}
+\BOOKMARK [0][]{chapter.3}{3 Parameter Estimation}{}
+\BOOKMARK [1][]{section.3.1}{3.1 Simple Rejection Sampler}{chapter.3}
+\BOOKMARK [1][]{section.3.2}{3.2 Markov Chain Monte Carlo\(MCMC\)}{chapter.3}
+\BOOKMARK [1][]{section.3.3}{3.3 Sequential Monte Carlo\(SMC\)}{chapter.3}
+\BOOKMARK [2][]{subsection.3.3.1}{3.3.1 Using Fourier Distance as a distance metric}{section.3.3}
+\BOOKMARK [1][]{section.3.4}{3.4 Results}{chapter.3}
+\BOOKMARK [2][]{subsection.3.4.1}{3.4.1 Parameter inference for the Lotka-Volterra model}{section.3.4}
+\BOOKMARK [2][]{subsection.3.4.2}{3.4.2 Parameter inference for repressilator model}{section.3.4}
+\BOOKMARK [0][]{chapter.4}{4 System dynamics and infer-ability}{}
+\BOOKMARK [1][]{section.4.1}{4.1 Methods}{chapter.4}
+\BOOKMARK [2][]{subsection.4.1.1}{4.1.1 Models}{section.4.1}
+\BOOKMARK [2][]{subsection.4.1.2}{4.1.2 Maximum Likelihood for ODEs}{section.4.1}
+\BOOKMARK [1][]{section.4.2}{4.2 Results}{chapter.4}
+\BOOKMARK [2][]{subsection.4.2.1}{4.2.1 Hopf Bifurcation}{section.4.2}
+\BOOKMARK [2][]{subsection.4.2.2}{4.2.2 SNIC}{section.4.2}
+\BOOKMARK [0][]{chapter.5}{5 Conclusions }{}
+\BOOKMARK [0][]{appendix*.20}{Appdx A}{}
+\BOOKMARK [0][]{appendix*.21}{Appdx B}{}
+\BOOKMARK [0][]{section*.23}{References}{}

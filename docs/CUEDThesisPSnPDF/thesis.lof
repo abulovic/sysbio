@@ -1,0 +1,17 @@
+\select@language {english}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Networks of interactions between circadian clock and metabolic pathways \cite [] {sahar2012regulation}\relax }}{3}{figure.caption.5}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Negative autoregulation network motif: Gene X and its protein product are regulated by A. Protein product X also represses its own production \cite []{alon2007introduction}(chapter 1)\relax }}{4}{figure.caption.6}
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Parameter inference methods combine experimental data with the knowledge about the underlying structure of a dynamical system to be investigated. Unknown model parameter (here k1, k2, k3 and k4) can be estimated.\relax }}{6}{figure.caption.7}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces In the SMC algorithm a sample from the prior distribution $\pi (\theta )$ is passed through filtering steps where the probability of the particles to represent the data best is updated during the algorithm via intermediate distributions. The final distribution $p_{\epsilon _{T}}$ is an approximation of the posterior distribution. The SMC algorithm follows a particle-filtering approach.\relax }}{15}{figure.caption.8}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Posteriors distributions for the two parameters $a$ and $b$ of the Lotka-Volterra model inferred with the simple rejection sampler.\relax }}{19}{figure.caption.9}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Inferred posteriors and quality of solution\relax }}{21}{figure.caption.12}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Inferred posterior distributions.\relax }}{22}{figure.caption.13}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Posteriors distributions for the two parameters $a$ and $b$ of the Lotka-Volterra model inferred with the simple rejection sampler.\relax }}{23}{figure.caption.14}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces The repressilator model. Three genes connected in a feedback loop where the protein product of each gene represses the production of the next gene in the loop.\relax }}{24}{figure.caption.15}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

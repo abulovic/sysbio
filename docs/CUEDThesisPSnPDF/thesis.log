@@ -1,0 +1,890 @@
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.1)  25 APR 2013 21:32
+entering extended mode
+ %&-line parsing enabled.
+**thesis.tex
+(./thesis.tex
+LaTeX2e <2009/09/24>
+Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
+ak, danish, dutch, finnish, french, basque, ngerman, german, german-x-2009-06-1
+9, ngerman-x-2009-06-19, ibycus, monogreek, greek, ancientgreek, hungarian, san
+skrit, italian, latin, latvian, lithuanian, mongolian2a, mongolian, bokmal, nyn
+orsk, romanian, irish, coptic, serbian, turkish, welsh, esperanto, uppersorbian
+, estonian, indonesian, interlingua, icelandic, kurmanji, slovenian, polish, po
+rtuguese, spanish, galician, catalan, swedish, ukenglish, pinyin, loaded.
+(./Classes/CUEDthesisPSnPDF.cls
+
+LaTeX Warning: You have requested document class `Classes/CUEDthesisPSnPDF',
+               but the document class provides `CUEDthesisPSnPDF'.
+
+Document Class: CUEDthesisPSnPDF 2010/07/14 v1.1 CUED thesis class
+(/usr/share/texmf-texlive/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/bk12.clo
+File: bk12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/setspace/setspace.sty
+Package: setspace 2000/12/01 6.7 Contributed and Supported LaTeX2e package
+
+Package: `setspace' 6.7 <2000/12/01>
+) (/usr/share/texmf-texlive/tex/latex/tocbibind/tocbibind.sty
+Package: tocbibind 2009/09/04 v1.5i extra ToC listings
+
+
+Package tocbibind Note: The document has chapter divisions.
+
+
+Package tocbibind Note: Using chapter style headings, unless overridden.
+
+) (/usr/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2009/06/22 v3.00
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+))
+(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip43
+\f@ncyO@elh=\skip44
+\f@ncyO@erh=\skip45
+\f@ncyO@olh=\skip46
+\f@ncyO@orh=\skip47
+\f@ncyO@elf=\skip48
+\f@ncyO@erf=\skip49
+\f@ncyO@olf=\skip50
+\f@ncyO@orf=\skip51
+)
+(/usr/share/texmf-texlive/tex/latex/amsfonts/eucal.sty
+Package: eucal 2009/06/22 v3.00 Euler Script fonts
+LaTeX Font Info:    Overwriting math alphabet `\EuScript' in version `bold'
+(Font)                  U/eus/m/n --> U/eus/b/n on input line 33.
+)
+(/var/lib/texmf/tex/generic/babel/babel.sty
+Package: babel 2008/07/06 v3.8l The Babel package
+
+(/usr/share/texmf-texlive/tex/generic/babel/english.ldf
+Language: english 2005/03/30 v3.3o English support from the babel system
+
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2008/07/06 v3.8l Babel common definitions
+\babel@savecnt=\count88
+\U@D=\dimen103
+)
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+))
+(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(/etc/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
+\Gread@gobject=\count89
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+(/usr/share/texmf-texlive/tex/latex/footmisc/footmisc.sty
+Package: footmisc 2009/09/15 v5.5a a miscellany of footnote facilities
+\FN@temptoken=\toks15
+\footnotemargin=\dimen104
+\c@pp@next@reset=\count90
+\c@@fnserial=\count91
+Package footmisc Info: Declaring symbol style bringhurst on input line 855.
+Package footmisc Info: Declaring symbol style chicago on input line 863.
+Package footmisc Info: Declaring symbol style wiley on input line 872.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 883.
+
+Package footmisc Info: Declaring symbol style lamport* on input line 903.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
+.
+)
+(/usr/share/texmf-texlive/tex/latex/natbib/natbib.sty
+Package: natbib 2009/07/16 8.31 (PWD, AO)
+\bibhang=\skip52
+\bibsep=\skip53
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count92
+)
+(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2009/04/10 v2.0 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode detected.
+)
+(/usr/share/texmf-texlive/tex/latex/nomencl/nomencl.sty
+Package: nomencl 2005/09/22 v4.2 Nomenclature package (LN)
+\nomlabelwidth=\dimen105
+\nom@tempdim=\dimen106
+\nomitemsep=\skip54
+)
+\@nomenclaturefile=\write3
+\openout3 = `thesis.nlo'.
+
+
+Writing nomenclature file thesis.nlo
+(/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2008/11/04 v1.4 Switches for detecting VTeX and its modes (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2009/01/23 v0.5 Provides ifxetex conditional
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/hycolor.sty
+Package: hycolor 2009/10/02 v1.5 Code for color options of hyperref/bookmark (H
+O)
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
+Package: xcolor-patch 2009/10/02 xcolor patch
+))
+\@linkdim=\dimen107
+\Hy@linkcounter=\count93
+\Hy@pagecounter=\count94
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)
+(/usr/share/texmf-texlive/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
+t (HO)
+))
+Package hyperref Info: Option `plainpages' set `false' on input line 2864.
+Package hyperref Info: Option `pdfpagelabels' set `true' on input line 2864.
+Package hyperref Info: Option `bookmarks' set `true' on input line 2864.
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 2864.
+Package hyperref Info: Option `bookmarksnumbered' set `true' on input line 2864
+.
+Package hyperref Info: Option `breaklinks' set `true' on input line 2864.
+Package hyperref Info: Option `linktocpage' set `true' on input line 2864.
+Package hyperref Info: Option `colorlinks' set `true' on input line 2864.
+Package hyperref Info: Option `hyperindex' set `true' on input line 2864.
+Package hyperref Info: Option `hyperfigures' set `true' on input line 2864.
+Package hyperref Info: Hyper figures ON on input line 2973.
+Package hyperref Info: Link nesting OFF on input line 2980.
+Package hyperref Info: Hyper index ON on input line 2983.
+Package hyperref Info: Plain pages OFF on input line 2990.
+Package hyperref Info: Backreferencing ON on input line 2993.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 3191.
+(/usr/share/texmf-texlive/tex/latex/hyperref/backref.sty
+Package: backref 2006/09/05 v1.28 Bibliographical back referencing
+)
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+\Urlmuskip=\muskip10
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 3428.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bitset.sty
+Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/intcalc.sty
+Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bigintcalc.sty
+Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2009/09/23 v0.6 LuaTeX support for pdfTeX utility functions
+ (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2009/04/17 v1.2 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2009/08/05 v1.0 Some LaTeX kernel commands for general use (HO
+)
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+)))
+\Fld@menulength=\count95
+\Field@Width=\dimen108
+\Fld@charsize=\dimen109
+\Field@toks=\toks17
+Package hyperref Info: Hyper figures ON on input line 4375.
+Package hyperref Info: Link nesting OFF on input line 4382.
+Package hyperref Info: Hyper index ON on input line 4385.
+Package hyperref Info: backreferencing ON on input line 4390.
+Package hyperref Info: Link coloring ON on input line 4395.
+Package hyperref Info: Link coloring with OCG OFF on input line 4402.
+Package hyperref Info: PDF/A mode OFF on input line 4407.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
+)
+\Hy@abspage=\count96
+\c@Item=\count97
+\c@Hfootnote=\count98
+)
+*hyperref using driver hpdftex*
+(/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
+\Fld@listcount=\count99
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+)
+\Gin@req@height=\dimen110
+\Gin@req@width=\dimen111
+)
+
+Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
+less on input line 165.
+
+) (/usr/share/texmf-texlive/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip55
+)
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip56
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks18
+\ex@=\dimen112
+))
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen113
+)
+(/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count100
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count101
+\leftroot@=\count102
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count103
+\DOTSCASE@=\count104
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen114
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count105
+\c@MaxMatrixCols=\count106
+\dotsspace@=\muskip11
+\c@parentequation=\count107
+\dspbrk@lvl=\count108
+\tag@help=\toks19
+\row@=\count109
+\column@=\count110
+\maxfields@=\count111
+\andhelp@=\toks20
+\eqnshift@=\dimen115
+\alignsep@=\dimen116
+\tagshift@=\dimen117
+\tagwidth@=\dimen118
+\totwidth@=\dimen119
+\lineht@=\dimen120
+\@envbody=\toks21
+\multlinegap=\skip57
+\multlinetaggap=\skip58
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+(/usr/share/texmf-texlive/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2009/05/18 v2.2 Customized lists
+\enit@toks=\toks23
+\labelindent=\skip59
+\enit@outerparindent=\dimen121
+\enitdp@desc=\count112
+)
+(/usr/share/texmf-texlive/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count113
+\float@exts=\toks24
+\float@box=\box28
+\@float@everytoks=\toks25
+\@floatcapt=\box29
+)
+(/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+\captionmargin=\dimen122
+\captionmargin@=\dimen123
+\captionwidth=\dimen124
+\caption@indent=\dimen125
+\caption@parindent=\dimen126
+\caption@hangindent=\dimen127
+)
+\c@ContinuedFloat=\count114
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.sty
+\lst@mode=\count115
+\lst@gtempboxa=\box30
+\lst@token=\toks26
+\lst@length=\count116
+\lst@currlwidth=\dimen128
+\lst@column=\count117
+\lst@pos=\count118
+\lst@lostspace=\dimen129
+\lst@width=\dimen130
+\lst@newlines=\count119
+\lst@lineno=\count120
+\lst@maxwidth=\dimen131
+
+(/usr/share/texmf-texlive/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count121
+\lst@skipnumbers=\count122
+\lst@framebox=\box31
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(/usr/share/texmf-texlive/tex/latex/caption/subcaption.sty
+Package: subcaption 2008/08/31 v1.0b Adding subcaptions (AR)
+\c@subfigure=\count123
+\c@subtable=\count124
+)
+(/usr/share/texmf-texlive/tex/latex/tools/tabularx.sty
+Package: tabularx 1999/01/07 v2.07 `tabularx' package (DPC)
+
+(/usr/share/texmf-texlive/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen132
+\extrarowheight=\dimen133
+\NC@list=\toks27
+\extratabsurround=\skip60
+\backup@length=\skip61
+)
+\TX@col@width=\dimen134
+\TX@old@table=\dimen135
+\TX@old@col=\dimen136
+\TX@target=\dimen137
+\TX@delta=\dimen138
+\TX@cols=\count125
+\TX@ftn=\toks28
+)
+(./StyleFiles/watermark.sty
+
+LaTeX Warning: You have requested package `StyleFiles/watermark',
+               but the package provides `watermark'.
+
+Package: watermark 2002/01/29 v1.00 Watermarks (NCC)
+) (./thesis.aux (./Acknowledgement/acknowledgement.aux)
+(./Abstract/abstract.aux) (./Introduction/introduction.aux)
+(./Chapter1/chapter1.aux) (./Chapter2/chapter2.aux
+
+LaTeX Warning: Label `fig:sub1' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sub1' multiply defined.
+
+
+LaTeX Warning: Label `fig:sub2' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sub2' multiply defined.
+
+) (./Chapter3/chapter3.aux
+
+LaTeX Warning: Label `fig:phase_plane_hopf' multiply defined.
+
+) (./Conclusions/conclusions.aux) (./Appendix1/appendix1.aux)
+(./Appendix2/appendix2.aux))
+\openout1 = `thesis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 72.
+LaTeX Font Info:    ... okay on input line 72.
+
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count126
+\scratchdimen=\dimen139
+\scratchbox=\box32
+\nofMPsegments=\count127
+\nofMParguments=\count128
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count129
+\MPscratchDim=\dimen140
+\MPnumerator=\count130
+\everyMPtoPDFconversion=\toks30
+)
+Package hyperref Info: Link coloring ON on input line 72.
+ (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
+)
+\c@section@level=\count131
+)
+LaTeX Info: Redefining \ref on input line 72.
+LaTeX Info: Redefining \pageref on input line 72.
+ (./thesis.out)
+(./thesis.out)
+\@outlinefile=\write4
+\openout4 = `thesis.out'.
+
+Package backref Info: ** backref set up for natbib ** on input line 72.
+\AtBeginShipoutBox=\box33
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: listings package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\c@lstlisting=\count132
+ (./title.tex [1
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
+\openout2 = `Acknowledgement/acknowledgement.aux'.
+
+ (./Acknowledgement/acknowledgement.tex [1
+
+
+])
+\openout2 = `Abstract/abstract.aux'.
+
+ (./Abstract/abstract.tex
+[2
+
+
+]) (./thesis.toc
+LaTeX Font Info:    Try loading font information for U+msa on input line 7.
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 7.
+
+(/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+) [3
+\FN@pp@footnotehinttrue 
+
+
+])
+\tf@toc=\write5
+\openout5 = `thesis.toc'.
+
+ [4] (./thesis.lof)
+\tf@lof=\write6
+\openout6 = `thesis.lof'.
+
+ [5
+
+]
+\openout2 = `Introduction/introduction.aux'.
+
+ (./Introduction/introduction.tex
+Chapter 1.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.13 
+      [1
+
+
+
+]
+<Introduction/IntroductionFigs/clock_metabolism.jpg, id=191, 520.59982pt x 271.
+81195pt>
+File: Introduction/IntroductionFigs/clock_metabolism.jpg Graphic file (type jpg
+)
+ <use Introduction/IntroductionFigs/clock_metabolism.jpg> [2]
+<Introduction/IntroductionFigs/neg_autoregulation.png, id=214, 557.08125pt x 17
+6.66pt>
+File: Introduction/IntroductionFigs/neg_autoregulation.png Graphic file (type p
+ng)
+ <use Introduction/IntroductionFigs/neg_autoregulation.png> [3 <./Introduction/
+IntroductionFigs/clock_metabolism.jpg>] [4 <./Introduction/IntroductionFigs/neg
+_autoregulation.png>] [5]
+<Introduction/IntroductionFigs/inference.png, id=248, 593.21625pt x 448.67625pt
+>
+File: Introduction/IntroductionFigs/inference.png Graphic file (type png)
+ <use Introduction/IntroductionFigs/inference.png>) [6 <./Introduction/Introduc
+tionFigs/inference.png (PNG copy)>]
+\openout2 = `Chapter1/chapter1.aux'.
+
+ (./Chapter1/chapter1.tex
+Chapter 2.
+[7
+
+
+
+]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 42.
+ (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 42.
+ [8] [9]) [10]
+\openout2 = `Chapter2/chapter2.aux'.
+
+
+(./Chapter2/chapter2.tex
+Chapter 3.
+[11
+
+
+
+] [12] [13]
+<Chapter2/Chapter2Figs/ABCSMC.png, id=369, 453.695pt x 254.9525pt>
+File: Chapter2/Chapter2Figs/ABCSMC.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/ABCSMC.png> [14] [15 <./Chapter2/Chapter2Figs/ABCSMC
+.png (PNG copy)>]
+LaTeX Font Info:    Try loading font information for U+eus on input line 78.
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/ueus.fd
+File: ueus.fd 2009/06/22 v3.00 Euler Script
+)
+
+LaTeX Warning: Command \i invalid in math mode on input line 82.
+
+[16]
+
+LaTeX Warning: Reference `sec:results' on page 17 undefined on input line 84.
+
+[17] <Chapter2/Chapter2Figs/lv_rej_th1.png, id=412, 586.8324pt x 442.2924pt>
+File: Chapter2/Chapter2Figs/lv_rej_th1.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/lv_rej_th1.png>
+<Chapter2/Chapter2Figs/lv_rej_th2.png, id=413, 586.8324pt x 442.2924pt>
+File: Chapter2/Chapter2Figs/lv_rej_th2.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/lv_rej_th2.png> [18] [19 <./Chapter2/Chapter2Figs/lv
+_rej_th1.png> <./Chapter2/Chapter2Figs/lv_rej_th2.png>]
+<Chapter2/Chapter2Figs/smc_ad_hist_th1.png, id=438, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_ad_hist_th1.png>
+<Chapter2/Chapter2Figs/smc_ad_hist_th2.png, id=439, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_ad_hist_th2.png>
+<Chapter2/Chapter2Figs/smc_ad_x.png, id=440, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_ad_x.png>
+<Chapter2/Chapter2Figs/smc_ad_y.png, id=441, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_ad_y.png>
+<use Chapter2/Chapter2Figs/smc_ad_hist_th1.png>
+<use Chapter2/Chapter2Figs/smc_ad_hist_th2.png>
+<use Chapter2/Chapter2Figs/smc_ad_x.png>
+<use Chapter2/Chapter2Figs/smc_ad_y.png>
+File: Chapter2/Chapter2Figs/smc_ad_hist_th1.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_ad_hist_th1.png>
+File: Chapter2/Chapter2Figs/smc_ad_hist_th2.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_ad_hist_th2.png>
+File: Chapter2/Chapter2Figs/smc_ad_x.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_ad_x.png>
+File: Chapter2/Chapter2Figs/smc_ad_y.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_ad_y.png>
+Overfull \hbox (30.0pt too wide) in alignment at lines 166--166
+[][][]
+ []
+
+<Chapter2/Chapter2Figs/smc_man_th1.png, id=442, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_man_th1.png>
+<Chapter2/Chapter2Figs/smc_man_th2.png, id=443, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_man_th2.png>
+<Chapter2/Chapter2Figs/smc_man_x.png, id=444, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_man_x.png>
+<Chapter2/Chapter2Figs/smc_man_y.png, id=445, 586.8324pt x 442.2924pt>
+<use Chapter2/Chapter2Figs/smc_man_y.png>
+<use Chapter2/Chapter2Figs/smc_man_th1.png>
+<use Chapter2/Chapter2Figs/smc_man_th2.png>
+<use Chapter2/Chapter2Figs/smc_man_x.png>
+<use Chapter2/Chapter2Figs/smc_man_y.png>
+File: Chapter2/Chapter2Figs/smc_man_th1.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_man_th1.png>
+File: Chapter2/Chapter2Figs/smc_man_th2.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_man_th2.png>
+File: Chapter2/Chapter2Figs/smc_man_x.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_man_x.png>
+File: Chapter2/Chapter2Figs/smc_man_y.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_man_y.png>
+Overfull \hbox (30.0pt too wide) in alignment at lines 178--178
+[][][]
+ []
+
+
+LaTeX Warning: Reference `tab:dsteps_multi' on page 20 undefined on input line 
+182.
+
+<Chapter2/Chapter2Figs/smc_fourier_x.png, id=448, 586.8324pt x 442.2924pt>
+File: Chapter2/Chapter2Figs/smc_fourier_x.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_fourier_x.png>
+<Chapter2/Chapter2Figs/smc_fourier_y.png, id=449, 586.8324pt x 442.2924pt>
+File: Chapter2/Chapter2Figs/smc_fourier_y.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/smc_fourier_y.png> [20] [21 <./Chapter2/Chapter2Figs
+/smc_ad_hist_th1.png> <./Chapter2/Chapter2Figs/smc_ad_hist_th2.png> <./Chapter2
+/Chapter2Figs/smc_ad_x.png> <./Chapter2/Chapter2Figs/smc_ad_y.png>] [22 <./Chap
+ter2/Chapter2Figs/smc_man_th1.png> <./Chapter2/Chapter2Figs/smc_man_th2.png> <.
+/Chapter2/Chapter2Figs/smc_man_x.png> <./Chapter2/Chapter2Figs/smc_man_y.png>]
+<Chapter2/Chapter2Figs/repressilator.png, id=474, 447.6725pt x 306.14375pt>
+File: Chapter2/Chapter2Figs/repressilator.png Graphic file (type png)
+
+<use Chapter2/Chapter2Figs/repressilator.png> [23 <./Chapter2/Chapter2Figs/smc_
+fourier_x.png> <./Chapter2/Chapter2Figs/smc_fourier_y.png>]) [24 <./Chapter2/Ch
+apter2Figs/repressilator.png (PNG copy)>]
+\openout2 = `Chapter3/chapter3.aux'.
+
+ (./Chapter3/chapter3.tex
+Chapter 4.
+[25
+
+
+
+] [26] [27]
+<Chapter3/Chapter3Figs/likelihood_hopf08m.png, id=515, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf08m.png Graphic file (type png)
+<use Chapter3/Chapter3Figs/likelihood_hopf08m.png>
+<Chapter3/Chapter3Figs/likelihood_hopf04m.png, id=516, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf04m.png Graphic file (type png)
+<use Chapter3/Chapter3Figs/likelihood_hopf04m.png>
+<Chapter3/Chapter3Figs/likelihood_hopf0.png, id=517, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf0.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/likelihood_hopf0.png>
+<Chapter3/Chapter3Figs/likelihood_hopf04.png, id=518, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf04.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/likelihood_hopf04.png>
+<Chapter3/Chapter3Figs/likelihood_hopf08.png, id=519, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf08.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/likelihood_hopf08.png>
+<Chapter3/Chapter3Figs/likelihood_hopf12.png, id=520, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_hopf12.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/likelihood_hopf12.png> [28]
+<Chapter3/Chapter3Figs/phase_hopf08m.png, id=529, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_hopf08m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_hopf08m.png>
+<Chapter3/Chapter3Figs/phase_hopf04m.png, id=530, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_hopf04m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_hopf04m.png>
+<Chapter3/Chapter3Figs/phase_hopf08.png, id=531, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_hopf08.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_hopf08.png>
+<Chapter3/Chapter3Figs/phase_hopf12.png, id=532, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_hopf12.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_hopf12.png> [29]
+
+LaTeX Warning: Reference `' on page 30 undefined on input line 91.
+
+
+<Chapter3/Chapter3Figs/likelihood_sinc_055m.png, id=538, 586.8324pt x 442.2924p
+t>
+File: Chapter3/Chapter3Figs/likelihood_sinc_055m.png Graphic file (type png)
+ <use Chapter3/Chapter3Figs/likelihood_sinc_055m.png>
+<Chapter3/Chapter3Figs/likelihood_snic035m.png, id=539, 586.8324pt x 442.2924pt
+>
+File: Chapter3/Chapter3Figs/likelihood_snic035m.png Graphic file (type png)
+ <use Chapter3/Chapter3Figs/likelihood_snic035m.png>
+<Chapter3/Chapter3Figs/likelihood_snic025m.png, id=540, 586.8324pt x 442.2924pt
+>
+File: Chapter3/Chapter3Figs/likelihood_snic025m.png Graphic file (type png)
+ <use Chapter3/Chapter3Figs/likelihood_snic025m.png>
+<Chapter3/Chapter3Figs/likelihood_snic005.png, id=541, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_snic005.png Graphic file (type png)
+<use Chapter3/Chapter3Figs/likelihood_snic005.png>
+<Chapter3/Chapter3Figs/likelihood_snic015.png, id=542, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/likelihood_snic015.png Graphic file (type png)
+<use Chapter3/Chapter3Figs/likelihood_snic015.png> [30]
+<Chapter3/Chapter3Figs/phase_snic055m.png, id=549, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_snic055m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_snic055m.png>
+<Chapter3/Chapter3Figs/phase_snic035m.png, id=550, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_snic035m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_snic035m.png>
+<Chapter3/Chapter3Figs/phase_snic015m.png, id=551, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_snic015m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_snic015m.png>
+<Chapter3/Chapter3Figs/phase_snic005m.png, id=552, 586.8324pt x 442.2924pt>
+File: Chapter3/Chapter3Figs/phase_snic005m.png Graphic file (type png)
+
+<use Chapter3/Chapter3Figs/phase_snic005m.png>) [31] [32 <./Chapter3/Chapter3Fi
+gs/likelihood_hopf08m.png> <./Chapter3/Chapter3Figs/likelihood_hopf04m.png> <./
+Chapter3/Chapter3Figs/likelihood_hopf0.png> <./Chapter3/Chapter3Figs/likelihood
+_hopf04.png> <./Chapter3/Chapter3Figs/likelihood_hopf08.png> <./Chapter3/Chapte
+r3Figs/likelihood_hopf12.png>] [33 <./Chapter3/Chapter3Figs/phase_hopf08m.png> 
+<./Chapter3/Chapter3Figs/phase_hopf04m.png> <./Chapter3/Chapter3Figs/phase_hopf
+08.png> <./Chapter3/Chapter3Figs/phase_hopf12.png>] [34 <./Chapter3/Chapter3Fig
+s/likelihood_sinc_055m.png> <./Chapter3/Chapter3Figs/likelihood_snic035m.png> <
+./Chapter3/Chapter3Figs/likelihood_snic025m.png> <./Chapter3/Chapter3Figs/likel
+ihood_snic005.png> <./Chapter3/Chapter3Figs/likelihood_snic015.png>] [35 <./Cha
+pter3/Chapter3Figs/phase_snic055m.png> <./Chapter3/Chapter3Figs/phase_snic035m.
+png> <./Chapter3/Chapter3Figs/phase_snic015m.png> <./Chapter3/Chapter3Figs/phas
+e_snic005m.png>]
+\openout2 = `Conclusions/conclusions.aux'.
+
+ (./Conclusions/conclusions.tex
+Chapter 5.
+) [36
+
+
+
+]
+\openout2 = `Appendix1/appendix1.aux'.
+
+ (./Appendix1/appendix1.tex) [37
+
+
+
+
+]
+\openout2 = `Appendix2/appendix2.aux'.
+
+ (./Appendix2/appendix2.tex) [38
+
+
+
+]
+(./thesis.bbl (./thesis.brf)
+\tf@brf=\write7
+\openout7 = `thesis.brf'.
+
+ [39
+
+
+] [40]) [41] (./thesis.aux
+(./Acknowledgement/acknowledgement.aux) (./Abstract/abstract.aux)
+(./Introduction/introduction.aux) (./Chapter1/chapter1.aux)
+(./Chapter2/chapter2.aux) (./Chapter3/chapter3.aux)
+(./Conclusions/conclusions.aux) (./Appendix1/appendix1.aux)
+(./Appendix2/appendix2.aux))
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 9664 strings out of 493848
+ 146205 string characters out of 1152824
+ 232001 words of memory out of 3000000
+ 12473 multiletter control sequences out of 15000+50000
+ 16043 words of font info for 60 fonts, out of 3000000 for 9000
+ 714 hyphenation exceptions out of 8191
+ 45i,20n,50p,2404b,611s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmbx6.pfb></usr/share/texmf-texlive/fonts/
+type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+mextra/cmex8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi1
+0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr
+/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf
+-texlive/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fon
+ts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-texlive/fonts/type1/p
+ublic/amsfonts/cmextra/cmmib8.pfb></usr/share/texmf-texlive/fonts/type1/public/
+amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
+cmr12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></u
+sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texm
+f-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/f
+onts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/p
+ublic/amsfonts/cm/cmsy8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmti12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt1
+2.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/euler/eusm10.pfb>
+Output written on thesis.pdf (47 pages, 1284311 bytes).
+PDF statistics:
+ 774 PDF objects out of 1000 (max. 8388607)
+ 155 named destinations out of 1000 (max. 500000)
+ 365 words of extra memory for PDF output out of 10000 (max. 10000000)
+

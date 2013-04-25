@@ -1,0 +1,24 @@
+\select@language {english}
+\contentsline {chapter}{Contents}{iii}{section*.2}
+\contentsline {chapter}{List of Figures}{v}{section*.4}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Background Research}{7}{chapter.2}
+\contentsline {chapter}{\numberline {3}Parameter Estimation}{11}{chapter.3}
+\contentsline {section}{\numberline {3.1}Simple Rejection Sampler}{12}{section.3.1}
+\contentsline {section}{\numberline {3.2}Markov Chain Monte Carlo(MCMC)}{13}{section.3.2}
+\contentsline {section}{\numberline {3.3}Sequential Monte Carlo(SMC)}{14}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Using Fourier Distance as a distance metric}{17}{subsection.3.3.1}
+\contentsline {section}{\numberline {3.4}Results}{17}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Parameter inference for the Lotka-Volterra model}{18}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Parameter inference for repressilator model}{23}{subsection.3.4.2}
+\contentsline {chapter}{\numberline {4}System dynamics and infer-ability}{25}{chapter.4}
+\contentsline {section}{\numberline {4.1}Methods}{26}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Models}{26}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Maximum Likelihood for ODEs}{27}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Results}{28}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Hopf Bifurcation}{28}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}SNIC}{30}{subsection.4.2.2}
+\contentsline {chapter}{\numberline {5}Conclusions }{36}{chapter.5}
+\contentsline {chapter}{Appdx A}{37}{appendix*.20}
+\contentsline {chapter}{Appdx B}{38}{appendix*.21}
+\contentsline {chapter}{References}{39}{section*.23}
