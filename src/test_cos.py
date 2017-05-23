@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# bla bla 
 
 from scipy import integrate
 from scipy import array
