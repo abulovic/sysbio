@@ -24,6 +24,7 @@ def main():
     print ds
     plt.plot(ds)
     plt.show()
+    print "Showing plots."
 
     
 if __name__ == '__main__':
