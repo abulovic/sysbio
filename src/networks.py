@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #positive autoregulation
+# bla bla bla
 def dx_dt(X, t):
     tau = 10
     beta = 1
