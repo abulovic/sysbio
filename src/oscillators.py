@@ -19,7 +19,7 @@ def dX_dt(X, t):
     k2 = 1
     k3 = 1
     k4 = 1
-    k5 = 1
+    k5 = 1.2
     y = array([(ka-k4)*X[0] - k2*X[0]*X[1] + 1, -k3*X[1] + k3*X[2], k4*X[0] - k5*X[2]])
     return y
 
