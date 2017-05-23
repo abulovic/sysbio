@@ -7,6 +7,8 @@ import numpy as np
 import sys
 from scipy import integrate, array
 
+print 'bla'
+
 def dx_dt(X, t, th):
     kA = 3.
     k2 = th[0]
